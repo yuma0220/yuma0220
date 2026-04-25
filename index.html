@@ -2,92 +2,105 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>二次関数：究極の演習システム</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <title>2次関数：Lv.100 Ultimate Studio</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --bg: #050505; --card: #111111; --accent: #8b5cf6; --text: #ffffff; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        :root { --bg: #020617; --card: #0f172a; --accent: #c026d3; --text: #f8fafc; --glass: rgba(255,255,255,0.05); }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; display: flex; height: 100vh; }
         
-        aside { width: 300px; background: var(--card); border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
-        .lvl-group { margin-bottom: 20px; }
-        .lvl-h { color: var(--accent); font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .q-btn { width: 100%; text-align: left; padding: 12px; background: transparent; border: 1px solid transparent; color: #999; cursor: pointer; border-radius: 6px; font-size: 0.85rem; margin-bottom: 2px; }
-        .q-btn:hover { background: #1a1a1a; color: white; }
-        .q-btn.active { background: var(--accent); color: white; font-weight: bold; }
+        /* サイドバー */
+        aside { width: 340px; background: #020617; border-right: 1px solid #1e293b; padding: 25px; overflow-y: auto; }
+        .lvl-tag { font-size: 0.7rem; background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
+        .lvl-h { color: #64748b; font-size: 0.75rem; letter-spacing: 2px; margin: 30px 0 10px; text-transform: uppercase; border-bottom: 1px solid #1e293b; }
+        .q-btn { width: 100%; text-align: left; padding: 14px; background: var(--glass); border: 1px solid transparent; color: #94a3b8; cursor: pointer; border-radius: 10px; font-size: 0.85rem; margin-bottom: 6px; transition: 0.3s; }
+        .q-btn:hover { background: #1e293b; color: white; border-color: var(--accent); }
+        .q-btn.active { background: linear-gradient(135deg, #c026d3, #7c3aed); color: white; font-weight: bold; }
 
+        /* メイン */
         main { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-        .p-card { background: var(--card); border-radius: 12px; padding: 30px; border: 1px solid #222; }
-        .math-box { font-size: 2.2rem; text-align: center; margin: 20px 0; padding: 20px; background: #000; border-radius: 8px; min-height: 1.2em; }
-        .instr { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; color: #ccc; }
+        .p-card { background: var(--card); border-radius: 20px; padding: 40px; border: 1px solid #1e293b; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .math-box { font-size: 2.2rem; text-align: center; margin: 30px 0; padding: 30px; background: rgba(0,0,0,0.4); border-radius: 15px; border: 1px solid #334155; }
+        .instr { font-size: 1.2rem; line-height: 1.6; margin-bottom: 25px; border-left: 6px solid var(--accent); padding-left: 20px; }
         
-        .ai-expl { background: #0a0a0f; border: 1px solid var(--accent); border-radius: 8px; padding: 20px; display: none; line-height: 1.8; margin-bottom: 20px; }
-        .chart-box { flex: 1; min-height: 300px; background: #000; border-radius: 12px; border: 1px solid #222; padding: 10px; }
-        .ctrl { display: flex; gap: 10px; }
-        button.primary { flex: 1; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        .ai-expl { background: #1e293b; border-radius: 15px; padding: 30px; display: none; margin-bottom: 20px; }
+        .step-b { color: var(--accent); font-weight: bold; font-size: 1.1rem; border-bottom: 1px solid #334155; margin: 20px 0 10px; padding-bottom: 5px; }
+        
+        /* 実験室スライダー */
+        .lab-panel { display: flex; gap: 20px; background: #0f172a; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed var(--accent); }
+        .lab-ctrl { flex: 1; }
+        input[type=range] { width: 100%; accent-color: var(--accent); }
+
+        .chart-box { flex: 1; min-height: 450px; background: #000; border-radius: 20px; border: 1px solid #1e293b; overflow: hidden; }
+        .btn-row { display: flex; gap: 15px; }
+        .btn-main { flex: 1; padding: 20px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .btn-p { background: var(--accent); color: white; }
+        .btn-s { background: #334155; color: white; }
     </style>
 </head>
 <body>
 
 <aside>
-    <h2 style="color:var(--accent); margin-bottom: 30px;">二次関数 Master</h2>
-    <div class="lvl-group">
-        <div class="lvl-h">レベル 1: 基礎・移動</div>
-        <button class="q-btn active" id="btn-l1_v" onclick="app.select('l1_v')">頂点と軸の方程式</button>
-        <button class="q-btn" id="btn-l1_m" onclick="app.select('l1_m')">平行移動・対称移動</button>
-    </div>
-    <div class="lvl-group">
-        <div class="lvl-h">レベル 2: 最大・最小</div>
-        <button class="q-btn" id="btn-l2_r" onclick="app.select('l2_r')">定義域と最大最小</button>
-        <button class="q-btn" id="btn-l2_t" onclick="app.select('l2_t')">4次式の置き換え(t)</button>
-    </div>
-    <div class="lvl-group">
-        <div class="lvl-h">レベル 3: 方程式・不等式</div>
-        <button class="q-btn" id="btn-l3_d" onclick="app.select('l3_d')">x軸との共有点の個数</button>
-        <button class="q-btn" id="btn-l3_l" onclick="app.select('l3_l')">切り取る線分の長さ</button>
-    </div>
-    <div class="lvl-group">
-        <div class="lvl-h">レベル 4: 発展・章末</div>
-        <button class="q-btn" id="btn-l4_k" onclick="app.select('l4_k')">頂点の軌跡 (k)</button>
-        <button class="q-btn" id="btn-l4_a" onclick="app.select('l4_a')">絶対値グラフの共有点</button>
-    </div>
+    <h2 style="background: linear-gradient(to right, #f472b6, #c026d3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; margin: 0;">Lv.100 Studio</h2>
+    
+    <div class="lvl-h">Lv.1-20 基礎マスター</div>
+    <button class="q-btn active" id="btn-v" onclick="app.select('v')"><span class="lvl-tag">01</span>頂点・軸の完全解析</button>
+    <button class="q-btn" id="btn-m" onclick="app.select('m')"><span class="lvl-tag">15</span>移動・対称・回転の理</button>
+
+    <div class="lvl-h">Lv.21-50 応用・最大最小</div>
+    <button class="q-btn" id="btn-r" onclick="app.select('r')"><span class="lvl-tag">35</span>動く定義域と最大最小</button>
+    <button class="q-btn" id="btn-l" onclick="app.select('l')"><span class="lvl-tag">45</span>x軸の切り取る線分</button>
+
+    <div class="lvl-h">Lv.51-80 思考力・数式</div>
+    <button class="q-btn" id="btn-abs" onclick="app.select('abs')"><span class="lvl-tag">65</span>絶対値関数の境界問題</button>
+    <button class="q-btn" id="btn-p" onclick="app.select('p')"><span class="lvl-tag">78</span>主役交代 (xとpの双対性)</button>
+
+    <div class="lvl-h">Lv.81-100 極致・融合</div>
+    <button class="q-btn" id="btn-sign" onclick="app.select('sign')"><span class="lvl-tag">85</span>解の配置：3条件の連立</button>
+    <button class="q-btn" id="btn-lab" onclick="app.select('lab')"><span class="lvl-tag">99</span>究極：Sandbox実験室</button>
 </aside>
 
 <main>
+    <div id="lab-ui" class="lab-panel" style="display:none;">
+        <div class="lab-ctrl">a: <input type="range" id="sl-a" min="-5" max="5" step="0.1" value="1" oninput="app.labUpdate()"> <span id="v-a">1</span></div>
+        <div class="lab-ctrl">b: <input type="range" id="sl-b" min="-10" max="10" step="0.1" value="0" oninput="app.labUpdate()"> <span id="v-b">0</span></div>
+        <div class="lab-ctrl">c: <input type="range" id="sl-c" min="-10" max="10" step="0.1" value="0" oninput="app.labUpdate()"> <span id="v-c">0</span></div>
+    </div>
+
     <div class="p-card">
         <div id="q-instr" class="instr"></div>
         <div id="q-formula" class="math-box"></div>
-        <div class="ctrl">
-            <button class="primary" onclick="app.showExpl()">解説を表示</button>
-            <button class="primary" style="background:#222;" onclick="app.reload()">類題を生成</button>
+        <div class="btn-row">
+            <button class="btn-main btn-p" onclick="app.showExpl()">AI完全解説を表示</button>
+            <button class="btn-main btn-s" onclick="app.reload()">新数値を生成</button>
         </div>
     </div>
+
     <div id="expl" class="ai-expl"></div>
     <div class="chart-box"><canvas id="mainChart"></canvas></div>
 </main>
 
 <script>
 const app = {
-    mode: 'l1_v',
+    mode: 'v',
     current: {},
     chart: null,
 
-    // 数式クリーナー (1x -> x, 0x -> 消去, +- -> -)
-    fmt(a, b, c) {
+    // 数式生成エンジン (1x, 0x を排除)
+    fmt(a, b, c, var_x = 'x') {
         let s = "";
-        if (a !== 0) {
-            if (a === 1) s += "x^2";
-            else if (a === -1) s += "-x^2";
-            else s += a + "x^2";
-        }
-        if (b !== 0) {
-            const sign = b > 0 ? (s ? "+" : "") : "-";
-            const val = Math.abs(b) === 1 ? "" : Math.abs(b);
-            s += sign + val + "x";
-        }
-        if (c !== 0) {
-            s += (c > 0 ? (s ? "+" : "") : "-") + Math.abs(c);
-        }
+        const clean = (val, power) => {
+            if (val === 0) return "";
+            let res = val > 0 ? (s ? "+" : "") : "-";
+            let v = Math.abs(val);
+            if (v !== 1 || power === 0) res += v;
+            if (power > 0) res += var_x;
+            if (power > 1) res += "^" + power;
+            return res;
+        };
+        s += clean(a, 2);
+        s += clean(b, 1);
+        s += clean(c, 0);
         return s || "0";
     },
 
@@ -97,109 +110,100 @@ const app = {
         this.mode = m;
         document.querySelectorAll('.q-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + m).classList.add('active');
+        document.getElementById('lab-ui').style.display = (m === 'lab') ? 'flex' : 'none';
         this.reload();
     },
 
-    reload() {
+    async reload() {
         document.getElementById('expl').style.display = 'none';
         let f = "", i = "", e = "", g = {a:1, b:0, c:0, abs:false};
-        
         const a = (this.r(1, 2)) * (Math.random() > 0.5 ? 1 : -1);
         const p = this.r(-3, 3); const q = this.r(-3, 3);
 
+        if (this.mode === 'lab') {
+            i = "【サンドボックス】スライダーを動かして、グラフの形状・頂点の変化を観察しましょう。";
+            this.labUpdate();
+            return;
+        }
+
         switch(this.mode) {
-            case 'l1_v':
-                g = {a, b:-2*a*p, c:a*p*p+q, abs:false};
-                f = "y = " + this.fmt(g.a, g.b, g.c);
-                i = "この2次関数の頂点の座標と軸の方程式を求めよ。";
-                e = "平方完成を行うと、y = " + a + "(x " + (p>=0?'-':'+') + Math.abs(p) + ")^2 " + (q>=0?'+':'-') + Math.abs(q) + " となります。よって、頂点は (" + p + ", " + q + ")、軸は x = " + p + " です。";
+            case 'v':
+                g = {a, b:-2*a*p, c:a*p*p+q};
+                f = "f(x) = " + this.fmt(g.a, g.b, g.c);
+                i = "頂点の座標、軸の方程式を求め、グラフを描け。";
+                e = `<div class="step-b">Step 1: 平方完成</div> $f(x) = ${a}(x ${p>=0?'-':'+'}${Math.abs(p)})^2 ${q>=0?'+':'-'}${Math.abs(q)}$ <div class="step-b">Step 2: 解析</div> 頂点 $(${p}, ${q})$、軸 $x=${p}$。`;
                 break;
-            case 'l1_m':
-                const dx = this.r(1,3); const dy = this.r(-3,3);
-                f = "y = " + this.fmt(a, 0, 0) + " を x軸方向に " + dx + ", y軸方向に " + dy + " 移動";
-                i = "平行移動した後の放物線の方程式を求めよ。";
-                e = "公式 y - q = a(x - p)^2 に代入します。y - (" + dy + ") = " + a + "(x - " + dx + ")^2。展開して整理すると、y = " + this.fmt(a, -2*a*dx, a*dx*dx+dy) + " です。";
-                g = {a, b:-2*a*dx, c:a*dx*dx+dy, abs:false};
-                break;
-            case 'l2_r':
-                const s = p-1; const end = p+2;
-                g = {a:1, b:-2*p, c:p*p+q, abs:false};
-                f = "y = " + this.fmt(g.a, g.b, g.c) + " \\quad (" + s + " \\le x \\le " + end + ")";
-                i = "上の範囲における最大値と最小値を求めよ。";
-                const yS = (s-p)**2+q; const yE = (end-p)**2+q;
-                e = "頂点 x = " + p + " が範囲内にあります。頂点での値 y = " + q + " と、端点 f(" + s + ")=" + yS + ", f(" + end + ")=" + yE + " を比較して決定します。";
-                break;
-            case 'l2_t':
-                f = "y = (x^2-2x)^2 + 4(x^2-2x) + 1";
-                i = "t = x^2 - 2x と置いて、この関数の最小値を求めよ。";
-                e = "t = (x-1)^2 - 1 より t ≧ -1。与式は y = t^2 + 4t + 1 = (t+2)^2 - 3。t ≧ -1 の範囲では t = -1 で最小値をとります。";
-                g = {a:1, b:4, c:1, abs:false};
-                break;
-            case 'l3_d':
-                const D_val = this.r(-2, 2);
-                g = {a:1, b:this.r(-4, 4), c:0, abs:false};
-                g.c = Math.floor((g.b**2 - 4*D_val)/4);
-                f = "y = " + this.fmt(1, g.b, g.c);
-                i = "このグラフと x軸との共有点の個数を求めよ。";
-                const D = g.b**2 - 4*g.c;
-                e = "判別式 D = b^2 - 4ac を計算します。D = " + D + "。D > 0 なら2個、D = 0 なら1個、D < 0 なら0個となります。";
-                break;
-            case 'l3_l':
-                const len = [2, 4][this.r(0,1)];
-                const c_l = p*p - (len*len/4);
-                g = {a:1, b:-2*p, c:c_l, abs:false};
-                f = "y = " + this.fmt(1, g.b, g.c);
-                i = "このグラフが x軸から切り取る線分の長さを求めよ。";
-                e = "y=0 とした2次方程式の2解の差を求めます。解は x = " + (p-len/2) + ", " + (p+len/2) + " なので、長さは " + len + " です。";
-                break;
-            case 'l4_k':
-                const kv = this.r(1,3);
-                f = "y = x^2 - 2kx + k^2 + " + kv + "k";
-                i = "定数 k が変化するとき、この放物線の頂点が描く図形の方程式を求めよ。";
-                e = "頂点の座標を (x, y) とすると、x = k, y = " + kv + "k です。kを消去して y = " + kv + "x となります。";
-                g = {a:1, b:-2*2, c:4+kv*2, abs:false};
-                break;
-            case 'l4_a':
-                const av = [1, 4][this.r(0,1)];
-                f = "y = |x^2 - " + av + "|";
-                i = "直線 y = k との共有点が3個になるような、定数 k の値を求めよ。";
-                e = "y = |x^2 - " + av + "| のグラフは x = 0 で極大値 " + av + " をとります。直線がここを通るとき、共有点は3個です。";
+            case 'abs':
+                const av = [1, 4, 9][this.r(0,2)];
+                f = "f(x) = |x^2 - " + av + "|";
+                i = "このグラフと直線 y = k が異なる4個の共有点をもつとき、定数 k の値の範囲を求めよ。";
+                e = `<div class="step-b">1. グラフの描画</div> $x$ 軸より下の部分を上に折り返します。<div class="step-b">2. 境界の発見</div> 直線が $x$ 軸 ($k=0$) より上で、山の頂点 ($k=${av}$) より下のとき、共有点は4個になります。結論： $0 < k < ${av}$。`;
                 g = {a:1, b:0, c:-av, abs:true};
+                break;
+            case 'p':
+                f = "f(x) = x^2 - 2px - p^2 + 2p - 1";
+                i = "実数 p がどの値をとっても f(x) < 0 となる x の値の範囲を求めよ。(例題78)";
+                e = `<div class="step-b">1. 主役の交代</div> $p$ について整理： $g(p) = -p^2 + 2(1-x)p + (x^2-1)$ <div class="step-b">2. 条件解析</div> $g(p)$ が常に負 ⇔ $p$ の 2次関数の判別式 $D < 0$ <div class="step-b">3. 計算</div> $D/4 = (1-x)^2 + (x^2-1) = 2x^2 - 2x < 0$ より $0 < x < 1$。`;
+                g = {a:1, b:-2, c:0};
+                break;
+            case 'sign':
+                const x1 = this.r(1, 3); const x2 = this.r(4, 6);
+                f = "x^2 - " + (x1+x2) + "x + (m-1) = 0";
+                i = "2つの解がともに 2 より大きいとき、定数 m の範囲を求めよ。";
+                e = `<div class="step-b">思考の3本柱</div> 1. 判別式 $D \ge 0$<br>2. 軸 $x = \frac{k1+k2}{2} > 2$<br>3. 端点 $f(2) > 0$`;
+                g = {a:1, b:-(x1+x2), c:x1*x2};
                 break;
         }
 
         this.current = {f, i, e, g};
+        this.updateUI();
+    },
+
+    labUpdate() {
+        const a = parseFloat(document.getElementById('sl-a').value);
+        const b = parseFloat(document.getElementById('sl-b').value);
+        const c = parseFloat(document.getElementById('sl-c').value);
+        document.getElementById('v-a').innerText = a;
+        document.getElementById('v-b').innerText = b;
+        document.getElementById('v-c').innerText = c;
+        
+        const f = "y = " + this.fmt(a, b, c);
         document.getElementById('q-formula').innerHTML = "\\[ " + f + " \\]";
-        document.getElementById('q-instr').innerText = i;
-        if (window.MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, "q-formula"]);
-        this.draw();
+        MathJax.typesetPromise();
+        this.draw(a, b, c);
+    },
+
+    updateUI() {
+        document.getElementById('q-instr').innerText = this.current.i;
+        document.getElementById('q-formula').innerHTML = "\\[ " + this.current.f + " \\]";
+        MathJax.typesetPromise();
+        this.draw(this.current.g.a, this.current.g.b, this.current.g.c, this.current.g.abs);
     },
 
     showExpl() {
         const el = document.getElementById('expl');
-        el.innerHTML = "<h3 style='margin:0 0 10px 0; color:var(--accent)'>解説</h3>" + this.current.e;
+        el.innerHTML = "<h3 style='margin:0; color:var(--accent)'>🤖 Lv.100 AI Analysis</h3>" + this.current.e;
         el.style.display = 'block';
-        if (window.MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, "expl"]);
+        MathJax.typesetPromise([el]);
     },
 
-    draw() {
+    draw(a, b, c, abs = false) {
         const ctx = document.getElementById('mainChart').getContext('2d');
         if (this.chart) this.chart.destroy();
-        const {a, b, c, abs} = this.current.g;
         const pts = [];
-        for (let x = -7; x <= 7; x += 0.05) {
+        for (let x = -10; x <= 10; x += 0.1) {
             let y = a * x * x + b * x + c;
             if (abs) y = Math.abs(y);
             pts.push({ x, y });
         }
         this.chart = new Chart(ctx, {
             type: 'scatter',
-            data: { datasets: [{ data: pts, showLine: true, borderColor: '#8b5cf6', borderWidth: 2, pointRadius: 0, tension: 0.4 }] },
+            data: { datasets: [{ data: pts, showLine: true, borderColor: '#c026d3', borderWidth: 3, pointRadius: 0, tension: 0.4 }] },
             options: { 
-                responsive: true, maintainAspectRatio: false, 
+                responsive: true, maintainAspectRatio: false,
                 scales: { 
-                    x: { min: -5, max: 5, grid: { color: '#222' } }, 
-                    y: { min: -3, max: 10, grid: { color: '#222' } } 
+                    x: { min: -8, max: 8, grid: { color: '#1e293b' } }, 
+                    y: { min: -10, max: 15, grid: { color: '#1e293b' } } 
                 },
                 plugins: { legend: { display: false } }
             }
