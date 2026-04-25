@@ -9,12 +9,14 @@
 
 <body>
 
-<h1 class="title">📘 二次関数嫌い</h1>
+<header class="header">
+  <h1>📘 二次関数嫌い</h1>
+</header>
 
-<div class="layout">
+<main class="layout">
 
-  <!-- 左 -->
-  <div class="left">
+  <!-- LEFT -->
+  <aside class="left">
     <div class="card">
       <h3>名前を入力</h3>
       <input id="username" placeholder="ユーザー名">
@@ -23,48 +25,72 @@
 
     <div class="card">
       <h3>操作ガイド</h3>
-      <p>頂点 x = -b / 2a</p>
+      <p>・頂点のx座標</p>
+      <p class="formula">x = -b / 2a</p>
+      <p>・頂点の座標</p>
+      <p class="formula">( -b/2a , f(-b/2a) )</p>
     </div>
 
-    <div class="card purple">
+    <div class="card hint">
       <h3>場合分けのヒント</h3>
-      <p>a > 0 → 最小</p>
-      <p>a < 0 → 最大</p>
-      <p>区間 → 端と頂点比較</p>
+      <p>・a > 0 → 最小値</p>
+      <p>・a < 0 → 最大値</p>
+      <p>・区間 → 端点と頂点比較</p>
     </div>
-  </div>
+  </aside>
 
-  <!-- 中央 -->
-  <div class="center">
-    <div class="card">
-      <h2 id="question"></h2>
+  <!-- CENTER -->
+  <section class="center">
 
-      <div class="row">
+    <div class="card main-card">
+      <span id="typeBadge" class="badge">問題タイプ: normal</span>
+
+      <div id="question" class="question"></div>
+
+      <div class="answer-row">
         <input id="answer" placeholder="答えを入力">
         <button onclick="check()">答える</button>
       </div>
 
-      <p id="result"></p>
-      <p id="score">スコア:0</p>
+      <div class="result-box">
+        <p id="result">結果:</p>
+        <p id="score">スコア:0</p>
+      </div>
     </div>
 
     <div class="card">
       <h3>二次関数のグラフ</h3>
       <canvas id="graph"></canvas>
 
-      <p class="legend">
-        🔴 頂点　🟡 y切片　🟢 x切片
-      </p>
+      <div class="legend">
+        <span class="dot red"></span>頂点
+        <span class="dot yellow"></span>y切片
+        <span class="dot green"></span>x切片
+      </div>
     </div>
-  </div>
 
-  <!-- 右 -->
-  <div class="right">
+    <div class="card example">
+      <h3>💡 場合分けの具体例</h3>
+      <div class="example-grid">
+        <div class="ex blue">
+          <p>上に凸 → 最小</p>
+        </div>
+        <div class="ex purple">
+          <p>下に凸 → 最大</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- RIGHT -->
+  <aside class="right">
+
     <div class="card">
       <h3>分析（弱点）</h3>
-      <p id="status"></p>
+      <p id="status">basic (50%)</p>
       <canvas id="weakChart" width="250" height="200"></canvas>
-      <button onclick="weakMode()">弱点特訓モード</button>
+      <button class="full" onclick="weakMode()">弱点特訓モード</button>
     </div>
 
     <div class="card">
@@ -74,12 +100,14 @@
 
     <div class="card">
       <h3>データ管理</h3>
-      <button onclick="downloadBackup()">データを保存（バックアップ）</button>
+      <button class="full" onclick="downloadBackup()">データ保存</button>
       <input type="file" onchange="loadBackup(event)">
+      <button class="blue full">データ復元</button>
     </div>
-  </div>
 
-</div>
+  </aside>
+
+</main>
 
 <script src="app.js"></script>
 </body>
