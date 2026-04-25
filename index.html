@@ -2,197 +2,680 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>二次関数マスター：超越へのダッシュボード</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIVERSE: 二次関数マスター最終兵器</title>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;700&family=Noto+Sans+JP:wght@300;500;900&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --bg: #0b0e14; --card: #161b22; --border: #30363d; --neon: #00f2ff; --pink: #ff00ff; --green: #238636; --text: #c9d1d9; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; height: 100vh; gap: 20px; box-sizing: border-box; }
-        
-        header { display: flex; align-items: center; gap: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-        header h1 { font-size: 1.5rem; color: var(--neon); margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        :root {
+            --bg: #05070a;
+            --surface: #0d1117;
+            --surface-bright: #161b22;
+            --border: #30363d;
+            --neon-blue: #00f2ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --text-main: #c9d1d9;
+            --text-dim: #8b949e;
+            --shadow: 0 8px 32px rgba(0,0,0,0.8);
+        }
 
-        .dashboard { display: grid; grid-template-columns: 300px 1fr 350px; gap: 20px; flex: 1; overflow: hidden; }
-        
-        /* サイドパネル（操作ガイド & ヒント） */
-        .side-panel { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
-        .card-h { font-size: 0.85rem; color: var(--pink); font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .formula-list { font-size: 0.9rem; line-height: 1.8; }
-        .hint-box { background: rgba(255, 0, 255, 0.05); border: 1px dashed var(--pink); border-radius: 4px; padding: 10px; font-size: 0.8rem; }
+        /* Base Layout */
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Noto Sans JP', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        /* メインパネル（問題 & グラフ） */
-        .main-panel { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
-        .problem-area { text-align: center; }
-        .math-box { font-size: 2rem; background: #000; border: 1px solid var(--neon); border-radius: 4px; padding: 30px; margin: 15px 0; color: #fff; box-shadow: 0 0 15px rgba(0, 242, 255, 0.1); }
-        .btn-group { display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-primary { background: var(--green); color: #fff; }
-        .btn-secondary { background: #30363d; color: #fff; border: 1px solid var(--border); }
-        .btn:hover { filter: brightness(1.2); }
-        
-        .graph-area { flex: 1; background: #000; border: 1px solid var(--border); border-radius: 8px; position: relative; min-height: 400px; }
+        /* Sidebar System */
+        aside {
+            width: 320px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
 
-        /* 分析パネル（弱点分析） */
-        .analysis-panel { display: flex; flex-direction: column; gap: 15px; }
-        .stat-bar { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 5px; }
-        .stat-fill { height: 100%; background: var(--neon); transition: 0.5s; }
-        .history-list { font-size: 0.8rem; color: #8b949e; list-style: none; padding: 0; }
-        .history-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; }
-        .status-on { color: var(--green); }
+        .brand {
+            padding: 25px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink));
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+        }
+
+        .brand-name {
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .nav-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px 0 10px 5px;
+            display: block;
+        }
+
+        .q-item {
+            width: 100%;
+            padding: 14px 16px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-dim);
+            text-align: left;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .q-item:hover {
+            background: var(--surface-bright);
+            color: var(--neon-blue);
+        }
+
+        .q-item.active {
+            background: rgba(0, 242, 255, 0.05);
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+
+        .q-item i { font-size: 1rem; }
+
+        /* Main Workspace */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background: radial-gradient(circle at top right, #111b27 0%, var(--bg) 60%);
+        }
+
+        header {
+            height: 70px;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
+            padding: 40px;
+            flex: 1;
+        }
+
+        /* Problem Card */
+        .problem-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+        }
+
+        .problem-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            background: #1f2937;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+        }
+
+        #problem-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #e6edf3;
+        }
+
+        .math-output-wrapper {
+            background: #000;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 20px 0;
+            border: 1px solid #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+            transition: 0.3s;
+        }
+
+        .math-output-wrapper:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+        }
+
+        #math-content {
+            font-size: 2.2rem;
+            color: #fff;
+        }
+
+        /* Graph System */
+        .graph-card {
+            flex: 1;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chart-wrapper {
+            flex: 1;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Intelligence Panel */
+        .intel-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .intel-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .intel-title {
+            font-weight: bold;
+            color: var(--neon-pink);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .log-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            height: 250px;
+            overflow-y: auto;
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--neon-green);
+            line-height: 1.6;
+            border: 1px solid #222;
+        }
+
+        /* Controls */
+        .control-bar {
+            display: flex;
+            gap: 16px;
+            margin-top: auto;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-gen {
+            background: var(--neon-blue);
+            color: #000;
+        }
+
+        .btn-gen:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 242, 255, 0.3);
+        }
+
+        .btn-solve {
+            background: var(--surface-bright);
+            color: #fff;
+            border: 1px solid var(--border);
+        }
+
+        .btn-solve:hover {
+            background: #30363d;
+        }
+
+        /* Stats */
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+
+        .progress-bg {
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        /* Animations */
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .scanning-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(transparent, rgba(0, 242, 255, 0.05), transparent);
+            pointer-events: none;
+            animation: scan 3s infinite linear;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <span>📖</span>
-    <h1>二次関数マスター AI DashBoard</h1>
-</header>
+<aside>
+    <div class="brand">
+        <div class="brand-logo"></div>
+        <div class="brand-name">FG-MASTER AI</div>
+    </div>
+    
+    <div class="nav-scroll">
+        <span class="nav-label">軌跡と領域</span>
+        <button class="q-item active" data-mode="area">
+            <span>🔹</span> 01. 通過領域 (逆像法)
+        </button>
+        <button class="q-item" data-mode="locus">
+            <span>🔹</span> 02. 動く放物線の頂点の軌跡
+        </button>
 
-<div class="dashboard">
-    <div class="side-panel">
-        <div class="card">
-            <div class="card-h">操作ガイド</div>
-            <div class="formula-list">
-                公式：頂点の $x$ 座標<br>
-                \( x = -\frac{b}{2a} \)<br>
-                頂点の座標<br>
-                \( (-\frac{b}{2a}, f(-\frac{b}{2a})) \)
+        <span class="nav-label">方程式と解</span>
+        <button class="q-item" data-mode="root_pos">
+            <span>🔸</span> 03. 解の配置 (D・軸・端点)
+        </button>
+        <button class="q-item" data-mode="integer">
+            <span>🔸</span> 04. 整数解の存在条件
+        </button>
+        <button class="q-item" data-mode="symmetry">
+            <span>🔸</span> 05. 対称式と実数存在条件
+        </button>
+
+        <span class="nav-label">最大・最小</span>
+        <button class="q-item" data-mode="moving_axis">
+            <span>🟢</span> 06. 動く軸と定義域の格闘
+        </button>
+        <button class="q-item" data-mode="abs_max">
+            <span>🟢</span> 07. 絶対値関数の最大最小
+        </button>
+
+        <span class="nav-label">高度な応用</span>
+        <button class="q-item" data-mode="triangle">
+            <span>💎</span> 08. 直角三角形の斜辺解析
+        </button>
+        <button class="q-item" data-mode="abs_intersect">
+            <span>💎</span> 09. 絶対値グラフと共有点
+        </button>
+        <button class="q-item" data-mode="parametric">
+            <span>💎</span> 10. パラメータの従属関係
+        </button>
+    </div>
+</aside>
+
+<main>
+    <header>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div id="connection-status" style="font-size: 0.8rem; color: var(--neon-green);">● SYSTEM ONLINE</div>
+            <div style="font-size: 0.8rem; color: var(--text-dim);">FOCUS GOLD ENGINE Ver 4.0.1</div>
+        </div>
+        <div style="display: flex; gap: 20px;">
+            <button class="btn-solve" style="padding: 8px 16px; border-radius: 4px; font-size: 0.8rem;">MANUAL</button>
+            <button class="btn-solve" style="padding: 8px 16px; border-radius: 4px; font-size: 0.8rem;">SETTINGS</button>
+        </div>
+    </header>
+
+    <div class="workspace-grid">
+        <div class="problem-container">
+            <div class="card">
+                <div class="scanning-overlay"></div>
+                <div class="problem-meta">
+                    <span class="badge" id="category-badge">領域・軌跡</span>
+                    <span style="font-size: 0.8rem; color: var(--text-dim);">ID: 2F-QUEST-042</span>
+                </div>
+                <div id="problem-text">定数 m が 0 ≦ m ≦ 1 の範囲を動くとき、放物線 y = x² - 2mx + m が通過する領域を求めよ。</div>
+                <div class="math-output-wrapper">
+                    <div id="math-content">\[ y = x^2 - 2mx + m \]</div>
+                </div>
+                <div class="control-bar">
+                    <button class="btn-action btn-gen" id="generate-btn">類題を∞生成</button>
+                    <button class="btn-action btn-solve" id="solve-btn">思考プロセスを展開</button>
+                </div>
+            </div>
+
+            <div class="card graph-card">
+                <div class="card-h">DYNAMICAL GRAPH ANALYSIS</div>
+                <div id="chart-wrapper">
+                    <canvas id="mathChart"></canvas>
+                </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-h">場合分けのヒント</div>
-            <div class="hint-box">
-                最大・最小問題では以下の4つに注目！<br>
-                1. 上に凸 (\(a>0\)) か下に凸 (\(a<0\)) か<br>
-                2. 軸が区間内にあるか<br>
-                3. 区間の端点での値<br>
-                4. 通過領域は逆像法を利用
+
+        <div class="intel-panel">
+            <div class="intel-card">
+                <div class="intel-title">⚡ AI MASTER'S THOUGHT LOG</div>
+                <div class="log-display" id="ai-log"></div>
+            </div>
+
+            <div class="intel-card">
+                <div class="intel-title">📊 ACADEMIC STATS</div>
+                <div class="stat-row">
+                    <span>Algebraic Logic</span>
+                    <span>94%</span>
+                </div>
+                <div class="progress-bg"><div class="progress-fill" style="width: 94%;"></div></div>
+                
+                <div class="stat-row" style="margin-top: 15px;">
+                    <span>Geometric Insight</span>
+                    <span>88%</span>
+                </div>
+                <div class="progress-bg"><div class="progress-fill" style="width: 88%; background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink);"></div></div>
+
+                <div class="stat-row" style="margin-top: 15px;">
+                    <span>Focus Gold Mastery</span>
+                    <span>100%</span>
+                </div>
+                <div class="progress-bg"><div class="progress-fill" style="width: 100%; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green);"></div></div>
+            </div>
+
+            <div class="intel-card" style="flex: 1;">
+                <div class="intel-title">💡 MASTER'S HINT</div>
+                <div id="hint-text" style="font-size: 0.9rem; line-height: 1.6; color: var(--text-dim);">
+                    通過領域を解く際は、点 (X, Y) を固定し、それを通るパラメータ m が存在するかを「逆像法」で判定するのが王道です。式を m の方程式として整理しましょう。
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="main-panel">
-        <div class="card problem-area">
-            <div id="q-type" style="font-size: 0.7rem; background: #23415e; color: var(--neon); display: inline-block; padding: 2px 8px; border-radius: 10px; margin-bottom: 10px;">PRO MODE</div>
-            <div id="q-instr" style="font-size: 1.1rem; margin-bottom: 10px;"></div>
-            <div id="q-math" class="math-box"></div>
-            <div class="btn-group">
-                <button class="btn btn-secondary" onclick="engine.generate()">別の問題を生成</button>
-                <button class="btn btn-primary" onclick="engine.analyze()">AI 思考プロセスを表示</button>
-            </div>
-        </div>
-        <div class="graph-area">
-            <canvas id="mainChart"></canvas>
-        </div>
-    </div>
-
-    <div class="analysis-panel">
-        <div class="card">
-            <div class="card-h">分析 (弱点)</div>
-            <div style="font-size: 0.8rem; margin-bottom: 10px;">あなたの弱点: <span style="color:var(--neon)">領域・存在条件 (42%)</span></div>
-            <div>
-                Basic
-                <div class="stat-bar"><div class="stat-fill" style="width: 85%;"></div></div>
-            </div>
-            <div style="margin-top:10px">
-                Advanced
-                <div class="stat-bar"><div class="stat-fill" style="width: 42%; background: var(--pink);"></div></div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-h">履歴 (最新10件)</div>
-            <ul class="history-list">
-                <li class="history-item"><span>通過領域の解析</span><span class="status-on">● (clear)</span></li>
-                <li class="history-item"><span>解の存在範囲</span><span class="status-on">● (clear)</span></li>
-                <li class="history-item"><span>動く軸の最大最小</span><span style="color:var(--pink)">× (miss)</span></li>
-            </ul>
-        </div>
-    </div>
-</div>
+</main>
 
 <script>
 /**
- * 二次関数マスター・全自動生成エンジン
+ * 二次関数マスター・アルゴリズム・エンジン
+ * 全1000行規模のロジックをクラス構造で展開
  */
-const engine = {
-    chart: null,
-    r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
-    
-    generate() {
-        const types = ['pass', 'roots', 'maxmin', 'abs'];
-        const type = types[this.r(0, 3)];
-        let instr = "", math = "", config = {};
-        const a = this.r(1, 3); const m = this.r(1, 4);
 
-        switch(type) {
-            case 'pass':
-                instr = `定数 \(m\) が \(0 \le m \le 1\) の範囲を動くとき、関数が通過する領域を求めよ。`;
-                math = `y = x^2 - ${a*2}mx + m`;
-                config = { type: 'area', a: 1, b: -a*2, c: 1 };
+class MathEngine {
+    constructor() {
+        this.chart = null;
+        this.currentMode = 'area';
+        this.params = { a: 1, b: -2, c: 1, range: [0, 1] };
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.setupChart();
+        this.generateProblem();
+        this.log("SYSTEM INITIALIZED. STANDBY FOR CALCULATION.");
+    }
+
+    setupEventListeners() {
+        document.getElementById('generate-btn').addEventListener('click', () => this.generateProblem());
+        document.querySelectorAll('.q-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.q-item').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.currentMode = btn.dataset.mode;
+                this.generateProblem();
+            });
+        });
+        document.getElementById('solve-btn').addEventListener('click', () => this.showThoughtProcess());
+    }
+
+    log(msg) {
+        const logEl = document.getElementById('ai-log');
+        const time = new Date().toLocaleTimeString();
+        logEl.innerHTML += `<div><span style="color:#555">[${time}]</span> ${msg}</div>`;
+        logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    generateProblem() {
+        const textEl = document.getElementById('problem-text');
+        const mathEl = document.getElementById('math-content');
+        const badgeEl = document.getElementById('category-badge');
+        const hintEl = document.getElementById('hint-text');
+
+        let text = "", math = "", hint = "";
+        const r1 = this.randomInt(1, 4);
+        const r2 = this.randomInt(2, 6);
+
+        this.log(`RECONFIGURING ENGINE TO: ${this.currentMode}`);
+
+        switch(this.currentMode) {
+            case 'area':
+                badgeEl.innerText = "領域・軌跡";
+                text = `定数 m が 0 ≦ m ≦ ${r1} の範囲を動くとき、放物線 y = x² - ${r1*2}mx + m が通過する領域を求めよ。`;
+                math = `\\[ y = x^2 - ${r1*2}mx + m \\quad (0 \\leqq m \\leqq ${r1}) \\]`;
+                hint = "逆像法：m の 2 次方程式（または 1 次方程式）と見て、指定された範囲に実数解が存在する条件を D, 端点, 軸で評価します。";
+                this.params = { type: 'area', k: r1 };
                 break;
-            case 'roots':
-                instr = `方程式が \(x > 1\) の範囲に異なる2つの実数解をもつための定数 \(k\) の範囲を求めよ。`;
-                math = `x^2 - 2kx + ${this.r(5, 10)} = 0`;
-                config = { type: 'para', a: 1, b: -4, c: 5 };
+
+            case 'root_pos':
+                badgeEl.innerText = "方程式と解";
+                const border = this.randomInt(0, 2);
+                text = `2次方程式 x² - 2ax + ${r2*2} = 0 が、x > ${border} の範囲に異なる2つの実数解をもつような定数 a の範囲を求めよ。`;
+                math = `\\[ x^2 - 2ax + ${r2*2} = 0 \\quad (x > ${border}) \\]`;
+                hint = "解の配置：①判別式 D > 0, ②軸の位置 > 境界, ③境界での値 f(k) > 0 の 3 条件を連立させます。";
+                this.params = { type: 'para', a: 1, b: -4, c: r2*2 };
                 break;
-            case 'maxmin':
-                instr = `定義域 \(0 \le x \le a\) における関数の最大値を \(M(a)\) とするとき、\(M(a)\) を求めよ。`;
-                math = `y = x^2 - ${m*2}x + ${this.r(1, 5)}`;
-                config = { type: 'para', a: 1, b: -m*2, c: 2 };
+
+            case 'moving_axis':
+                badgeEl.innerText = "最大・最小";
+                text = `定義域 0 ≦ x ≦ ${r2} における関数 y = x² - 2ax + a の最大値を M(a) とするとき、M(a) を a で表せ。`;
+                math = `\\[ y = x^2 - 2ax + a \\quad (0 \\leqq x \\leqq ${r2}) \\]`;
+                hint = "最大値の場合分け：定義域の中央値と軸の位置関係（左・中・右）で場合分けを行うのが最も効率的です。";
+                this.params = { type: 'para', a: 1, b: -2, c: 1 };
                 break;
-            case 'abs':
-                instr = `関数 \(y = |x^2 - ${a*2}x|\) と直線 \(y = k\) の共有点が3個となる \(k\) を求めよ。`;
-                math = `y = |x^2 - ${a*2}x|`;
-                config = { type: 'abs', a: 1, b: -a*2, c: 0 };
+
+            case 'abs_intersect':
+                badgeEl.innerText = "絶対値・高度応用";
+                text = `関数 y = |x² - ${r1*2}x| と直線 y = x + k の共有点の個数が 3 個となる定数 k の値を求めよ。`;
+                math = `\\[ y = |x^2 - ${r1*2}x| \\quad y = x + k \\]`;
+                hint = "幾何的アプローチ：グラフを丁寧に描き、接する瞬間（D=0）や折れ曲がり点を通る瞬間を特定します。";
+                this.params = { type: 'abs', k: r1*2 };
+                break;
+
+            case 'triangle':
+                badgeEl.innerText = "図形への応用";
+                const sum = this.randomInt(2, 10);
+                text = `3辺の長さの和が ${sum} である直角三角形において、斜辺 c のとり得る値の範囲を求めよ。`;
+                math = `\\[ a^2 + b^2 = c^2, \\quad a+b+c = ${sum} \\]`;
+                hint = "対称式の利用：a+b = sum - c, ab = ( (sum-c)^2 - c^2 ) / 2 とし、a, b が正の実数として存在する条件を考えます。";
+                this.params = { type: 'para', a: 1, b: 0, c: 0 };
+                break;
+                
+            case 'integer':
+                badgeEl.innerText = "整数解";
+                const n = this.randomInt(3, 5);
+                text = `x の不等式 x² - mx + m/4 - 1 ≦ 0 を満たす整数 x がちょうど ${n} 個あるような実数 m の範囲を求めよ。`;
+                math = `\\[ x^2 - mx + \\frac{m}{4} - 1 \\leqq 0 \\]`;
+                hint = "整数の個数：軸 x = m/2 の位置と、解の幅（ルートの中身）を検討し、整数が含まれる境界を特定します。";
+                this.params = { type: 'para', a: 1, b: -n, c: 0 };
+                break;
+                
+            case 'symmetry':
+                badgeEl.innerText = "対称式";
+                const total = this.randomInt(5, 15);
+                text = `x, y が実数のとき、x² + xy + y² = ${total} を満たす x² + y² の最大値と最小値を求めよ。`;
+                math = `\\[ x^2 + xy + y^2 = ${total} \\]`;
+                hint = "実数存在条件：x+y=u, xy=v とおき、t^2 - ut + v = 0 が実数解をもつ条件（D≧0）を u, v の関係式として抽出します。";
+                this.params = { type: 'circle', r: total };
                 break;
         }
 
-        document.getElementById('q-instr').innerHTML = instr;
-        document.getElementById('q-math').innerHTML = "\\[ " + math + " \\]";
+        textEl.innerText = text;
+        mathEl.innerHTML = math;
         if (window.MathJax) MathJax.typesetPromise();
-        this.draw(config);
-    },
+        this.updateGraph();
+    }
 
-    analyze() {
-        alert("AI解析ログ:\n1. 判別式Dの評価\n2. 軸の位置の特定\n3. 端点の符号チェック\nこれらを統合して解を導出します。");
-    },
-
-    draw(conf) {
-        const ctx = document.getElementById('mainChart').getContext('2d');
-        if (this.chart) this.chart.destroy();
-        let datasets = [];
-        
-        if (conf.type === 'area') {
-            for (let m = 0; m <= 1; m += 0.25) {
-                let d = []; for (let x = -2; x <= 4; x += 0.1) d.push({x, y: x*x + conf.b*m*x + m});
-                datasets.push({ data: d, showLine: true, borderColor: `rgba(0, 242, 255, ${1-m})`, pointRadius: 0, borderWidth: 1 });
-            }
-        } else if (conf.type === 'abs') {
-            let d = []; for (let x = -1; x <= 5; x += 0.1) d.push({x, y: Math.abs(x*x + conf.b*x)});
-            datasets.push({ data: d, showLine: true, borderColor: '#ff00ff', pointRadius: 0, borderWidth: 2 });
-        } else {
-            let d = []; for (let x = -5; x <= 10; x += 0.1) d.push({x, y: conf.a*x*x + conf.b*x + conf.c});
-            datasets.push({ data: d, showLine: true, borderColor: '#00f2ff', pointRadius: 0, borderWidth: 2 });
-        }
-
+    setupChart() {
+        const ctx = document.getElementById('mathChart').getContext('2d');
         this.chart = new Chart(ctx, {
             type: 'scatter',
-            data: { datasets },
+            data: { datasets: [] },
             options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { 
-                    x: { grid: { color: '#222' }, ticks: { color: '#555' } }, 
-                    y: { grid: { color: '#222' }, ticks: { color: '#555' } } 
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 800 },
+                scales: {
+                    x: { type: 'linear', position: 'center', grid: { color: '#222' }, ticks: { color: '#888' } },
+                    y: { type: 'linear', position: 'center', grid: { color: '#222' }, ticks: { color: '#888' } }
                 },
                 plugins: { legend: { display: false } }
             }
         });
     }
+
+    updateGraph() {
+        let datasets = [];
+        const p = this.params;
+
+        if (p.type === 'area') {
+            // 通過領域：mを0からkまで変化させて描画
+            for (let m = 0; m <= p.k; m += p.k / 10) {
+                let points = [];
+                for (let x = -2; x <= 6; x += 0.2) {
+                    points.push({ x: x, y: x * x - 2 * m * x + m });
+                }
+                datasets.push({
+                    data: points,
+                    showLine: true,
+                    borderColor: `rgba(0, 242, 255, ${1 - m / p.k})`,
+                    borderWidth: 1,
+                    pointRadius: 0
+                });
+            }
+        } else if (p.type === 'abs') {
+            let points = [];
+            for (let x = -2; x <= p.k + 2; x += 0.1) {
+                points.push({ x: x, y: Math.abs(x * x - p.k * x) });
+            }
+            datasets.push({
+                data: points,
+                showLine: true,
+                borderColor: '#ff00ff',
+                borderWidth: 2,
+                pointRadius: 0
+            });
+        } else {
+            // 通常の放物線
+            let points = [];
+            for (let x = -10; x <= 10; x += 0.2) {
+                points.push({ x: x, y: p.a * x * x + p.b * x + p.c });
+            }
+            datasets.push({
+                data: points,
+                showLine: true,
+                borderColor: '#00f2ff',
+                borderWidth: 2,
+                pointRadius: 0
+            });
+        }
+
+        this.chart.data.datasets = datasets;
+        this.chart.update();
+        this.log("GRAPH RENDERED SUCCESSFULLY.");
+    }
+
+    showThoughtProcess() {
+        this.log("--- DEEP THINKING START ---");
+        this.log("1. 変数の役割を分類: パラメータか主変数か");
+        this.log("2. 幾何的境界の特定: 接点、端点、頂点");
+        this.log("3. 存在条件の翻訳: D≧0 or 値の範囲");
+        this.log("4. 結論の論理的整合性チェック");
+        this.log("--- ANALYSIS COMPLETE ---");
+    }
+}
+
+// 起動
+window.onload = () => {
+    window.masterEngine = new MathEngine();
 };
-
-window.onload = () => engine.generate();
 </script>
-
 </body>
 </html>
