@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- フォント -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<!-- フォント完全一致 -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -16,148 +16,186 @@
 <title>二次関数嫌い</title>
 
 <style>
-body{
-  font-family: 'Inter', sans-serif;
-}
+body{font-family:'Inter',sans-serif;}
 </style>
-
 </head>
 
 <body class="bg-gradient-to-br from-[#0b1f35] to-[#020617] text-white">
 
-<h1 class="text-2xl font-semibold p-6">📘 二次関数嫌い</h1>
+<h1 class="text-[22px] font-semibold px-6 py-5">📘 二次関数嫌い</h1>
 
-<div class="grid grid-cols-1 lg:grid-cols-[260px_1fr_320px] gap-6 px-6 pb-10">
+<div class="grid lg:grid-cols-[260px_1fr_320px] gap-6 px-6 pb-10">
 
-  <!-- 左 -->
-  <div class="space-y-6">
-    <div class="bg-white/5 border border-white/10 rounded-xl p-4 shadow-xl">
-      <p class="mb-2">名前を入力</p>
-      <input id="username" class="w-full p-3 rounded-lg bg-[#111827]">
-      <button onclick="start()" class="w-full mt-3 bg-green-500 hover:bg-green-600 p-3 rounded-lg">開始</button>
-    </div>
+<!-- LEFT -->
+<div class="space-y-6">
 
-    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-      <p>頂点 x = -b / 2a</p>
-    </div>
+<div class="bg-white/5 border border-white/10 rounded-xl p-5 shadow-2xl backdrop-blur-xl">
+<p class="mb-2 text-sm">名前を入力</p>
+<input id="username" class="w-full p-3 rounded-lg bg-[#111827] outline-none">
+<button onclick="start()" class="w-full mt-3 bg-green-500 hover:bg-green-600 transition p-3 rounded-lg">
+開始
+</button>
+</div>
 
-    <div class="bg-purple-500/10 border border-purple-400 rounded-xl p-4">
-      <p>a > 0 → 最小</p>
-      <p>a < 0 → 最大</p>
-    </div>
-  </div>
+<div class="bg-white/5 border border-white/10 rounded-xl p-5">
+<p class="text-sm">頂点 x = -b / 2a</p>
+</div>
 
-  <!-- 中央 -->
-  <div class="space-y-6">
+<div class="bg-purple-500/10 border border-purple-400 rounded-xl p-5">
+<p class="text-sm">a > 0 → 最小</p>
+<p class="text-sm">a < 0 → 最大</p>
+<p class="text-sm">区間 → 端点＋頂点</p>
+</div>
 
-    <div class="bg-white/5 border border-white/10 rounded-xl p-6 shadow-xl">
+</div>
 
-      <span class="bg-sky-500 text-xs px-3 py-1 rounded-full">問題タイプ: normal</span>
+<!-- CENTER -->
+<div class="space-y-6">
 
-      <div id="question" class="text-center text-2xl mt-6 mb-6"></div>
+<div class="bg-white/5 border border-white/10 rounded-xl p-6 shadow-2xl backdrop-blur-xl">
 
-      <div class="flex gap-3">
-        <input id="answer" class="flex-1 p-3 rounded-lg bg-[#111827]" placeholder="答えを入力">
-        <button onclick="check()" class="bg-green-500 px-6 rounded-lg">答える</button>
-      </div>
+<span class="bg-sky-500 text-xs px-3 py-1 rounded-full">
+問題タイプ: normal
+</span>
 
-      <div class="mt-4 text-sm">
-        <p id="result">結果:</p>
-        <p id="score">スコア:0</p>
-      </div>
-    </div>
+<div id="question" class="text-center text-[24px] font-semibold mt-6 mb-6 leading-relaxed"></div>
 
-    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-      <p class="mb-2">二次関数のグラフ</p>
-      <canvas id="graph"></canvas>
-    </div>
+<div class="flex gap-3">
+<input id="answer" class="flex-1 p-3 rounded-lg bg-[#111827] outline-none">
+<button onclick="check()" class="bg-green-500 hover:bg-green-600 transition px-6 rounded-lg">
+答える
+</button>
+</div>
 
-  </div>
+<div class="mt-4 text-sm">
+<p id="result">結果:</p>
+<p id="score">スコア:0</p>
+</div>
 
-  <!-- 右 -->
-  <div class="space-y-6">
+</div>
 
-    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-      <p class="mb-2">分析</p>
-      <p class="mb-3">basic (50%)</p>
-      <canvas id="chart"></canvas>
-      <button class="w-full mt-3 bg-green-500 p-3 rounded-lg">弱点特訓</button>
-    </div>
+<div class="bg-white/5 border border-white/10 rounded-xl p-4">
+<p class="mb-2 text-sm">二次関数のグラフ</p>
+<canvas id="graph"></canvas>
+</div>
 
-    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-      <p>履歴</p>
-      <ul id="history"></ul>
-    </div>
+</div>
 
-  </div>
+<!-- RIGHT -->
+<div class="space-y-6">
+
+<div class="bg-white/5 border border-white/10 rounded-xl p-5">
+<p class="text-sm mb-2">分析</p>
+<p class="text-sm mb-3">basic (50%)</p>
+<canvas id="chart"></canvas>
+<button class="w-full mt-3 bg-green-500 hover:bg-green-600 transition p-3 rounded-lg">
+弱点特訓モード
+</button>
+</div>
+
+<div class="bg-white/5 border border-white/10 rounded-xl p-5">
+<p class="text-sm">履歴</p>
+<ul class="text-sm mt-2 space-y-1">
+<li>● 正解 (basic)</li>
+<li>● 不正解 (normal)</li>
+</ul>
+</div>
+
+</div>
 
 </div>
 
 <script>
-let a=2,b=-3,c=1;
+let a,b,c,correct,score=0;
+let graphChart;
+
+window.onload=start;
 
 function start(){
-  generate();
+generate();
 }
 
 function generate(){
-  a=Math.floor(Math.random()*3)+1;
-  b=Math.floor(Math.random()*11)-5;
-  c=Math.floor(Math.random()*6)-3;
+a=Math.floor(Math.random()*3)+1;
+b=Math.floor(Math.random()*11)-5;
+c=Math.floor(Math.random()*6)-3;
 
-  document.getElementById("question").innerText =
-    `y = ${a}x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c}
+correct=-b/(2*a);
+
+document.getElementById("question").innerText =
+`y = ${a}x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c}
 の頂点のx座標を求めよ`;
 
-  drawGraph();
+drawGraph();
 }
 
 function check(){
-  generate();
+let ans=Number(document.getElementById("answer").value);
+let ok=Math.abs(ans-correct)<0.5;
+
+document.getElementById("result").innerText =
+ok ? "正解！" : "不正解："+correct.toFixed(2);
+
+score += ok ? 10 : -5;
+document.getElementById("score").innerText="スコア:"+score;
+
+generate();
 }
 
-/* グラフ（Chart.js） */
 function drawGraph(){
-  const ctx=document.getElementById("graph");
+const ctx=document.getElementById("graph");
 
-  let data=[];
-  for(let x=-10;x<=10;x+=0.5){
-    data.push({x:x,y:a*x*x+b*x+c});
-  }
-
-  new Chart(ctx,{
-    type:'line',
-    data:{
-      datasets:[{
-        label:'graph',
-        data:data,
-        borderColor:'#38bdf8',
-        tension:0.3
-      }]
-    },
-    options:{
-      scales:{
-        x:{type:'linear',grid:{color:'#444'}},
-        y:{grid:{color:'#444'}}
-      }
-    }
-  });
+let data=[];
+for(let x=-10;x<=10;x+=0.2){
+data.push({x:x,y:a*x*x+b*x+c});
 }
 
-/* 分析グラフ */
+if(graphChart) graphChart.destroy();
+
+graphChart=new Chart(ctx,{
+type:'line',
+data:{
+datasets:[{
+data:data,
+borderColor:'#38bdf8',
+pointRadius:0,
+tension:0.25
+}]
+},
+options:{
+plugins:{legend:{display:false}},
+scales:{
+x:{
+type:'linear',
+grid:{color:'rgba(255,255,255,0.08)'},
+ticks:{color:'#aaa'}
+},
+y:{
+grid:{color:'rgba(255,255,255,0.08)'},
+ticks:{color:'#aaa'}
+}
+}
+}
+});
+}
+
 new Chart(document.getElementById("chart"),{
-  type:'bar',
-  data:{
-    labels:['basic','normal','advanced'],
-    datasets:[{
-      data:[50,66,33],
-      backgroundColor:['#22c55e','#3b82f6','#a855f7']
-    }]
-  },
-  options:{
-    plugins:{legend:{display:false}},
-    scales:{y:{beginAtZero:true,max:100}}
-  }
+type:'bar',
+data:{
+labels:['basic','normal','advanced'],
+datasets:[{
+data:[50,70,30],
+backgroundColor:['#22c55e','#3b82f6','#a855f7'],
+borderRadius:6
+}]
+},
+options:{
+plugins:{legend:{display:false}},
+scales:{
+y:{beginAtZero:true,max:100,ticks:{color:'#aaa'}},
+x:{ticks:{color:'#aaa'}}
+}
+}
 });
 </script>
 
