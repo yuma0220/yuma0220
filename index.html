@@ -2,27 +2,36 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ポータブル教頭：完全版（分数・類題強化）</title>
+    <title>ポータブル教頭：MathJax完全対応版</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+            chtml: { displayAlign: 'center' }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
             --bg: #050505; --sidebar: #0a0a0a; --card: #111; --border: #333;
             --neon: #00f2ff; --neon-sub: #39ff14; --text: #eee; --ans: #ffcc00;
         }
-        body { background: var(--bg); color: var(--text); font-family: 'Consolas', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: 'Consolas', 'Hiragino Kaku Gothic ProN', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        aside { width: 320px; background: var(--sidebar); border-right: 2px solid var(--neon); padding: 20px; overflow-y: auto; }
+        aside { width: 320px; background: var(--sidebar); border-right: 2px solid var(--neon); padding: 20px; overflow-y: auto; scrollbar-width: thin; }
         .brand { border-bottom: 2px solid var(--neon); padding-bottom: 10px; margin-bottom: 20px; }
         .brand h1 { font-size: 1.2rem; color: var(--neon); margin: 0; }
-        .category-label { font-size: 0.75rem; color: #666; margin: 15px 0 8px; display: block; border-left: 3px solid #444; padding-left: 8px; }
+        .category-label { font-size: 0.75rem; color: #666; text-transform: uppercase; margin: 15px 0 8px; display: block; border-left: 3px solid #444; padding-left: 8px; font-weight: bold; }
         
-        .menu-btn { width: 100%; padding: 10px; background: #111; border: 1px solid var(--border); color: #888; text-align: left; cursor: pointer; margin-bottom: 5px; border-radius: 4px; font-size: 0.85rem; }
-        .menu-btn.active { border-color: var(--neon); background: rgba(0, 242, 255, 0.1); color: #fff; }
+        .menu-btn { width: 100%; padding: 10px 12px; background: #111; border: 1px solid var(--border); color: #888; text-align: left; cursor: pointer; margin-bottom: 5px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; }
+        .menu-btn:hover { border-color: var(--neon); color: #fff; }
+        .menu-btn.active { border-color: var(--neon); background: rgba(0, 242, 255, 0.1); color: #fff; box-shadow: 0 0 10px rgba(0, 242, 255, 0.1); }
+        .menu-btn.kiso-btn { border-left: 4px solid var(--neon-sub); }
+        .menu-btn.nanmon-btn { border-left: 4px solid #ff00ff; }
 
         main { flex: 1; padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
-        .problem-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; }
-        .math-display { background: #000; border: 1px solid #222; padding: 20px; margin: 15px 0; border-radius: 8px; min-height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #fff; }
+        .problem-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; flex-shrink: 0; }
+        .math-display { background: #000; border: 1px solid #222; padding: 20px; margin: 15px 0; border-radius: 8px; min-height: 100px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; }
         
         .ans-section { margin-top: 15px; padding: 15px; background: rgba(255, 204, 0, 0.05); border: 1px dashed var(--ans); border-radius: 8px; display: none; color: var(--ans); font-size: 1.1rem; line-height: 1.8; }
         .btn-group { display: flex; gap: 10px; }
@@ -30,7 +39,7 @@
         .btn-gen { background: var(--neon); color: #000; }
         .btn-ans { background: #444; color: #fff; }
 
-        .graph-wrap { height: 300px; background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 10px; flex-shrink: 0; }
+        .graph-wrap { flex: 1; min-height: 300px; background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
     </style>
 </head>
 <body>
@@ -38,18 +47,26 @@
 <aside>
     <div class="brand"><h1>PORTABLE KYOTO</h1></div>
     <span class="category-label">【基礎：星1〜2】</span>
-    <button class="menu-btn active" onclick="app.setMode('k_square', this)">平方完成と頂点</button>
-    <button class="menu-btn" onclick="app.setMode('k_maxmin', this)">最大・最小の基本</button>
-    <button class="menu-btn" onclick="app.setMode('k_ineq', this)">2次不等式の解法</button>
+    <button class="menu-btn kiso-btn active" onclick="app.setMode('k_square', this)">平方完成と頂点</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_move', this)">グラフの平行移動</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_axis', this)">3点から式を決定</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_maxmin', this)">最大・最小の基本</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_ineq', this)">2次不等式の解法</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_kouten', this)">x軸との共有点($D$)</button>
     <span class="category-label">【応用：星3〜4】</span>
-    <button class="menu-btn" onclick="app.setMode('a_root_pos', this)">解の配置($D$・軸・境界)</button>
-    <button class="menu-btn" onclick="app.setMode('a_abs', this)">絶対値関数の共有点</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_axis_move', this)">軸が動く最大最小</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_root_pos', this)">解の配置($D$・軸・境界)</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_area', this)">通過領域(逆像法)</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_abs', this)">絶対値関数の共有点</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_int', this)">整数解の個数限定</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_sym', this)">対称式の実数存在条件</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_tri', this)">直角三角形の斜辺範囲</button>
 </aside>
 
 <main>
     <div class="problem-card">
         <div id="instr" style="font-size: 1rem; color: #aaa;"></div>
-        <div class="math-display"><div id="math-box"></div></div>
+        <div class="math-display" id="math-box"></div>
         <div class="btn-group">
             <button class="btn btn-gen" onclick="app.generate()">類題を生成（数値変更）</button>
             <button class="btn btn-ans" onclick="app.toggleAns()">答えを表示/隠す</button>
@@ -84,85 +101,57 @@ const app = {
         box.style.display = (box.style.display === 'block') ? 'none' : 'block';
     },
 
-    generate() {
-        document.getElementById('ans-box').style.display = 'none';
-        const inst = document.getElementById('instr');
+    async generate() {
         const box = document.getElementById('math-box');
         const ans = document.getElementById('ans-box');
+        ans.style.display = 'none';
+        
         let t = "", m = "", a_text = "", conf = {};
-
-        // 乱数の種を毎回確実に変える
-        const seed1 = this.r(1, 5); const seed2 = this.r(-6, 6); const seed3 = this.r(-6, 6);
+        const av = this.r(1, 3); const bv = this.r(-8, 8); const cv = this.r(-8, 8);
 
         switch(this.mode) {
             case 'k_square':
-                // あえて奇数を含ませて分数にする
-                const A = this.r(1, 2); const B = this.r(1, 9) * (Math.random() > 0.5 ? 1 : -1);
-                const C = this.r(-5, 5);
                 t = "【基礎】次の2次関数を平方完成し、頂点の座標を答えよ。";
-                m = `y = ${A === 1 ? '' : A}x^2 ${B >= 0 ? '+' : ''}${B}x ${C >= 0 ? '+' : ''}${C}`;
-                // 頂点x = -B/(2A), y = C - B^2/(4A)
-                const vx_n = -B; const vx_d = 2 * A;
-                const vy_n = 4 * A * C - B * B; const vy_d = 4 * A;
-                a_text = `答え： $y = ${A === 1 ? '' : A}(x - ${this.frac(-vx_n, vx_d)})^2 ${vy_n >= 0 ? '+' : ''}${this.frac(vy_n, vy_d)}$ <br> 頂点は $( ${this.frac(vx_n, vx_d)}, ${this.frac(vy_n, vy_d)} )$`;
-                conf = { type: 'std', a: A, b: B, c: C }; break;
-
-            case 'k_maxmin':
-                const ma = this.r(1, 2); const mp = this.r(1, 4); const mq = this.r(-5, 5);
-                const r_end = this.r(4, 6);
-                t = `【基礎】$0 \\leqq x \\leqq ${r_end}$ における次の関数の最大・最小を求めよ。`;
-                m = `y = ${ma === 1 ? '' : ma}(x - ${mp})^2 ${mq >= 0 ? '+' : ''}${mq}`;
-                const v0 = ma * Math.pow(0 - mp, 2) + mq;
-                const vp = mq;
-                const ve = ma * Math.pow(r_end - mp, 2) + mq;
-                a_text = `答え： 最大値 ${Math.max(v0, ve)} , 最小値 ${vp} (頂点が範囲内のため)`;
-                conf = { type: 'p', a: ma, p: mp, q: mq }; break;
-
+                m = `y = ${av === 1 ? '' : av}x^2 ${bv >= 0 ? '+' : ''}${bv}x ${cv >= 0 ? '+' : ''}${cv}`;
+                const vx_n = -bv, vx_d = 2 * av;
+                const vy_n = 4 * av * cv - bv * bv, vy_d = 4 * av;
+                a_text = `答え： $y = ${av === 1 ? '' : av}(x - ${this.frac(-vx_n, vx_d)})^2 ${vy_n >= 0 ? '+' : ''}${this.frac(vy_n, vy_d)}$ <br> 頂点 $( ${this.frac(vx_n, vx_d)}, ${this.frac(vy_n, vy_d)} )$`;
+                conf = { type: 'std', a: av, b: bv, c: cv }; break;
             case 'k_ineq':
-                const x1 = this.r(-3, 2); const x2 = x1 + this.r(1, 5);
+                const x1 = this.r(-3, 1); const x2 = x1 + this.r(2, 4);
                 t = "【基礎】次の2次不等式を解け。";
                 m = `x^2 ${-(x1+x2) >= 0 ? '+' : ''}${-(x1+x2)}x ${x1*x2 >= 0 ? '+' : ''}${x1*x2} \\leqq 0`;
-                a_text = `答え： $(x ${-x1 >= 0 ? '+' : ''}${-x1})(x ${-x2 >= 0 ? '+' : ''}${-x2}) \\leqq 0$ より <br> $ ${x1} \\leqq x \\leqq ${x2} $`;
+                a_text = `答え： $(x ${-x1 >= 0 ? '+' : ''}${-x1})(x ${-x2 >= 0 ? '+' : ''}${-x2}) \\leqq 0$ より $ ${x1} \\leqq x \\leqq ${x2} $`;
                 conf = { type: 'std', a: 1, b: -(x1+x2), c: x1*x2 }; break;
-
             case 'a_root_pos':
-                const ak = this.r(2, 7); const ab = this.r(1, 3);
-                t = `【応用】$x^2 - 2ax + ${ak} = 0$ が $x > ${ab}$ の範囲に異なる2つの実数解をもつ定数 $a$ の範囲。`;
-                m = `x^2 - 2ax + ${ak} = 0 \\quad (x > ${ab})`;
-                a_text = `答え： ① $D/4 = a^2 - ${ak} > 0$ <br> ② 軸 $a > ${ab}$ <br> ③ $f(${ab}) = ${ab*ab} - 2(${ab})a + ${ak} > 0$ <br> これらを解いて： $\\sqrt{${ak}} < a < ${this.frac(ab*ab + ak, 2*ab)}$`;
+                const ak = this.r(3, 7);
+                t = `【応用】$x^2 - 2ax + ${ak} = 0$ が $x > 1$ の範囲に異なる2つの実数解をもつ $a$ の範囲。`;
+                m = `x^2 - 2ax + ${ak} = 0 \\quad (x > 1)`;
+                a_text = `答え： $D/4 > 0, \\text{軸} > 1, f(1) > 0$ を連立して $\\sqrt{${ak}} < a < ${this.frac(1+ak, 2)}$`;
                 conf = { type: 'std', a: 1, b: -4, c: ak }; break;
-
-            case 'a_abs':
-                const bk = this.r(2, 6);
-                t = `【応用】$y = |x^2 - ${bk*2}x|$ と直線 $y = k$ の共有点が3個となる $k$ の値を求めよ。`;
-                m = `y = |x^2 - ${bk*2}x|`;
-                a_text = `答え： 元の頂点は $(${bk}, -${bk*bk})$。折り返すと $(${bk}, ${bk*bk})$。 <br> よって、山なりに接する $k = ${bk*bk}$`;
-                conf = { type: 'abs', b: -bk*2 }; break;
+            default:
+                t = "類題を生成中..."; m = "y = x^2"; a_text = "解答準備中";
+                conf = { type: 'std', a: 1, b: 0, c: 0 };
         }
 
-        inst.innerHTML = t;
+        document.getElementById('instr').innerHTML = t;
         box.innerHTML = `\\[ ${m} \\]`;
         ans.innerHTML = a_text;
-        if (window.MathJax) MathJax.typesetPromise();
+
+        // MathJaxに再レンダリングを命令
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            await MathJax.typesetPromise([box, ans]);
+        }
         this.draw(conf);
     },
 
     draw(conf) {
         const ctx = document.getElementById('mainChart').getContext('2d');
         if (this.chart) this.chart.destroy();
-        let ds = [];
-        if (conf.type === 'p') {
-            let d = []; for(let x=conf.p-5; x<=conf.p+5; x+=0.2) d.push({x: x, y: conf.a*(x-conf.p)**2 + conf.q});
-            ds.push({ data: d, showLine: true, borderColor: '#00f2ff', borderWidth: 2, pointRadius: 0 });
-        } else if (conf.type === 'abs') {
-            let d = []; for(let x=-2; x<=10; x+=0.1) d.push({x: x, y: Math.abs(x*x + conf.b*x)});
-            ds.push({ data: d, showLine: true, borderColor: '#ff00ff', borderWidth: 2, pointRadius: 0 });
-        } else {
-            let d = []; for(let x=-10; x<=10; x+=0.2) d.push({x: x, y: conf.a*x*x + (conf.b||0)*x + (conf.c||0)});
-            ds.push({ data: d, showLine: true, borderColor: '#39ff14', borderWidth: 2, pointRadius: 0 });
-        }
+        let d = []; 
+        for(let x=-8; x<=8; x+=0.2) d.push({x: x, y: conf.a*x*x + (conf.b||0)*x + (conf.c||0)});
         this.chart = new Chart(ctx, {
-            type: 'scatter', data: { datasets: ds },
+            type: 'scatter', data: { datasets: [{ data: d, showLine: true, borderColor: '#00f2ff', borderWidth: 2, pointRadius: 0 }] },
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { position: 'center', grid:{color:'#222'} }, y: { position: 'center', grid:{color:'#222'} } }, plugins: { legend: { display: false } } }
         });
     }
