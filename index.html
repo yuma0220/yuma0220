@@ -3,50 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>二次関数トレーナー</title>
+<title>二次関数嫌い</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
+<h1 class="title">📘 二次関数嫌い</h1>
 
-  <h1>📘 二次関数トレーナー</h1>
+<div class="layout">
 
-  <div class="card login">
-    <input id="username" placeholder="名前を入力">
-    <button onclick="login()">開始</button>
-  </div>
-
-  <div class="card main">
-    <p id="question">問題がここに表示される</p>
-
-    <div class="answer-area">
-      <input id="answer" placeholder="答え">
-      <button onclick="check()">回答</button>
+  <!-- 左 -->
+  <div class="left">
+    <div class="card">
+      <h3>名前を入力</h3>
+      <input id="username" placeholder="ユーザー名">
+      <button onclick="login()">開始</button>
     </div>
 
-    <p id="result"></p>
-    <p id="score">スコア:0</p>
+    <div class="card">
+      <h3>操作ガイド</h3>
+      <p>x = -b / 2a</p>
+    </div>
 
-    <canvas id="graph" width="300" height="300"></canvas>
+    <div class="card">
+      <h3>場合分けのヒント</h3>
+      <p>a > 0 → 最小</p>
+      <p>a < 0 → 最大</p>
+      <p>範囲 → 端＋頂点を比較</p>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>📊 分析</h2>
-    <p id="status"></p>
-    <canvas id="weakChart" width="300" height="200"></canvas>
-    <button onclick="weakMode()">弱点特訓</button>
+  <!-- 中央 -->
+  <div class="center">
+    <div class="card">
+      <p id="question">問題</p>
+
+      <div class="row">
+        <input id="answer" placeholder="答え">
+        <button onclick="check()">答える</button>
+      </div>
+
+      <p id="result"></p>
+      <p id="score">スコア:0</p>
+    </div>
+
+    <div class="card">
+      <h3>グラフ</h3>
+      <canvas id="graph"></canvas>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>📜 履歴</h2>
-    <ul id="historyList"></ul>
-  </div>
+  <!-- 右 -->
+  <div class="right">
+    <div class="card">
+      <h3>分析</h3>
+      <p id="status"></p>
+      <canvas id="weakChart" width="250" height="200"></canvas>
+      <button onclick="weakMode()">弱点特訓</button>
+    </div>
 
-  <div class="card">
-    <button onclick="downloadBackup()">データ保存</button>
-    <input type="file" onchange="loadBackup(event)">
+    <div class="card">
+      <h3>履歴</h3>
+      <ul id="historyList"></ul>
+    </div>
+
+    <div class="card">
+      <button onclick="downloadBackup()">保存</button>
+      <input type="file" onchange="loadBackup(event)">
+    </div>
   </div>
 
 </div>
