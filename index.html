@@ -2,166 +2,145 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>二次関数：Lv.100 GOD MODE</title>
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
-        };
-    </script>
+    <title>Focus Gold AI Final Edition</title>
+    <script>window.MathJax = { tex: { inlineMath: [['$', '$']] } };</script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --bg: #000000; --accent: #00f2ff; --neon: #ff00ff; --text: #e0e0e0; }
-        body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        :root { --bg: #000; --acc: #00f2ff; --neon: #ff00ff; --txt: #e0e0e0; }
+        body { background: var(--bg); color: var(--txt); font-family: 'Orbitron', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        aside { width: 350px; background: #0a0a0a; border-right: 1px solid #333; padding: 25px; overflow-y: auto; scrollbar-width: none; }
-        .lvl-h { color: var(--accent); font-size: 0.7rem; letter-spacing: 3px; margin: 30px 0 10px; text-transform: uppercase; text-shadow: 0 0 5px var(--accent); }
-        .q-btn { width: 100%; text-align: left; padding: 15px; background: #111; border: 1px solid #222; color: #888; cursor: pointer; border-radius: 4px; font-size: 0.8rem; margin-bottom: 8px; transition: 0.4s; }
-        .q-btn:hover { border-color: var(--accent); color: white; }
-        .q-btn.active { background: #1a1a1a; color: #fff; border-color: var(--neon); box-shadow: 0 0 15px rgba(255, 0, 255, 0.4); }
+        aside { width: 350px; background: #080808; border-right: 1px solid #333; padding: 25px; overflow-y: auto; scrollbar-width: none; }
+        .lvl-h { color: var(--acc); font-size: 0.7rem; letter-spacing: 3px; margin: 25px 0 10px; text-transform: uppercase; text-shadow: 0 0 5px var(--acc); }
+        .q-btn { width: 100%; text-align: left; padding: 14px; background: #111; border: 1px solid #222; color: #777; cursor: pointer; border-radius: 4px; font-size: 0.8rem; margin-bottom: 6px; transition: 0.3s; }
+        .q-btn:hover { border-color: var(--acc); color: #fff; }
+        .q-btn.active { border-color: var(--neon); color: #fff; background: #1a1a1a; box-shadow: 0 0 15px rgba(255, 0, 255, 0.4); }
 
-        main { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; background: radial-gradient(circle at center, #0d0d0d 0%, #000 100%); }
-        .p-card { background: rgba(15, 15, 15, 0.8); border-radius: 5px; padding: 40px; border: 1px solid #222; position: relative; }
-        .math-box { font-size: 2.2rem; text-align: center; margin: 25px 0; padding: 30px; background: rgba(0,0,0,0.8); border: 1px solid var(--accent); color: #fff; text-shadow: 0 0 10px var(--accent); }
-        .instr { font-size: 1.2rem; line-height: 1.8; color: #bbb; margin-bottom: 25px; border-left: 3px solid var(--neon); padding-left: 15px; }
+        main { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at center, #111 0%, #000 100%); display: flex; flex-direction: column; gap: 20px; }
+        .card { background: rgba(15, 15, 15, 0.95); border: 1px solid #222; padding: 40px; border-radius: 2px; position: relative; }
+        .math-box { font-size: 2.2rem; text-align: center; margin: 25px 0; padding: 30px; border: 1px solid var(--acc); color: #fff; text-shadow: 0 0 10px var(--acc); background: #000; }
+        .instr { font-size: 1.1rem; line-height: 1.8; color: #bbb; border-left: 4px solid var(--neon); padding-left: 20px; margin-bottom: 20px; }
         
-        .expl-box { background: rgba(10, 10, 10, 0.95); border: 1px solid var(--neon); border-radius: 4px; padding: 30px; display: none; line-height: 2; }
-        .step-h { color: var(--neon); font-weight: bold; font-size: 1.1rem; display: block; border-bottom: 1px solid #333; margin-bottom: 10px; }
-
-        .chart-box { min-height: 400px; background: #000; border: 1px solid #333; }
-        .controls { display: flex; gap: 15px; }
-        .btn { flex: 1; padding: 20px; border: 1px solid #444; background: #000; color: #fff; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
-        .btn:hover { background: var(--accent); color: #000; }
+        .expl { background: #050505; border: 1px solid var(--neon); border-radius: 4px; padding: 30px; display: none; line-height: 2; margin-bottom: 20px; }
+        .btn-row { display: flex; gap: 15px; }
+        .btn { flex: 1; padding: 20px; border: 1px solid #444; background: #000; color: #fff; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px; }
+        .btn:hover { background: var(--acc); color: #000; box-shadow: 0 0 20px var(--acc); }
+        .chart-box { height: 400px; background: #000; border: 1px solid #222; }
     </style>
 </head>
 <body>
 
 <aside>
-    <h1 style="color:var(--neon); font-size: 1.5rem; letter-spacing: -1px;">AI MATH LAB</h1>
+    <h1 style="color:var(--neon); font-size: 1.4rem; letter-spacing: -1px; margin-bottom: 40px;">GOD MODE: FINAL</h1>
     
-    <div class="lvl-h">Section 1: 最大最小と場合分け</div>
-    <button class="q-btn active" onclick="app.select('maxmin1', this)">軸が動く最大・最小 (5分類)</button>
-    <button class="q-btn" onclick="app.select('maxmin2', this)">区間が動く最大・最小</button>
-    <button class="q-btn" onclick="app.select('abs', this)">絶対値記号を含むグラフ</button>
+    <div class="lvl-h">Chapter 1: 対称式と存在条件</div>
+    <button class="q-btn active" onclick="app.sel('sym', this)">x, y の実数存在条件 (kの範囲)</button>
+    <button class="q-btn" onclick="app.sel('tri', this)">直角三角形の斜辺 c の範囲</button>
 
-    <div class="lvl-h">Section 2: 方程式と不等式の応用</div>
-    <button class="q-btn" onclick="app.select('sep', this)">解の配置 (条件：軸・端点・D)</button>
-    <button class="q-btn" onclick="app.select('fg78', this)">Focus Gold 78 (全称命題 p)</button>
-    <button class="q-btn" onclick="app.select('common', this)">2つの放物線の共通接線</button>
+    <div class="lvl-h">Chapter 2: 整数条件と解</div>
+    <button class="q-btn" onclick="app.sel('int_root', this)">整数解を少なくとも1つもつ m</button>
+    <button class="q-btn" onclick="app.sel('int_count', this)">不等式を満たす整数がちょうどn個</button>
 
-    <div class="lvl-h">Section 3: 高度な軌跡・領域</div>
-    <button class="q-btn" onclick="app.select('area', this)">放物線の通過領域 (逆像法)</button>
-    <button class="q-btn" onclick="app.select('mapping', this)">2変数 $x, y$ の拘束条件</button>
+    <div class="lvl-h">Chapter 3: 絶対値と共有点</div>
+    <button class="q-btn" onclick="app.sel('abs_line', this)">折り返し放物線と動く直線</button>
+    <button class="q-btn" onclick="app.sel('abs_3pts', this)">絶対値関数の共有点3個の境界</button>
+
+    <div class="lvl-h">Chapter 4: 高度な決定問題</div>
+    <button class="q-btn" onclick="app.sel('v_trace', this)">頂点が直線上にある定数決定</button>
+    <button class="q-btn" onclick="app.sel('move_rev', this)">平行移動の逆算：元の関数 f(x)</button>
 </aside>
 
 <main>
-    <div class="p-card">
+    <div class="card">
         <div id="q-instr" class="instr"></div>
         <div id="q-formula" class="math-box"></div>
-        <div class="controls">
-            <button class="btn" onclick="app.showExpl()">AI 思考プロセスを表示</button>
-            <button class="btn" onclick="app.reload()">類題を生成 (AI Think)</button>
+        <div class="btn-row">
+            <button class="btn" onclick="app.toggleExpl()">AI 分析ログを表示</button>
+            <button class="btn" onclick="app.reload()">類題を生成 (∞ GEN)</button>
         </div>
     </div>
-    <div id="expl" class="expl-box"></div>
+    <div id="expl" class="expl"></div>
     <div class="chart-box"><canvas id="mainChart"></canvas></div>
 </main>
 
 <script>
 const app = {
-    mode: 'maxmin1',
-    chart: null,
-    current: {},
-
+    mode: 'sym', chart: null, curr: {},
     r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
-
-    select(m, b) {
+    sel(m, b) {
         this.mode = m;
-        document.querySelectorAll('.q-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.q-btn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         this.reload();
     },
-
     reload() {
         document.getElementById('expl').style.display = 'none';
-        let d = {};
-        const a = this.r(1, 3); const k = this.r(-2, 4);
-
+        let d = {}; const v = this.r(2, 8);
         switch(this.mode) {
-            case 'maxmin1':
+            case 'sym':
                 d = {
-                    instr: `関数 $f(x) = x^2 - 2ax + a^2 + ${k}$ の $0 \\le x \\le 2$ における最小値を求めよ。`,
-                    formula: `f(x) = (x-a)^2 + ${k}`,
-                    expl: `<span class="step-h">AI解析：軸の移動</span> 軸 $x=a$ と区間 $0 \le x \le 2$ の位置関係で3〜5通りに分けます。<br>① $a < 0$ (左側)、② $0 \le a \le 2$ (内部)、③ $a > 2$ (右側) で最小値の場所が変わります。`,
-                    graph: { type: 'dynamic', a: 1.5, c: k }
+                    instr: `連立方程式 $x^2+xy+y^2=${v*3}$ と $x^2+y^2=k$ が実数解をもつ $k$ の範囲を求めよ。`,
+                    formula: `x, y \\in \\mathbb{R}`,
+                    expl: `和 $u=x+y$, 積 $v=xy$ とおき、$t^2 - ut + v = 0$ の $D \ge 0$ を解析します。`,
+                    g: { type: 'circle', r: Math.sqrt(v*3) }
                 }; break;
-            case 'sep':
-                const m = this.r(1, 3);
+            case 'int_count':
+                const n = this.r(3, 5);
                 d = {
-                    instr: `2次方程式 $x^2 - 2mx + m + 2 = 0$ の解がともに $x > ${m}$ となる定数 $m$ の範囲を求めよ。`,
-                    formula: `x^2 - 2mx + m + 2 = 0`,
-                    expl: `<span class="step-h">解の配置：黄金の3条件</span> 1. 判別式 $D/4 = m^2 - (m+2) \ge 0$<br>2. 軸 $x = m > ${m}$<br>3. 端点 $f(${m}) > 0$`,
-                    graph: { a: 1, b: -4, c: 6 }
+                    instr: `不等式 $x^2 - mx + \\frac{m}{4} - 1 \\le 0$ を満たす整数 $x$ がちょうど ${n} 個ある $m$ を求めよ。`,
+                    formula: `N(x) = ${n}`,
+                    expl: `軸 $x=m/2$ の位置と、解の幅 $L = \sqrt{m^2-m+4}$ を評価します。`,
+                    g: { type: 'para', b: -5, c: 2 }
                 }; break;
-            case 'fg78':
+            case 'abs_line':
+                const k = this.r(1, 4);
                 d = {
-                    instr: "【FG 例題78】すべての実数 $p$ に対して $x^2 - 2px + 2p^2 - 4 > 0$ が成り立つ $x$ の範囲を求めよ。",
-                    formula: "2p^2 - (2x)p + (x^2-4) > 0",
-                    expl: `<span class="step-h">主役の交代</span> $p$ の2次関数と見て、その判別式 $D_p < 0$ を解くのがFocus Gold式の最短ルートです。`,
-                    graph: { a: 1, b: 0, c: -4 }
+                    instr: `関数 $y=|x^2 - ${k*2}x|$ と直線 $y=x+a$ の共有点の個数を $a$ で分類せよ。`,
+                    formula: `y = |x(x-${k*2})|`,
+                    expl: `放物線と直線の「接する」条件 $D=0$ と、折れ曲がり点 $(0,0), (${k*2},0)$ を通る瞬間が境界です。`,
+                    g: { type: 'abs', k: k*2 }
                 }; break;
-            case 'area':
+            case 'move_rev':
+                const dx = this.r(-3, 3); const dy = this.r(-3, 3);
                 d = {
-                    instr: "定数 $m$ が $0 \le m \le 1$ の範囲を動くとき、$y = x^2 - 2mx + m$ が通過する領域を求めよ。",
-                    formula: "y = x^2 - 2mx + m \\quad (0 \le m \le 1)",
-                    expl: `<span class="step-h">逆像法</span> $m$ の2次方程式と見て、$0 \le m \le 1$ に解を持つ条件を $x, y$ の平面上で解析します。`,
-                    graph: { type: 'area' }
+                    instr: `放物線 $y=f(x)$ を $x$軸方向に ${dx}, $y$軸方向に ${dy} 移動させると $y=x^2$ になった。$f(x)$ を求めよ。`,
+                    formula: `f(x) = (x + ${-dx})^2 + ${-dy}`,
+                    expl: `移動を逆算します。逆方向の移動は $x$軸方向に ${-dx}, $y$軸方向に ${-dy}$ です。`,
+                    g: { type: 'para', b: -2*(-dx), c: (-dx)**2 + (-dy) }
                 }; break;
-            // 他のモードも同様に高難度設定を記述...
+            default:
+                d = { instr: "解析中...", formula: "f(x)", expl: "Waiting...", g: { type: 'para', b: 0, c: 0 } };
         }
-        this.current = d;
-        this.updateUI();
+        this.curr = d; this.update();
     },
-
-    updateUI() {
-        document.getElementById('q-instr').innerHTML = this.current.instr;
-        document.getElementById('q-formula').innerHTML = "\\[ " + this.current.formula + " \\]";
+    update() {
+        document.getElementById('q-instr').innerHTML = this.curr.instr;
+        document.getElementById('q-formula').innerHTML = "\\[ " + this.curr.formula + " \\]";
         if (window.MathJax) MathJax.typesetPromise();
         this.draw();
     },
-
-    showExpl() {
+    toggleExpl() {
         const el = document.getElementById('expl');
-        el.innerHTML = `<h3 style="color:var(--accent); margin-top:0;">⚡ AI DEEP ANALYSIS</h3>` + this.current.expl;
-        el.style.display = 'block';
+        el.innerHTML = `<h3 style="color:var(--acc);margin-top:0">⚡ AI DEEP LOGIC</h3>` + this.curr.expl;
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
         if (window.MathJax) MathJax.typesetPromise([el]);
     },
-
     draw() {
         const ctx = document.getElementById('mainChart').getContext('2d');
         if (this.chart) this.chart.destroy();
-        const g = this.current.graph;
-        let ds = [];
-
-        let pts = [];
-        for(let x=-4; x<=6; x+=0.1) pts.push({x, y: (g.a||1)*x*x + (g.b||-2)*x + (g.c||2)});
-        ds.push({data: pts, showLine: true, borderColor: '#00f2ff', borderWidth: 3, pointRadius: 0});
-
+        let pts = []; const g = this.curr.g;
+        if (g.type === 'abs') {
+            for(let x=-2; x<=g.k+2; x+=0.1) pts.push({x, y: Math.abs(x*x - g.k*x)});
+        } else {
+            for(let x=-5; x<=5; x+=0.1) pts.push({x, y: x*x + (g.b||0)*x + (g.c||0)});
+        }
         this.chart = new Chart(ctx, {
             type: 'scatter',
-            data: { datasets: ds },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    x: { min: -3, max: 5, grid: { color: '#222' } },
-                    y: { min: -2, max: 10, grid: { color: '#222' } }
-                },
-                plugins: { legend: { display: false } }
-            }
+            data: { datasets: [{ data: pts, showLine: true, borderColor: '#00f2ff', borderWidth: 2, pointRadius: 0 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { color: '#222' } }, y: { grid: { color: '#222' } } }, plugins: { legend: { display: false } } }
         });
     }
 };
-
 window.onload = () => app.reload();
 </script>
 </body>
