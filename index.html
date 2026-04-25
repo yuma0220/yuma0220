@@ -2,214 +2,188 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Focus Gold Ultimate AI Engine</title>
+    <title>二次関数マスター：超越へのダッシュボード</title>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --bg: #050505; --neon: #00f2ff; --pink: #ff00ff; --panel: #111; }
-        body { background: var(--bg); color: #fff; font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        :root { --bg: #0b0e14; --card: #161b22; --border: #30363d; --neon: #00f2ff; --pink: #ff00ff; --green: #238636; --text: #c9d1d9; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; height: 100vh; gap: 20px; box-sizing: border-box; }
         
-        /* サイドメニュー */
-        aside { width: 320px; background: #000; border-right: 1px solid #333; padding: 25px; display: flex; flex-direction: column; }
-        .brand { font-size: 1.5rem; font-weight: bold; color: var(--pink); margin-bottom: 30px; letter-spacing: 2px; }
-        .nav-group { margin-bottom: 20px; }
-        .nav-label { font-size: 0.7rem; color: #555; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        .q-btn { width: 100%; text-align: left; padding: 12px; background: #111; border: 1px solid #222; color: #888; cursor: pointer; margin-bottom: 5px; border-radius: 4px; transition: 0.3s; }
-        .q-btn:hover { border-color: var(--neon); color: #fff; }
-        .q-btn.active { border-color: var(--neon); background: #1a1a1a; color: #fff; box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
+        header { display: flex; align-items: center; gap: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        header h1 { font-size: 1.5rem; color: var(--neon); margin: 0; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* メインコンテンツ */
-        main { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: var(--panel); border: 1px solid #222; padding: 30px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .status-bar { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--neon); margin-bottom: 15px; }
-        .status-dot { width: 8px; height: 8px; background: var(--neon); border-radius: 50%; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        .dashboard { display: grid; grid-template-columns: 300px 1fr 350px; gap: 20px; flex: 1; overflow: hidden; }
+        
+        /* サイドパネル（操作ガイド & ヒント） */
+        .side-panel { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+        .card-h { font-size: 0.85rem; color: var(--pink); font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .formula-list { font-size: 0.9rem; line-height: 1.8; }
+        .hint-box { background: rgba(255, 0, 255, 0.05); border: 1px dashed var(--pink); border-radius: 4px; padding: 10px; font-size: 0.8rem; }
 
-        /* 数式表示エリア */
-        .math-container { background: #000; border: 1px solid #333; padding: 40px; border-radius: 4px; margin: 20px 0; min-height: 120px; display: flex; align-items: center; justify-content: center; }
-        #math-output { font-size: 2rem; }
+        /* メインパネル（問題 & グラフ） */
+        .main-panel { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .problem-area { text-align: center; }
+        .math-box { font-size: 2rem; background: #000; border: 1px solid var(--neon); border-radius: 4px; padding: 30px; margin: 15px 0; color: #fff; box-shadow: 0 0 15px rgba(0, 242, 255, 0.1); }
+        .btn-group { display: flex; gap: 10px; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-primary { background: var(--green); color: #fff; }
+        .btn-secondary { background: #30363d; color: #fff; border: 1px solid var(--border); }
+        .btn:hover { filter: brightness(1.2); }
+        
+        .graph-area { flex: 1; background: #000; border: 1px solid var(--border); border-radius: 8px; position: relative; min-height: 400px; }
 
-        /* 操作ボタン */
-        .controls { display: flex; gap: 15px; }
-        .btn-main { flex: 2; padding: 18px; background: var(--neon); color: #000; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .btn-main:hover { filter: brightness(1.1); box-shadow: 0 0 20px var(--neon); }
-
-        /* グラフエリア */
-        .graph-wrap { flex: 1; background: #000; border: 1px solid #222; border-radius: 8px; min-height: 400px; padding: 10px; }
+        /* 分析パネル（弱点分析） */
+        .analysis-panel { display: flex; flex-direction: column; gap: 15px; }
+        .stat-bar { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 5px; }
+        .stat-fill { height: 100%; background: var(--neon); transition: 0.5s; }
+        .history-list { font-size: 0.8rem; color: #8b949e; list-style: none; padding: 0; }
+        .history-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; }
+        .status-on { color: var(--green); }
     </style>
 </head>
 <body>
 
-<aside>
-    <div class="brand">FG-ULTIMATE</div>
-    
-    <div class="nav-group">
-        <span class="nav-label">軌跡・領域</span>
-        <button class="q-btn active" onclick="engine.setMode('passing', this)">通過領域の完全解析</button>
-    </div>
+<header>
+    <span>📖</span>
+    <h1>二次関数マスター AI DashBoard</h1>
+</header>
 
-    <div class="nav-group">
-        <span class="nav-label">方程式・不等式</span>
-        <button class="q-btn" onclick="engine.setMode('roots', this)">解の配置：存在条件</button>
-        <button class="q-btn" onclick="engine.setMode('integers', this)">整数解の個数限定</button>
-    </div>
-
-    <div class="nav-group">
-        <span class="nav-label">図形と計量</span>
-        <button class="q-btn" onclick="engine.setMode('triangle', this)">直角三角形の境界値</button>
-        <button class="q-btn" onclick="engine.setMode('symmetry', this)">対称式の変数変換</button>
-    </div>
-</aside>
-
-<main>
-    <div class="card">
-        <div class="status-bar">
-            <div class="status-dot"></div>
-            <span id="ai-status">AI ENGINE READY: WAITING FOR PARAMETERS</span>
+<div class="dashboard">
+    <div class="side-panel">
+        <div class="card">
+            <div class="card-h">操作ガイド</div>
+            <div class="formula-list">
+                公式：頂点の $x$ 座標<br>
+                \( x = -\frac{b}{2a} \)<br>
+                頂点の座標<br>
+                \( (-\frac{b}{2a}, f(-\frac{b}{2a})) \)
+            </div>
         </div>
-        <div id="instruction" style="font-size: 1.1rem; line-height: 1.6; color: #ccc;"></div>
-        
-        <div class="math-container">
-            <div id="math-output"></div>
-        </div>
-
-        <div class="controls">
-            <button class="btn-main" onclick="engine.generate()">Generate Randomized Problem</button>
+        <div class="card">
+            <div class="card-h">場合分けのヒント</div>
+            <div class="hint-box">
+                最大・最小問題では以下の4つに注目！<br>
+                1. 上に凸 (\(a>0\)) か下に凸 (\(a<0\)) か<br>
+                2. 軸が区間内にあるか<br>
+                3. 区間の端点での値<br>
+                4. 通過領域は逆像法を利用
+            </div>
         </div>
     </div>
 
-    <div class="graph-wrap">
-        <canvas id="graphCanvas"></canvas>
+    <div class="main-panel">
+        <div class="card problem-area">
+            <div id="q-type" style="font-size: 0.7rem; background: #23415e; color: var(--neon); display: inline-block; padding: 2px 8px; border-radius: 10px; margin-bottom: 10px;">PRO MODE</div>
+            <div id="q-instr" style="font-size: 1.1rem; margin-bottom: 10px;"></div>
+            <div id="q-math" class="math-box"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="engine.generate()">別の問題を生成</button>
+                <button class="btn btn-primary" onclick="engine.analyze()">AI 思考プロセスを表示</button>
+            </div>
+        </div>
+        <div class="graph-area">
+            <canvas id="mainChart"></canvas>
+        </div>
     </div>
-</main>
+
+    <div class="analysis-panel">
+        <div class="card">
+            <div class="card-h">分析 (弱点)</div>
+            <div style="font-size: 0.8rem; margin-bottom: 10px;">あなたの弱点: <span style="color:var(--neon)">領域・存在条件 (42%)</span></div>
+            <div>
+                Basic
+                <div class="stat-bar"><div class="stat-fill" style="width: 85%;"></div></div>
+            </div>
+            <div style="margin-top:10px">
+                Advanced
+                <div class="stat-bar"><div class="stat-fill" style="width: 42%; background: var(--pink);"></div></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-h">履歴 (最新10件)</div>
+            <ul class="history-list">
+                <li class="history-item"><span>通過領域の解析</span><span class="status-on">● (clear)</span></li>
+                <li class="history-item"><span>解の存在範囲</span><span class="status-on">● (clear)</span></li>
+                <li class="history-item"><span>動く軸の最大最小</span><span style="color:var(--pink)">× (miss)</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <script>
 /**
- * Focus Gold AI Logic Engine (100+ lines of specialized logic)
+ * 二次関数マスター・全自動生成エンジン
  */
 const engine = {
-    mode: 'passing',
     chart: null,
+    r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
     
-    // AI乱数生成器
-    randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
-    
-    setMode(m, btn) {
-        this.mode = m;
-        document.querySelectorAll('.q-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.generate();
-    },
-
-    // 最強AI問題生成ロジック
     generate() {
-        const out = document.getElementById('math-output');
-        const inst = document.getElementById('instruction');
-        const status = document.getElementById('ai-status');
-        
-        let formula = "";
-        let text = "";
-        
-        // パラメータの完全ランダム化
-        const a = this.randomInt(1, 4);
-        const b = this.randomInt(-5, 5);
-        const c = this.randomInt(1, 6);
-        const targetCount = this.randomInt(2, 5);
+        const types = ['pass', 'roots', 'maxmin', 'abs'];
+        const type = types[this.r(0, 3)];
+        let instr = "", math = "", config = {};
+        const a = this.r(1, 3); const m = this.r(1, 4);
 
-        status.innerText = `AI THINKING... GENERATING ${this.mode.toUpperCase()} PROBLEM`;
-
-        switch(this.mode) {
-            case 'passing':
-                const rangeEnd = this.randomInt(1, 3);
-                text = `定数 m が 0 \\leqq m \\leqq ${rangeEnd} の範囲を動くとき、次の2次関数が通過する領域を求め、図示せよ。`;
-                formula = `y = x^2 - ${a*2}mx + ${a}m`;
-                this.renderGraph('area', {a, b: -2*a, c: a, range: rangeEnd});
+        switch(type) {
+            case 'pass':
+                instr = `定数 \(m\) が \(0 \le m \le 1\) の範囲を動くとき、関数が通過する領域を求めよ。`;
+                math = `y = x^2 - ${a*2}mx + m`;
+                config = { type: 'area', a: 1, b: -a*2, c: 1 };
                 break;
-
             case 'roots':
-                const xStart = this.randomInt(-2, 1);
-                const xEnd = xStart + this.randomInt(3, 5);
-                text = `方程式 f(x) = 0 が、${xStart} \\leqq x \\leqq ${xEnd} の範囲に少なくとも1つの実数解をもつような定数 a の範囲を求めよ。`;
-                formula = `f(x) = x^2 - 2ax + ${this.randomInt(1, 10)}`;
-                this.renderGraph('para', {a: 1, b: -2, c: 5});
+                instr = `方程式が \(x > 1\) の範囲に異なる2つの実数解をもつための定数 \(k\) の範囲を求めよ。`;
+                math = `x^2 - 2kx + ${this.r(5, 10)} = 0`;
+                config = { type: 'para', a: 1, b: -4, c: 5 };
                 break;
-
-            case 'integers':
-                text = `不等式 f(x) \\leqq 0 を満たす整数 x がちょうど ${targetCount} 個存在するような整数 m の値をすべて求めよ。`;
-                formula = `f(x) = x^2 - mx + \\frac{m}{${this.randomInt(2, 4)}} - 1`;
-                this.renderGraph('para', {a: 1, b: -targetCount, c: 0});
+            case 'maxmin':
+                instr = `定義域 \(0 \le x \le a\) における関数の最大値を \(M(a)\) とするとき、\(M(a)\) を求めよ。`;
+                math = `y = x^2 - ${m*2}x + ${this.r(1, 5)}`;
+                config = { type: 'para', a: 1, b: -m*2, c: 2 };
                 break;
-
-            case 'triangle':
-                const sumVal = this.randomInt(1, 10);
-                text = `直角三角形の3辺の長さの和が ${sumVal} であるとき、斜辺の長さ c のとり得る値の範囲を求めよ。`;
-                formula = `a^2 + b^2 = c^2, \\quad a+b+c = ${sumVal}`;
-                this.renderGraph('line', {});
-                break;
-
-            case 'symmetry':
-                const total = this.randomInt(5, 20);
-                text = `x, y が実数であるとき、次の連立方程式が実数解をもつための k の範囲を求めよ。`;
-                formula = `\\begin{cases} x^2 + xy + y^2 = ${total} \\\\ x^2 + y^2 = k \\end{cases}`;
-                this.renderGraph('circle', {r: Math.sqrt(total)});
+            case 'abs':
+                instr = `関数 \(y = |x^2 - ${a*2}x|\) と直線 \(y = k\) の共有点が3個となる \(k\) を求めよ。`;
+                math = `y = |x^2 - ${a*2}x|`;
+                config = { type: 'abs', a: 1, b: -a*2, c: 0 };
                 break;
         }
 
-        inst.innerHTML = `\\( ${text} \\)`;
-        out.innerHTML = `\\[ ${formula} \\]`;
-
-        // MathJaxの再描画
-        if (window.MathJax) {
-            MathJax.typesetPromise();
-        }
+        document.getElementById('q-instr').innerHTML = instr;
+        document.getElementById('q-math').innerHTML = "\\[ " + math + " \\]";
+        if (window.MathJax) MathJax.typesetPromise();
+        this.draw(config);
     },
 
-    // 動的グラフ描画システム
-    renderGraph(type, params) {
-        const ctx = document.getElementById('graphCanvas').getContext('2d');
-        if (this.chart) this.chart.destroy();
+    analyze() {
+        alert("AI解析ログ:\n1. 判別式Dの評価\n2. 軸の位置の特定\n3. 端点の符号チェック\nこれらを統合して解を導出します。");
+    },
 
+    draw(conf) {
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        if (this.chart) this.chart.destroy();
         let datasets = [];
         
-        if (type === 'area') {
-            // 通過領域のシミュレーション描画
-            for (let m = 0; m <= params.range; m += params.range/10) {
-                let data = [];
-                for (let x = -2; x <= 4; x += 0.1) {
-                    data.push({x: x, y: x*x + params.b*m*x + params.c*m});
-                }
-                datasets.push({
-                    data: data,
-                    showLine: true,
-                    borderColor: `rgba(0, 242, 255, ${1 - m/params.range})`,
-                    borderWidth: 1,
-                    pointRadius: 0
-                });
+        if (conf.type === 'area') {
+            for (let m = 0; m <= 1; m += 0.25) {
+                let d = []; for (let x = -2; x <= 4; x += 0.1) d.push({x, y: x*x + conf.b*m*x + m});
+                datasets.push({ data: d, showLine: true, borderColor: `rgba(0, 242, 255, ${1-m})`, pointRadius: 0, borderWidth: 1 });
             }
+        } else if (conf.type === 'abs') {
+            let d = []; for (let x = -1; x <= 5; x += 0.1) d.push({x, y: Math.abs(x*x + conf.b*x)});
+            datasets.push({ data: d, showLine: true, borderColor: '#ff00ff', pointRadius: 0, borderWidth: 2 });
         } else {
-            // 通常の放物線など
-            let data = [];
-            for (let x = -10; x <= 10; x += 0.2) {
-                data.push({x: x, y: params.a * x * x + (params.b || 0) * x + (params.c || 0)});
-            }
-            datasets.push({
-                data: data,
-                showLine: true,
-                borderColor: '#ff00ff',
-                borderWidth: 2,
-                pointRadius: 0
-            });
+            let d = []; for (let x = -5; x <= 10; x += 0.1) d.push({x, y: conf.a*x*x + conf.b*x + conf.c});
+            datasets.push({ data: d, showLine: true, borderColor: '#00f2ff', pointRadius: 0, borderWidth: 2 });
         }
 
         this.chart = new Chart(ctx, {
             type: 'scatter',
-            data: { datasets: datasets },
+            data: { datasets },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { type: 'linear', position: 'center', grid: { color: '#222' } },
-                    y: { type: 'linear', position: 'center', grid: { color: '#222' } }
+                responsive: true, maintainAspectRatio: false,
+                scales: { 
+                    x: { grid: { color: '#222' }, ticks: { color: '#555' } }, 
+                    y: { grid: { color: '#222' }, ticks: { color: '#555' } } 
                 },
                 plugins: { legend: { display: false } }
             }
@@ -217,7 +191,6 @@ const engine = {
     }
 };
 
-// 初期起動
 window.onload = () => engine.generate();
 </script>
 
