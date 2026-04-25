@@ -1,311 +1,269 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>二次関数嫌い</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二次関数嫌い - 完全再現</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
 
-<style>
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  background: radial-gradient(circle at top,#0b1f35,#020617);
-  color:white;
-}
+        .header { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
 
-.container{
-  display:flex;
-  gap:20px;
-  padding:20px;
-}
+        /* レイアウト */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-.card{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:12px;
-  padding:20px;
-}
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
 
-.left{width:250px;}
-.center{flex:1;}
-.right{width:300px;}
+        h3 { font-size: 16px; margin-top: 0; margin-bottom: 15px; }
 
-input{
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:#111827;
-  color:white;
-}
+        /* 入力エリア */
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box;
+        }
 
-button{
-  width:100%;
-  margin-top:10px;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-  color:white;
-  cursor:pointer;
-}
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
 
-.question{
-  text-align:center;
-  font-size:22px;
-  margin:20px 0;
-}
+        .btn-green { background-color: var(--accent-green); color: white; }
+        .btn-blue { background-color: var(--accent-blue); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--accent-green); color: var(--accent-green); }
 
-.row{
-  display:flex;
-  gap:10px;
-}
+        /* メイン問題エリア */
+        .question-badge {
+            background: #1e40af;
+            color: #93c5fd;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
 
-canvas{
-  background:#020617;
-  border-radius:10px;
-  width:100%;
-}
+        .formula-display {
+            text-align: center;
+            font-size: 28px;
+            padding: 20px 0;
+        }
 
-.badge{
-  background:#0ea5e9;
-  padding:5px 10px;
-  border-radius:10px;
-  font-size:12px;
-}
-</style>
+        .answer-area { display: flex; gap: 10px; margin-bottom: 15px; }
+
+        /* ヒントカード */
+        .hint-card {
+            background: linear-gradient(135deg, #1e1b4b, #2e1065);
+            border: 1px solid #4c1d95;
+        }
+
+        .hint-text { font-size: 13px; color: #e2e8f0; line-height: 1.6; }
+
+        /* グラフ描画エリア */
+        #graphCanvas {
+            background: #020617;
+            border-radius: 8px;
+            width: 100%;
+            height: 400px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* 履歴リスト */
+        .history-list {
+            list-style: none;
+            padding: 0;
+            font-size: 13px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .status-ok { color: #22c55e; }
+        .status-ng { color: #ef4444; }
+    </style>
 </head>
-
 <body>
 
-<h2 style="padding:20px;">📘 二次関数嫌い</h2>
+<div class="header">📘 二次関数嫌い</div>
 
-<div class="container">
+<div class="grid-container">
+    <div class="sidebar-left">
+        <div class="card">
+            <h3>名前を入力</h3>
+            <input type="text" placeholder="ユーザー名">
+            <button class="btn btn-green">開始</button>
+        </div>
 
-<!-- 左 -->
-<div class="left">
-  <div class="card">
-    <p>名前</p>
-    <input id="username">
-    <button onclick="generate()">開始</button>
-  </div>
+        <div class="card">
+            <h3>操作ガイド</h3>
+            <div class="hint-text">
+                ・公式（頂点のx座標）<br>
+                $$x = - \frac{b}{2a}$$
+                ・頂点の座標<br>
+                $$\left( - \frac{b}{2a}, f\left( - \frac{b}{2a} \right) \right)$$
+            </div>
+        </div>
 
-  <div class="card">
-    <p>難易度</p>
-    <button onclick="setLevel('easy')">Easy</button>
-    <button onclick="setLevel('normal')">Normal</button>
-    <button onclick="setLevel('hard')">Hard</button>
-  </div>
-</div>
-
-<!-- 中央 -->
-<div class="center">
-  <div class="card">
-
-    <span class="badge">問題</span>
-
-    <div id="question" class="question"></div>
-
-    <div class="row">
-      <input id="answer">
-      <button onclick="check()">答える</button>
+        <div class="card hint-card">
+            <h3 style="color: #a78bfa;">場合分けのヒント</h3>
+            <div class="hint-text">
+                二次関数の最大値・最小値を求める問題では、以下の場合に分けて考えます。<br><br>
+                ・上に凸 ($a > 0$) のとき → 最小値<br>
+                ・下に凸 ($a < 0$) のとき → 最大値<br>
+                ・区間がある場合は、頂点と端点の値を比較する！
+            </div>
+        </div>
     </div>
 
-    <p id="result"></p>
-    <p id="score">スコア:0</p>
+    <div class="main-content">
+        <div class="card">
+            <span class="badge question-badge">問題タイプ: normal</span>
+            <div class="formula-display">
+                $$y = 2x^2 - 3x + 1$$
+                <p style="font-size: 18px;">の頂点のx座標を求めよ。</p>
+            </div>
+            <div class="answer-area">
+                <input type="text" placeholder="答えを入力" style="margin:0;">
+                <button class="btn btn-green" style="width:120px;">答える</button>
+            </div>
+            <div style="font-size: 14px; color: var(--text-sub);">
+                結果:<br>スコア: 0
+            </div>
+        </div>
 
-  </div>
+        <div class="card">
+            <h3>二次関数のグラフ</h3>
+            <canvas id="graphCanvas"></canvas>
+            <div class="legend">
+                <span><span style="color:red;">■</span> 頂点</span>
+                <span><span style="color:yellow;">■</span> y切片</span>
+                <span><span style="color:green;">■</span> x切片</span>
+            </div>
+        </div>
+    </div>
 
-  <div class="card">
-    <canvas id="graph" width="700" height="350"></canvas>
-  </div>
-</div>
+    <div class="sidebar-right">
+        <div class="card">
+            <h3>📊 分析（弱点）</h3>
+            <p style="font-size: 14px; color: #fbbf24;">あなたの弱点: <b>basic (50%)</b></p>
+            <canvas id="statsChart" height="200"></canvas>
+            <button class="btn btn-green" style="margin-top:15px;">弱点特訓モード</button>
+        </div>
 
-<!-- 右 -->
-<div class="right">
+        <div class="card">
+            <h3>履歴（最新10件）</h3>
+            <div class="history-list">
+                <div class="history-item"><span>● 2026/04/25 12:30:45 : <span class="status-ok">○</span> (normal)</span></div>
+                <div class="history-item"><span>● 2026/04/25 12:30:10 : <span class="status-ng">×</span> (basic)</span></div>
+                <div class="history-item"><span>● 2026/04/25 12:29:31 : <span class="status-ok">○</span> (advanced)</span></div>
+            </div>
+        </div>
 
-  <div class="card">
-    <p id="analysis">分析</p>
-  </div>
-
-  <div class="card">
-    <p>履歴</p>
-    <ul id="history"></ul>
-  </div>
-
-</div>
-
+        <div class="card">
+            <h3>データ管理</h3>
+            <button class="btn btn-green" style="margin-bottom:10px;">データを保存（バックアップ）</button>
+            <input type="file" id="file" style="display:none;">
+            <button class="btn btn-outline" onclick="document.getElementById('file').click()">ファイルを選択 選択されていません</button>
+            <button class="btn btn-blue" style="margin-top:10px;">データを復元</button>
+        </div>
+    </div>
 </div>
 
 <script>
-let a,b,c,correct,score=0;
-let level="normal";
+    // グラフ描画（Chart.js）
+    const ctxStats = document.getElementById('statsChart').getContext('2d');
+    new Chart(ctxStats, {
+        type: 'bar',
+        data: {
+            labels: ['basic', 'normal', 'advanced'],
+            datasets: [{
+                data: [50, 66, 33],
+                backgroundColor: ['#22c55e', '#3b82f6', '#a855f7'],
+                borderRadius: 5
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
 
-/* ===== 履歴・分析 ===== */
-let history = JSON.parse(localStorage.getItem("history")) || [];
-
-let stats = {
-  easy:{ok:0,total:0},
-  normal:{ok:0,total:0},
-  hard:{ok:0,total:0}
-};
-
-/* ===== 難易度 ===== */
-function setLevel(l){
-  level=l;
-  generate();
-}
-
-/* ===== ランダム ===== */
-function rand(min,max){
-  return Math.floor(Math.random()*(max-min+1))+min;
-}
-
-/* ===== 問題生成 ===== */
-function generate(){
-
-  if(level==="easy"){
-    a=1; b=rand(-4,4); c=0;
-  }
-  if(level==="normal"){
-    a=rand(1,3); b=rand(-6,6); c=rand(-5,5);
-  }
-  if(level==="hard"){
-    a=rand(-3,3)||1; b=rand(-8,8); c=rand(-8,8);
-  }
-
-  correct=-b/(2*a);
-
-  document.getElementById("question").innerText=
-  `y=${a}x²${b>=0?'+':''}${b}x${c>=0?'+':''}${c}
-の頂点のx座標`;
-
-  drawGraph();
-}
-
-/* ===== 判定 ===== */
-function check(){
-  let ans=Number(document.getElementById("answer").value);
-  let ok=Math.abs(ans-correct)<0.5;
-
-  document.getElementById("result").innerText=
-    ok?"正解！":"不正解："+correct.toFixed(2);
-
-  score+=ok?10:-5;
-  document.getElementById("score").innerText="スコア:"+score;
-
-  // 記録
-  stats[level].total++;
-  if(ok) stats[level].ok++;
-
-  history.push({
-    result: ok,
-    level: level,
-    date: new Date().toLocaleString()
-  });
-
-  localStorage.setItem("history", JSON.stringify(history));
-
-  showHistory();
-  analyze();
-
-  generate();
-}
-
-/* ===== 履歴表示 ===== */
-function showHistory(){
-  const ul=document.getElementById("history");
-  ul.innerHTML="";
-
-  history.slice(-10).reverse().forEach(h=>{
-    let li=document.createElement("li");
-    li.innerText=`${h.date} : ${h.result?"○":"×"} (${h.level})`;
-    ul.appendChild(li);
-  });
-}
-
-/* ===== 分析 ===== */
-function analyze(){
-  let worst="easy";
-  let worstRate=1;
-
-  for(let k in stats){
-    let r=stats[k].ok/(stats[k].total||1);
-    if(r<worstRate){
-      worstRate=r;
-      worst=k;
+    // 数学グラフ描画用 Canvas
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+    function drawGrid() {
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        // グリッド線
+        for(let i=0; i<canvas.width; i+=40) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+        }
+        // 軸
+        ctx.strokeStyle = '#f8fafc';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(centerX, 0); ctx.lineTo(centerX, canvas.height); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, centerY); ctx.lineTo(canvas.width, centerY); ctx.stroke();
     }
-  }
-
-  document.getElementById("analysis").innerText=
-    `弱点: ${worst} (${Math.round(worstRate*100)}%)`;
-}
-
-/* ===== グラフ ===== */
-function drawGraph(){
-  const canvas=document.getElementById("graph");
-  const ctx=canvas.getContext("2d");
-
-  const W=canvas.width;
-  const H=canvas.height;
-
-  ctx.clearRect(0,0,W,H);
-
-  const scale=30;
-  const cx=W/2;
-  const cy=H/2;
-
-  // 背景
-  ctx.fillStyle="#020617";
-  ctx.fillRect(0,0,W,H);
-
-  // グリッド
-  ctx.strokeStyle="rgba(255,255,255,0.15)";
-  for(let i=-10;i<=10;i++){
-    let x=cx+i*scale;
-    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
-
-    let y=cy-i*scale;
-    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
-  }
-
-  // 軸
-  ctx.strokeStyle="white";
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,H); ctx.stroke();
-
-  // 放物線
-  ctx.strokeStyle="#60a5fa";
-  ctx.lineWidth=3;
-  ctx.beginPath();
-
-  for(let x=-10;x<=10;x+=0.05){
-    let y=a*x*x+b*x+c;
-    let px=cx+x*scale;
-    let py=cy-y*scale;
-
-    if(x===-10) ctx.moveTo(px,py);
-    else ctx.lineTo(px,py);
-  }
-  ctx.stroke();
-
-  // 頂点
-  let vx=-b/(2*a);
-  let vy=a*vx*vx+b*vx+c;
-
-  ctx.fillStyle="red";
-  ctx.beginPath();
-  ctx.arc(cx+vx*scale,cy-vy*scale,5,0,Math.PI*2);
-  ctx.fill();
-}
-
-/* ===== 初期表示 ===== */
-showHistory();
-analyze();
-generate();
+    drawGrid();
 </script>
 
 </body>
