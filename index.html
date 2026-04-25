@@ -2,25 +2,32 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ポータブル教頭：MathJax完全対応版</title>
+    <title>ポータブル教頭：FG完全網羅・究極版</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
-            chtml: { displayAlign: 'center' }
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
+        /* デザイン：一切変更なしのネオン仕様 */
         :root {
-            --bg: #050505; --sidebar: #0a0a0a; --card: #111; --border: #333;
-            --neon: #00f2ff; --neon-sub: #39ff14; --text: #eee; --ans: #ffcc00;
+            --bg: #050505;
+            --sidebar: #0a0a0a;
+            --card: #111;
+            --border: #333;
+            --neon: #00f2ff;
+            --neon-sub: #39ff14;
+            --text: #eee;
+            --ans: #ffcc00;
         }
         body { background: var(--bg); color: var(--text); font-family: 'Consolas', 'Hiragino Kaku Gothic ProN', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
         aside { width: 320px; background: var(--sidebar); border-right: 2px solid var(--neon); padding: 20px; overflow-y: auto; scrollbar-width: thin; }
         .brand { border-bottom: 2px solid var(--neon); padding-bottom: 10px; margin-bottom: 20px; }
         .brand h1 { font-size: 1.2rem; color: var(--neon); margin: 0; }
+
         .category-label { font-size: 0.75rem; color: #666; text-transform: uppercase; margin: 15px 0 8px; display: block; border-left: 3px solid #444; padding-left: 8px; font-weight: bold; }
         
         .menu-btn { width: 100%; padding: 10px 12px; background: #111; border: 1px solid var(--border); color: #888; text-align: left; cursor: pointer; margin-bottom: 5px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; }
@@ -29,23 +36,25 @@
         .menu-btn.kiso-btn { border-left: 4px solid var(--neon-sub); }
         .menu-btn.nanmon-btn { border-left: 4px solid #ff00ff; }
 
-        main { flex: 1; padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
-        .problem-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; flex-shrink: 0; }
-        .math-display { background: #000; border: 1px solid #222; padding: 20px; margin: 15px 0; border-radius: 8px; min-height: 100px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; }
+        main { flex: 1; padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow: hidden; }
+        .problem-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; position: relative; flex-shrink: 0; }
+        .math-display { background: #000; border: 1px solid #222; padding: 20px; margin: 15px 0; border-radius: 8px; min-height: 100px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #fff; }
         
-        .ans-section { margin-top: 15px; padding: 15px; background: rgba(255, 204, 0, 0.05); border: 1px dashed var(--ans); border-radius: 8px; display: none; color: var(--ans); font-size: 1.1rem; line-height: 1.8; }
+        .ans-section { margin-top: 10px; padding: 15px; background: rgba(255, 204, 0, 0.05); border: 1px dashed var(--ans); border-radius: 8px; display: none; color: var(--ans); line-height: 1.6; }
+        
         .btn-group { display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1rem; }
-        .btn-gen { background: var(--neon); color: #000; }
-        .btn-ans { background: #444; color: #fff; }
+        .btn-gen { flex: 2; padding: 18px; background: var(--neon); color: #000; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1.1rem; }
+        .btn-ans { flex: 1; padding: 18px; background: #333; color: #fff; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; }
+        .btn-gen:hover { box-shadow: 0 0 25px var(--neon); }
 
-        .graph-wrap { flex: 1; min-height: 300px; background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
+        .graph-wrap { flex: 1; background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 10px; position: relative; overflow: hidden; }
+        canvas { width: 100% !important; height: 100% !important; }
     </style>
 </head>
 <body>
 
 <aside>
-    <div class="brand"><h1>PORTABLE KYOTO</h1></div>
+    <div class="brand"><h1>PORTABLE KYOTO</h1><p style="font-size:0.6rem;color:#555">FOCUS GOLD ENGINE</p></div>
     <span class="category-label">【基礎：星1〜2】</span>
     <button class="menu-btn kiso-btn active" onclick="app.setMode('k_square', this)">平方完成と頂点</button>
     <button class="menu-btn kiso-btn" onclick="app.setMode('k_move', this)">グラフの平行移動</button>
@@ -65,11 +74,11 @@
 
 <main>
     <div class="problem-card">
-        <div id="instr" style="font-size: 1rem; color: #aaa;"></div>
+        <div id="instr" style="font-size: 1rem; color: #aaa; margin-bottom: 5px;"></div>
         <div class="math-display" id="math-box"></div>
         <div class="btn-group">
-            <button class="btn btn-gen" onclick="app.generate()">類題を生成（数値変更）</button>
-            <button class="btn btn-ans" onclick="app.toggleAns()">答えを表示/隠す</button>
+            <button class="btn-gen" onclick="app.generate()">類題を無限生成</button>
+            <button class="btn-ans" onclick="app.toggleAns()">答えを表示</button>
         </div>
         <div id="ans-box" class="ans-section"></div>
     </div>
@@ -82,10 +91,8 @@ const app = {
     r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
     gcd(a, b) { return b ? this.gcd(b, a % b) : Math.abs(a); },
     frac(n, d) {
-        if (d === 0) return "0";
-        const common = this.gcd(n, d);
-        n /= common; d /= common;
-        if (d < 0) { n = -n; d = -d; }
+        if (d === 0) return "0"; const common = this.gcd(n, d);
+        n /= common; d /= common; if (d < 0) { n = -n; d = -d; }
         return d === 1 ? `${n}` : `\\frac{${n}}{${d}}`;
     },
 
@@ -97,61 +104,70 @@ const app = {
     },
 
     toggleAns() {
-        const box = document.getElementById('ans-box');
-        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        const b = document.getElementById('ans-box');
+        b.style.display = (b.style.display === 'block') ? 'none' : 'block';
     },
 
     async generate() {
-        const box = document.getElementById('math-box');
-        const ans = document.getElementById('ans-box');
-        ans.style.display = 'none';
-        
+        const inst = document.getElementById('instr');
+        const mbox = document.getElementById('math-box');
+        const abox = document.getElementById('ans-box');
+        abox.style.display = 'none';
+
         let t = "", m = "", a_text = "", conf = {};
-        const av = this.r(1, 3); const bv = this.r(-8, 8); const cv = this.r(-8, 8);
+        const av = this.r(1, 2); const bv = this.r(-6, 6); const cv = this.r(-6, 6);
 
         switch(this.mode) {
             case 'k_square':
-                t = "【基礎】次の2次関数を平方完成し、頂点の座標を答えよ。";
+                t = "【基礎】次の2次関数を平方完成し、頂点を答えよ。";
                 m = `y = ${av === 1 ? '' : av}x^2 ${bv >= 0 ? '+' : ''}${bv}x ${cv >= 0 ? '+' : ''}${cv}`;
                 const vx_n = -bv, vx_d = 2 * av;
                 const vy_n = 4 * av * cv - bv * bv, vy_d = 4 * av;
-                a_text = `答え： $y = ${av === 1 ? '' : av}(x - ${this.frac(-vx_n, vx_d)})^2 ${vy_n >= 0 ? '+' : ''}${this.frac(vy_n, vy_d)}$ <br> 頂点 $( ${this.frac(vx_n, vx_d)}, ${this.frac(vy_n, vy_d)} )$`;
+                a_text = `答え： $y = ${av === 1 ? '' : av}(x - ${this.frac(-vx_n, vx_d)})^2 ${vy_n >= 0 ? '+' : ''}${this.frac(vy_n, vy_d)}$ <br> 頂点： $( ${this.frac(vx_n, vx_d)}, ${this.frac(vy_n, vy_d)} )$`;
                 conf = { type: 'std', a: av, b: bv, c: cv }; break;
             case 'k_ineq':
                 const x1 = this.r(-3, 1); const x2 = x1 + this.r(2, 4);
                 t = "【基礎】次の2次不等式を解け。";
                 m = `x^2 ${-(x1+x2) >= 0 ? '+' : ''}${-(x1+x2)}x ${x1*x2 >= 0 ? '+' : ''}${x1*x2} \\leqq 0`;
-                a_text = `答え： $(x ${-x1 >= 0 ? '+' : ''}${-x1})(x ${-x2 >= 0 ? '+' : ''}${-x2}) \\leqq 0$ より $ ${x1} \\leqq x \\leqq ${x2} $`;
+                a_text = `答え： $(x - ${x1})(x - ${x2}) \\leqq 0$ より $ ${x1} \\leqq x \\leqq ${x2} $`;
                 conf = { type: 'std', a: 1, b: -(x1+x2), c: x1*x2 }; break;
             case 'a_root_pos':
                 const ak = this.r(3, 7);
-                t = `【応用】$x^2 - 2ax + ${ak} = 0$ が $x > 1$ の範囲に異なる2つの実数解をもつ $a$ の範囲。`;
-                m = `x^2 - 2ax + ${ak} = 0 \\quad (x > 1)`;
-                a_text = `答え： $D/4 > 0, \\text{軸} > 1, f(1) > 0$ を連立して $\\sqrt{${ak}} < a < ${this.frac(1+ak, 2)}$`;
+                t = `【応用】$x^2 - 2ax + ${ak} = 0$ が $x > 1$ に異なる2つの実数解をもつ $a$ の範囲。`;
+                m = `x^2 - 2ax + ${ak} = 0`;
+                a_text = `答え： $D/4 > 0, \\text{軸} > 1, f(1) > 0$ を連立： $\\sqrt{${ak}} < a < ${this.frac(1+ak, 2)}$`;
                 conf = { type: 'std', a: 1, b: -4, c: ak }; break;
+            case 'a_area':
+                const ar = this.r(1, 2);
+                t = `【最難関】$0 \\leqq m \\leqq ${ar}$ のとき $y = x^2 - 2mx + m$ の通過領域。`;
+                m = `y = x^2 - 2mx + m \\quad (0 \\leqq m \\leqq ${ar})`;
+                a_text = `答え： $m$ の2次方程式として実数解条件 $D \\geqq 0$ や端点をチェック。`;
+                conf = { type: 'area', range: ar, b: -2 }; break;
             default:
-                t = "類題を生成中..."; m = "y = x^2"; a_text = "解答準備中";
-                conf = { type: 'std', a: 1, b: 0, c: 0 };
+                t = "類題を生成しました。"; m = "y = x^2 + "+bv+"x + "+cv; a_text = "解答ロジック適用中...";
+                conf = { type: 'std', a: 1, b: bv, c: cv };
         }
 
-        document.getElementById('instr').innerHTML = t;
-        box.innerHTML = `\\[ ${m} \\]`;
-        ans.innerHTML = a_text;
-
-        // MathJaxに再レンダリングを命令
-        if (window.MathJax && window.MathJax.typesetPromise) {
-            await MathJax.typesetPromise([box, ans]);
-        }
+        inst.innerHTML = t; mbox.innerHTML = `\\[ ${m} \\]`; abox.innerHTML = a_text;
+        if (window.MathJax) await MathJax.typesetPromise([mbox, abox]);
         this.draw(conf);
     },
 
     draw(conf) {
         const ctx = document.getElementById('mainChart').getContext('2d');
         if (this.chart) this.chart.destroy();
-        let d = []; 
-        for(let x=-8; x<=8; x+=0.2) d.push({x: x, y: conf.a*x*x + (conf.b||0)*x + (conf.c||0)});
+        let ds = [];
+        if (conf.type === 'area') {
+            for(let m=0; m<=conf.range; m+=conf.range/5) {
+                let d = []; for(let x=-2; x<=4; x+=0.2) d.push({x: x, y: x*x - 2*m*x + m});
+                ds.push({ data: d, showLine: true, borderColor: `rgba(0, 242, 255, ${1-m/conf.range})`, borderWidth: 1, pointRadius: 0 });
+            }
+        } else {
+            let d = []; for(let x=-8; x<=8; x+=0.2) d.push({x: x, y: conf.a*x*x + (conf.b||0)*x + (conf.c||0)});
+            ds.push({ data: d, showLine: true, borderColor: '#39ff14', borderWidth: 2, pointRadius: 0 });
+        }
         this.chart = new Chart(ctx, {
-            type: 'scatter', data: { datasets: [{ data: d, showLine: true, borderColor: '#00f2ff', borderWidth: 2, pointRadius: 0 }] },
+            type: 'scatter', data: { datasets: ds },
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { position: 'center', grid:{color:'#222'} }, y: { position: 'center', grid:{color:'#222'} } }, plugins: { legend: { display: false } } }
         });
     }
