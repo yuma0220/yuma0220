@@ -2,74 +2,60 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ポータブル教頭：FG完全網羅・究極版</title>
+    <title>ポータブル教頭：完全スタンドアロン版</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        /* デザイン：一切変更なしのネオン仕様 */
         :root {
-            --bg: #050505;
-            --sidebar: #0a0a0a;
-            --card: #111;
-            --border: #333;
-            --neon: #00f2ff;
-            --neon-sub: #39ff14;
-            --text: #eee;
-            --ans: #ffcc00;
+            --bg: #050505; --sidebar: #0a0a0a; --card: #111; --border: #333;
+            --neon: #00f2ff; --neon-sub: #39ff14; --text: #eee; --ans: #ffcc00;
         }
         body { background: var(--bg); color: var(--text); font-family: 'Consolas', 'Hiragino Kaku Gothic ProN', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
         aside { width: 320px; background: var(--sidebar); border-right: 2px solid var(--neon); padding: 20px; overflow-y: auto; scrollbar-width: thin; }
         .brand { border-bottom: 2px solid var(--neon); padding-bottom: 10px; margin-bottom: 20px; }
         .brand h1 { font-size: 1.2rem; color: var(--neon); margin: 0; }
-
         .category-label { font-size: 0.75rem; color: #666; text-transform: uppercase; margin: 15px 0 8px; display: block; border-left: 3px solid #444; padding-left: 8px; font-weight: bold; }
         
-        .menu-btn { width: 100%; padding: 10px 12px; background: #111; border: 1px solid var(--border); color: #888; text-align: left; cursor: pointer; margin-bottom: 5px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; }
-        .menu-btn:hover { border-color: var(--neon); color: #fff; }
+        .menu-btn { width: 100%; padding: 10px 12px; background: #111; border: 1px solid var(--border); color: #888; text-align: left; cursor: pointer; margin-bottom: 5px; border-radius: 4px; font-size: 0.85rem; }
         .menu-btn.active { border-color: var(--neon); background: rgba(0, 242, 255, 0.1); color: #fff; box-shadow: 0 0 10px rgba(0, 242, 255, 0.1); }
         .menu-btn.kiso-btn { border-left: 4px solid var(--neon-sub); }
         .menu-btn.nanmon-btn { border-left: 4px solid #ff00ff; }
 
         main { flex: 1; padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow: hidden; }
-        .problem-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; position: relative; flex-shrink: 0; }
-        .math-display { background: #000; border: 1px solid #222; padding: 20px; margin: 15px 0; border-radius: 8px; min-height: 100px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #fff; }
+        .problem-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; flex-shrink: 0; }
         
-        .ans-section { margin-top: 10px; padding: 15px; background: rgba(255, 204, 0, 0.05); border: 1px dashed var(--ans); border-radius: 8px; display: none; color: var(--ans); line-height: 1.6; }
-        
+        /* 数式描画エンジン（CSS） */
+        .math-display { background: #000; border: 1px solid #222; padding: 20px; margin: 15px 0; border-radius: 8px; min-height: 100px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; flex-wrap: wrap; gap: 8px; }
+        .frac { display: inline-flex; flex-direction: column; vertical-align: middle; align-items: center; font-size: 0.9em; margin: 0 4px; }
+        .frac-n { border-bottom: 1px solid #fff; padding: 0 4px; }
+        .frac-d { padding: 0 4px; }
+        .sup { font-size: 0.6em; vertical-align: super; margin-left: 2px; }
+
+        .ans-section { margin-top: 10px; padding: 15px; background: rgba(255, 204, 0, 0.05); border: 1px dashed var(--ans); border-radius: 8px; display: none; color: var(--ans); line-height: 2; font-size: 1.1rem; }
         .btn-group { display: flex; gap: 10px; }
         .btn-gen { flex: 2; padding: 18px; background: var(--neon); color: #000; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1.1rem; }
         .btn-ans { flex: 1; padding: 18px; background: #333; color: #fff; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; }
-        .btn-gen:hover { box-shadow: 0 0 25px var(--neon); }
 
-        .graph-wrap { flex: 1; background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 10px; position: relative; overflow: hidden; }
+        .graph-wrap { flex: 1; background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 10px; position: relative; }
         canvas { width: 100% !important; height: 100% !important; }
     </style>
 </head>
 <body>
 
 <aside>
-    <div class="brand"><h1>PORTABLE KYOTO</h1><p style="font-size:0.6rem;color:#555">FOCUS GOLD ENGINE</p></div>
+    <div class="brand"><h1>PORTABLE KYOTO</h1></div>
     <span class="category-label">【基礎：星1〜2】</span>
     <button class="menu-btn kiso-btn active" onclick="app.setMode('k_square', this)">平方完成と頂点</button>
     <button class="menu-btn kiso-btn" onclick="app.setMode('k_move', this)">グラフの平行移動</button>
     <button class="menu-btn kiso-btn" onclick="app.setMode('k_axis', this)">3点から式を決定</button>
     <button class="menu-btn kiso-btn" onclick="app.setMode('k_maxmin', this)">最大・最小の基本</button>
     <button class="menu-btn kiso-btn" onclick="app.setMode('k_ineq', this)">2次不等式の解法</button>
-    <button class="menu-btn kiso-btn" onclick="app.setMode('k_kouten', this)">x軸との共有点($D$)</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_kouten', this)">x軸との共有点(D)</button>
     <span class="category-label">【応用：星3〜4】</span>
     <button class="menu-btn nanmon-btn" onclick="app.setMode('a_axis_move', this)">軸が動く最大最小</button>
-    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_root_pos', this)">解の配置($D$・軸・境界)</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_root_pos', this)">解の配置</button>
     <button class="menu-btn nanmon-btn" onclick="app.setMode('a_area', this)">通過領域(逆像法)</button>
     <button class="menu-btn nanmon-btn" onclick="app.setMode('a_abs', this)">絶対値関数の共有点</button>
-    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_int', this)">整数解の個数限定</button>
-    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_sym', this)">対称式の実数存在条件</button>
-    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_tri', this)">直角三角形の斜辺範囲</button>
 </aside>
 
 <main>
@@ -90,10 +76,15 @@ const app = {
     mode: 'k_square', chart: null,
     r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
     gcd(a, b) { return b ? this.gcd(b, a % b) : Math.abs(a); },
-    frac(n, d) {
-        if (d === 0) return "0"; const common = this.gcd(n, d);
-        n /= common; d /= common; if (d < 0) { n = -n; d = -d; }
-        return d === 1 ? `${n}` : `\\frac{${n}}{${d}}`;
+    
+    // HTMLベースの分数生成
+    fracHtml(n, d) {
+        if (d === 0) return "0";
+        const common = this.gcd(n, d);
+        n /= common; d /= common;
+        if (d < 0) { n = -n; d = -d; }
+        if (d === 1) return n.toString();
+        return `<span class="frac"><span class="frac-n">${n}</span><span class="frac-d">${d}</span></span>`;
     },
 
     setMode(m, b) {
@@ -108,7 +99,7 @@ const app = {
         b.style.display = (b.style.display === 'block') ? 'none' : 'block';
     },
 
-    async generate() {
+    generate() {
         const inst = document.getElementById('instr');
         const mbox = document.getElementById('math-box');
         const abox = document.getElementById('ans-box');
@@ -120,36 +111,41 @@ const app = {
         switch(this.mode) {
             case 'k_square':
                 t = "【基礎】次の2次関数を平方完成し、頂点を答えよ。";
-                m = `y = ${av === 1 ? '' : av}x^2 ${bv >= 0 ? '+' : ''}${bv}x ${cv >= 0 ? '+' : ''}${cv}`;
+                m = `y = ${av === 1 ? '' : av}x<span class="sup">2</span> ${bv >= 0 ? '+' : ''}${bv}x ${cv >= 0 ? '+' : ''}${cv}`;
                 const vx_n = -bv, vx_d = 2 * av;
                 const vy_n = 4 * av * cv - bv * bv, vy_d = 4 * av;
-                a_text = `答え： $y = ${av === 1 ? '' : av}(x - ${this.frac(-vx_n, vx_d)})^2 ${vy_n >= 0 ? '+' : ''}${this.frac(vy_n, vy_d)}$ <br> 頂点： $( ${this.frac(vx_n, vx_d)}, ${this.frac(vy_n, vy_d)} )$`;
+                a_text = `答え： y = ${av === 1 ? '' : av}(x - ${this.fracHtml(-vx_n, vx_d)})<span class="sup">2</span> ${vy_n >= 0 ? '+' : ''}${this.fracHtml(vy_n, vy_d)} <br> 頂点： ( ${this.fracHtml(vx_n, vx_d)}, ${this.fracHtml(vy_n, vy_d)} )`;
                 conf = { type: 'std', a: av, b: bv, c: cv }; break;
+            
             case 'k_ineq':
                 const x1 = this.r(-3, 1); const x2 = x1 + this.r(2, 4);
                 t = "【基礎】次の2次不等式を解け。";
-                m = `x^2 ${-(x1+x2) >= 0 ? '+' : ''}${-(x1+x2)}x ${x1*x2 >= 0 ? '+' : ''}${x1*x2} \\leqq 0`;
-                a_text = `答え： $(x - ${x1})(x - ${x2}) \\leqq 0$ より $ ${x1} \\leqq x \\leqq ${x2} $`;
+                m = `x<span class="sup">2</span> ${-(x1+x2) >= 0 ? '+' : ''}${-(x1+x2)}x ${x1*x2 >= 0 ? '+' : ''}${x1*x2} ≦ 0`;
+                a_text = `答え： (x - ${x1})(x - ${x2}) ≦ 0 より ${x1} ≦ x ≦ ${x2}`;
                 conf = { type: 'std', a: 1, b: -(x1+x2), c: x1*x2 }; break;
+
             case 'a_root_pos':
                 const ak = this.r(3, 7);
-                t = `【応用】$x^2 - 2ax + ${ak} = 0$ が $x > 1$ に異なる2つの実数解をもつ $a$ の範囲。`;
-                m = `x^2 - 2ax + ${ak} = 0`;
-                a_text = `答え： $D/4 > 0, \\text{軸} > 1, f(1) > 0$ を連立： $\\sqrt{${ak}} < a < ${this.frac(1+ak, 2)}$`;
+                t = "【応用】x > 1 の範囲に異なる2つの実数解をもつ a の範囲。";
+                m = `x<span class="sup">2</span> - 2ax + ${ak} = 0`;
+                a_text = `答え： D/4 > 0, 軸 > 1, f(1) > 0 を連立して： √${ak} < a < ${this.fracHtml(1+ak, 2)}`;
                 conf = { type: 'std', a: 1, b: -4, c: ak }; break;
+            
             case 'a_area':
                 const ar = this.r(1, 2);
-                t = `【最難関】$0 \\leqq m \\leqq ${ar}$ のとき $y = x^2 - 2mx + m$ の通過領域。`;
-                m = `y = x^2 - 2mx + m \\quad (0 \\leqq m \\leqq ${ar})`;
-                a_text = `答え： $m$ の2次方程式として実数解条件 $D \\geqq 0$ や端点をチェック。`;
+                t = `【最難関】0 ≦ m ≦ ${ar} のとき y = x<span class="sup">2</span> - 2mx + m の通過領域。`;
+                m = `y = x<span class="sup">2</span> - 2mx + m (0 ≦ m ≦ ${ar})`;
+                a_text = `答え： mの2次方程式として実数解条件 D ≧ 0 や端点をチェック。`;
                 conf = { type: 'area', range: ar, b: -2 }; break;
+
             default:
-                t = "類題を生成しました。"; m = "y = x^2 + "+bv+"x + "+cv; a_text = "解答ロジック適用中...";
-                conf = { type: 'std', a: 1, b: bv, c: cv };
+                t = "類題生成中..."; m = "y = x<span class="sup">2</span>"; a_text = "解答準備中";
+                conf = { type: 'std', a: 1, b: 0, c: 0 };
         }
 
-        inst.innerHTML = t; mbox.innerHTML = `\\[ ${m} \\]`; abox.innerHTML = a_text;
-        if (window.MathJax) await MathJax.typesetPromise([mbox, abox]);
+        inst.innerHTML = t;
+        mbox.innerHTML = m;
+        abox.innerHTML = a_text;
         this.draw(conf);
     },
 
@@ -159,11 +155,11 @@ const app = {
         let ds = [];
         if (conf.type === 'area') {
             for(let m=0; m<=conf.range; m+=conf.range/5) {
-                let d = []; for(let x=-2; x<=4; x+=0.2) d.push({x: x, y: x*x - 2*m*x + m});
+                let d = []; for(let x=-2; x<=4; x+=0.1) d.push({x: x, y: x*x - 2*m*x + m});
                 ds.push({ data: d, showLine: true, borderColor: `rgba(0, 242, 255, ${1-m/conf.range})`, borderWidth: 1, pointRadius: 0 });
             }
         } else {
-            let d = []; for(let x=-8; x<=8; x+=0.2) d.push({x: x, y: conf.a*x*x + (conf.b||0)*x + (conf.c||0)});
+            let d = []; for(let x=-8; x<=8; x+=0.1) d.push({x: x, y: conf.a*x*x + (conf.b||0)*x + (conf.c||0)});
             ds.push({ data: d, showLine: true, borderColor: '#39ff14', borderWidth: 2, pointRadius: 0 });
         }
         this.chart = new Chart(ctx, {
@@ -172,7 +168,7 @@ const app = {
         });
     }
 };
-window.onload = () => setTimeout(() => app.generate(), 500);
+window.onload = () => app.generate();
 </script>
 </body>
 </html>
