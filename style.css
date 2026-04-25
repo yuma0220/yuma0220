@@ -1,0 +1,36 @@
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  text-align:center;
+}
+
+.card{
+  background:rgba(255,255,255,0.05);
+  padding:20px;
+  margin:15px auto;
+  border-radius:15px;
+  width:90%;
+  max-width:400px;
+}
+
+input{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  background:#22c55e;
+  color:white;
+  margin:5px;
+}
+
+canvas{
+  background:white;
+  margin-top:10px;
+}

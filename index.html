@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二次関数AIコーチ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>📘 二次関数AIコーチ</h1>
+
+<div class="card">
+  <input id="username" placeholder="名前">
+  <button onclick="login()">開始</button>
+</div>
+
+<div class="card">
+  <p id="question">問題</p>
+  <input id="answer">
+  <button onclick="check()">答える</button>
+
+  <p id="result"></p>
+  <p id="score">スコア:0</p>
+
+  <canvas id="graph" width="300" height="300"></canvas>
+</div>
+
+<div class="card">
+  <h2>分析</h2>
+  <p id="status"></p>
+  <canvas id="weakChart" width="300" height="200"></canvas>
+  <button onclick="weakMode()">弱点特訓</button>
+</div>
+
+<div class="card">
+  <h2>履歴</h2>
+  <ul id="historyList"></ul>
+</div>
+
+<div class="card">
+  <button onclick="downloadBackup()">データ保存</button>
+  <input type="file" onchange="loadBackup(event)">
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
