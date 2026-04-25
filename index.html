@@ -2,231 +2,239 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>二次関数：究極解析 Master v2.0</title>
+    <title>二次関数：AI解析 System v3.0</title>
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
-            chtml: { displayAlign: 'center' }
+            tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+            startup: { pageReady: () => { return MathJax.startup.defaultPageReady(); } }
         };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --bg: #0a0a0f; --card: #16161e; --accent: #8b5cf6; --text: #f3f4f6; --dim: #9ca3af; }
-        body { background: var(--bg); color: var(--text); font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; display: flex; height: 100vh; }
+        :root { --bg: #0d0d12; --card: #1a1a24; --accent: #a78bfa; --text: #e2e8f0; --border: #334155; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; display: flex; height: 100vh; }
         
-        aside { width: 340px; background: var(--card); border-right: 1px solid #2d2d39; padding: 25px; overflow-y: auto; }
-        .lvl-h { color: var(--accent); font-size: 0.7rem; font-weight: bold; letter-spacing: 1.5px; margin: 25px 0 10px; text-transform: uppercase; }
-        .q-btn { width: 100%; text-align: left; padding: 14px; background: transparent; border: none; color: var(--dim); cursor: pointer; border-radius: 8px; font-size: 0.9rem; margin-bottom: 4px; transition: 0.2s; }
-        .q-btn:hover { background: #252532; color: white; }
-        .q-btn.active { background: #2e1065; color: white; border-left: 4px solid var(--accent); font-weight: bold; }
+        aside { width: 320px; background: var(--card); border-right: 1px solid var(--border); padding: 30px; display: flex; flex-direction: column; }
+        .lvl-tag { font-size: 0.6rem; color: var(--accent); border: 1px solid var(--accent); padding: 2px 6px; border-radius: 4px; margin-bottom: 8px; display: inline-block; }
+        .q-btn { width: 100%; text-align: left; padding: 15px; background: #242432; border: 1px solid transparent; color: #94a3b8; cursor: pointer; border-radius: 10px; margin-bottom: 8px; transition: 0.3s; }
+        .q-btn:hover { background: #2d2d3d; border-color: var(--accent); color: white; }
+        .q-btn.active { background: #4c1d95; color: white; border-color: var(--accent); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 
-        main { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
-        .p-card { background: var(--card); border-radius: 16px; padding: 35px; border: 1px solid #2d2d39; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .math-display { font-size: 2.4rem; text-align: center; margin: 25px 0; padding: 30px; background: #000; border-radius: 12px; border: 1px solid #333; }
-        .instruction { font-size: 1.25rem; line-height: 1.6; color: #e5e7eb; border-left: 5px solid var(--accent); padding-left: 20px; }
+        main { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
+        .p-card { background: var(--card); border-radius: 20px; padding: 40px; border: 1px solid var(--border); }
+        .instruction { font-size: 1.3rem; font-weight: 600; line-height: 1.6; margin-bottom: 20px; color: #fff; }
+        .math-display { font-size: 2.2rem; text-align: center; margin: 30px 0; padding: 30px; background: #000; border-radius: 15px; border: 1px solid var(--border); min-height: 80px; display: flex; align-items: center; justify-content: center; }
         
-        /* AI解説エリアの強化 */
-        .ai-expl { background: #1e1e2d; border-radius: 12px; padding: 35px; display: none; line-height: 2; border: 1px solid #444; }
-        .expl-section { margin-bottom: 30px; }
-        .expl-h { color: var(--accent); font-weight: bold; font-size: 1.2rem; display: block; border-bottom: 1px solid #444; margin-bottom: 10px; }
-        .expl-text { color: #d1d5db; }
-        
-        .chart-box { min-height: 450px; background: #000; border-radius: 16px; border: 1px solid #2d2d39; }
-        .ctrl-row { display: flex; gap: 15px; }
-        button.btn-p { flex: 1; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
-        button.btn-s { background: #374151; color: white; border: none; padding: 18px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; }
+        .ai-expl { background: #11111a; border-left: 4px solid var(--accent); border-radius: 8px; padding: 30px; display: none; }
+        .expl-h { color: var(--accent); font-weight: bold; margin-bottom: 15px; font-size: 1.1rem; }
+        .expl-step { margin-bottom: 25px; border-bottom: 1px solid #2d2d3d; padding-bottom: 15px; }
+
+        .chart-container { background: #000; border-radius: 20px; border: 1px solid var(--border); padding: 20px; height: 450px; }
+        .btn-group { display: flex; gap: 16px; }
+        .btn { flex: 1; padding: 18px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .btn-main { background: var(--accent); color: #000; }
+        .btn-sub { background: #334155; color: white; }
+        .btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
 <aside>
-    <h2 style="margin-top:0; font-size: 1.6rem;">二次関数 Lab Pro</h2>
+    <h2 style="margin:0 0 30px 0; font-size: 1.5rem;">AI Math Solver</h2>
     
-    <div class="lvl-h">Essential (基礎〜標準)</div>
-    <button class="q-btn active" id="btn-v" onclick="app.select('v')">1. 頂点と式の決定</button>
-    <button class="q-btn" id="btn-sep" onclick="app.select('sep')">2. 解の配置(軸・端点・D)</button>
+    <span class="lvl-tag">Standard</span>
+    <button class="q-btn active" onclick="app.select('v', this)">頂点と係数の決定</button>
+    <button class="q-btn" onclick="app.select('sep', this)">解の配置（軸・端点・D）</button>
     
-    <div class="lvl-h">Advanced (Focus Gold StepUp)</div>
-    <button class="q-btn" id="btn-p" onclick="app.select('p')">3. 例題78 (主役の交代)</button>
-    <button class="q-btn" id="btn-tangent" onclick="app.select('tangent')">4. 共通接線と接触条件</button>
-    <button class="q-btn" id="btn-area" onclick="app.select('area')">5. 通過領域の境界解析</button>
+    <span class="lvl-tag" style="margin-top:20px;">Focus Gold StepUp</span>
+    <button class="q-btn" onclick="app.select('p', this)">主役の交代 (全称命題)</button>
+    <button class="q-btn" onclick="app.select('tangent', this)">2次関数の共通接線</button>
+    <button class="q-btn" onclick="app.select('area', this)">通過領域の包絡線</button>
 </aside>
 
 <main>
     <div class="p-card">
-        <div id="q-instr" class="instruction"></div>
+        <div id="q-instr" class="instruction">Loading...</div>
         <div id="q-formula" class="math-display"></div>
-        <div class="ctrl-row">
-            <button class="btn-p" onclick="app.showExpl()">AI思考プロセス・グラフ解説</button>
-            <button class="btn-s" onclick="app.reload()">類題を自動生成</button>
+        <div class="btn-group">
+            <button class="btn btn-main" onclick="app.toggleExpl()">AI解説を表示 / 隠す</button>
+            <button class="btn btn-sub" onclick="app.reload()">別の数値を生成（類題）</button>
         </div>
     </div>
     
     <div id="expl" class="ai-expl"></div>
-    <div class="chart-box"><canvas id="mainChart"></canvas></div>
+    <div class="chart-container"><canvas id="mainChart"></canvas></div>
 </main>
 
 <script>
+/**
+ * 二次関数AIロジックエンジン
+ */
 const app = {
     mode: 'v',
     chart: null,
-    current: {},
+    current: null,
 
-    // 数式成形エンジン
-    fmt(a, b, c, x="x") {
-        let s = "";
-        const term = (v, p) => {
-            if (v === 0) return "";
-            let res = v > 0 ? (s ? "+" : "") : "-";
-            let av = Math.abs(v);
-            if (av !== 1 || p === 0) res += Math.round(av * 10) / 10;
-            if (p > 0) res += x;
-            if (p > 1) res += "^" + p;
-            return res;
-        };
-        s += term(a, 2); s += term(b, 1); s += term(c, 0);
-        return s || "0";
-    },
-
-    r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
-
-    select(m) {
-        this.mode = m;
-        document.querySelectorAll('.q-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('btn-' + m).classList.add('active');
+    init() {
+        console.log("AI Engine Initializing...");
         this.reload();
     },
 
-    async reload() {
-        document.getElementById('expl').style.display = 'none';
-        let f="", i="", e="", g={a:1, b:0, c:0, type:'normal'};
-        const a = this.r(1, 2) * (Math.random() > 0.5 ? 1 : -1);
-        const p = this.r(-3, 3); const q = this.r(-2, 3);
+    select(mode, btn) {
+        this.mode = mode;
+        document.querySelectorAll('.q-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.reload();
+    },
 
-        switch(this.mode) {
-            case 'v':
-                g = {a, b:-2*a*p, c:a*p*p+q};
-                f = `f(x) = ${this.fmt(g.a, g.b, g.c)}`;
-                i = `頂点の座標が $(${p}, ${q})$ であり、点 $(0, ${g.c})$ を通る2次関数を求め、そのグラフを描きなさい。`;
-                e = `
-                    <div class="expl-section">
-                        <span class="expl-h">【解法戦略】頂点からのアプローチ</span>
-                        <div class="expl-text">頂点が既知の場合、基本形 $y = a(x-p)^2 + q$ からスタートするのが最短です。</div>
-                    </div>
-                    <div class="expl-section">
-                        <span class="expl-h">【ステップ】</span>
-                        1. $f(x) = a(x - ${p})^2 + ${q}$ とおきます。<br>
-                        2. 点 $(0, ${g.c})$ を通るので、代入して $a$ を求めます： $ ${g.c} = a(0 - ${p})^2 + ${q} \rightarrow a = ${a} $。<br>
-                        3. これを展開して一般形 ${f} を導きます。
-                    </div>`;
-                break;
-            case 'sep':
-                const k1 = this.r(1, 2);
-                g = {a:1, b:-(2*k1+2), c:k1*k1+4};
-                f = `x^2 ${this.fmt(0, g.b, g.c)} = 0`;
-                i = `この方程式の2つの異なる実数解が、ともに $x > ${k1}$ の範囲にあるような定数の条件を解析せよ。`;
-                e = `
-                    <div class="expl-section">
-                        <span class="expl-h">【AI解析】グラフの位置関係</span>
-                        <div class="expl-text">「解の配置」問題は、放物線が $x$ 軸のどの部分と交わるかを可視化することが重要です。</div>
-                    </div>
-                    <div class="expl-section">
-                        <span class="expl-h">【必須3条件のチェック】</span>
-                        1. **判別式 $D > 0$**: $x$ 軸と2点で交わる必要があります。<br>
-                        2. **軸の条件**: 軸 $x = -b/2a$ が ${k1} より右側にある必要があります。<br>
-                        3. **端点の符号**: $f(${k1}) > 0$ であることが、解を ${k1} より右に押し出す決定打となります。
-                    </div>`;
-                break;
-            case 'p':
-                f = "f(x) = x^2 - 2px - p^2 + 2p - 1";
-                i = "【Focus Gold 例題78】実数 $p$ がどのような値をとっても $f(x) < 0$ となる $x$ の範囲を求めよ。";
-                e = `
-                    <div class="expl-section">
-                        <span class="expl-h">【論理の転換】主役の交代</span>
-                        <div class="expl-text">「どんな $p$ でも」という言葉に注目します。これは $x$ を固定して、$p$ を変数と見なす「逆像法」の考え方です。</div>
-                    </div>
-                    <div class="expl-section">
-                        <span class="expl-h">【数式処理】</span>
-                        $p$ について整理すると、 $g(p) = -p^2 + 2(1-x)p + (x^2-1)$ という「$p$ の上に凸の2次関数」になります。<br>
-                        これが常に負であるためには、**$p$ の方程式の判別式 $D < 0$** であれば良いのです。
-                    </div>`;
-                g = {a:1, b:-2, c:0};
-                break;
-            case 'tangent':
-                const offset = this.r(2, 4);
-                f = `y = x^2 \\quad , \\quad y = -(x - ${offset})^2 + ${offset}`;
-                i = "2つの放物線の両方に接する共通接線の方程式を求め、その位置関係を示せ。";
-                e = `
-                    <div class="expl-section">
-                        <span class="expl-h">【解析】共通接線の導出</span>
-                        1. 放物線 $y=x^2$ 上の点 $(t, t^2)$ における接線 $y = 2tx - t^2$ を作ります。<br>
-                        2. この直線がもう一方の放物線と接する条件、つまり連立した時の判別式 $D=0$ を解きます。<br>
-                        3. $t$ が求まれば、それが接線の傾きを決定します。
-                    </div>`;
-                g = {type:'double', a1:1, b1:0, c1:0, a2:-1, b2:2*offset, c2:-offset*offset+offset};
-                break;
-            case 'area':
-                f = "y = x^2 - 2mx + m^2 + m \\quad (0 \\le m \\le 1)";
-                i = "定数 $m$ が $0$ から $1$ まで動くとき、放物線が通過する領域をグラフで示せ。";
-                e = `
-                    <div class="expl-section">
-                        <span class="expl-h">【高度な解析】通過領域</span>
-                        <div class="expl-text">放物線が動いた「跡（あとかた）」を求める問題です。</div>
-                    </div>
-                    <div class="expl-section">
-                        <span class="expl-h">【ステップ】</span>
-                        $m$ についての方程式 $m^2 + (1-2x)m + (x^2-y) = 0$ が、$0 \le m \le 1$ の範囲に実数解を持つような $x, y$ の条件を不等式で表します。これが「境界線」となります。
-                    </div>`;
-                g = {a:1, b:-2, c:1};
-                break;
+    // 数値をランダム生成するAIサブロジック
+    random(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
+
+    // 数式を美しく成形
+    formatEq(a, b, c) {
+        let res = "";
+        const f = (val, pow) => {
+            if (val === 0) return "";
+            let s = val > 0 ? (res ? "+" : "") : "-";
+            let v = Math.abs(val);
+            if (v !== 1 || pow === 0) s += v;
+            if (pow > 0) s += "x";
+            if (pow > 1) s += "^2";
+            return s;
+        };
+        res += f(a, 2); res += f(b, 1); res += f(c, 0);
+        return res || "0";
+    },
+
+    reload() {
+        const explEl = document.getElementById('expl');
+        explEl.style.display = 'none';
+        
+        // --- 類題生成AIアルゴリズム ---
+        let data = {};
+        const a = this.random(1, 2) * (Math.random() > 0.5 ? 1 : -1);
+        const p = this.random(-3, 3);
+        const q = this.random(-2, 4);
+
+        if (this.mode === 'v') {
+            const b = -2 * a * p;
+            const c = a * p * p + q;
+            data = {
+                instr: `頂点の座標が $(${p}, ${q})$ であり、点 $(0, ${c})$ を通る2次関数を求めなさい。`,
+                formula: `f(x) = ${this.formatEq(a, b, c)}`,
+                expl: `
+                    <div class="expl-step"><span class="expl-h">思考のプロセス</span>頂点が $(${p}, ${q})$ と与えられているため、基本形 $y = a(x - p)^2 + q$ に当てはめるのが最善です。</div>
+                    <div class="expl-step"><span class="expl-h">計算手順</span>
+                    1. $y = a(x - ${p})^2 + ${q}$ とおく。<br>
+                    2. $x=0, y=${c}$ を代入： $ ${c} = a(0 - ${p})^2 + ${q} $ <br>
+                    3. $ ${c} = ${p*p}a + ${q} \rightarrow a = ${a} $ <br>
+                    4. 展開して、一般形 $y = ${this.formatEq(a, b, c)}$ を得ます。</div>`,
+                graph: { a, b, c }
+            };
+        } else if (this.mode === 'sep') {
+            const k = this.random(1, 2);
+            data = {
+                instr: `2次方程式 $x^2 - 2mx + m + 2 = 0$ の異なる2つの実数解がともに $x > ${k}$ となる定数 $m$ の範囲を求めよ。`,
+                formula: `x^2 - 2mx + m + 2 = 0`,
+                expl: `
+                    <div class="expl-step"><span class="expl-h">AI戦略：3条件の連立</span>解の配置問題は、グラフが $x$ 軸のどこで交わるかを「判別式」「軸」「端点」で固定します。</div>
+                    <div class="expl-step"><span class="expl-h">論理展開</span>
+                    1. **判別式**: $D/4 = m^2 - (m+2) > 0$ <br>
+                    2. **軸の場所**: 軸 $x = m$ が $m > ${k}$ <br>
+                    3. **端点の符号**: $f(${k}) = ${k*k} - 2m(${k}) + m + 2 > 0$ <br>
+                    これらを全て満たす共通範囲が答えとなります。</div>`,
+                graph: { a:1, b:-4, c:5 } // 例示用
+            };
+        } else if (this.mode === 'p') {
+            data = {
+                instr: "【Focus Gold 78】実数 $p$ がどのような値をとっても $f(x) < 0$ となる $x$ の範囲を求めよ。",
+                formula: "f(x) = x^2 - 2px - p^2 + 2p - 1",
+                expl: `
+                    <div class="expl-step"><span class="expl-h">AI解析：視点の逆転</span>「どんな $p$ に対しても」という条件は、$p$ を変数と見なすことで解決します。</div>
+                    <div class="expl-step"><span class="expl-h">手順</span>
+                    $p$ の2次関数 $g(p) = -p^2 + 2(1-x)p + (x^2-1)$ が常に負 ⇔ $p$ に関する判別式 $D < 0$ を解きます。<br>
+                    $D/4 = (1-x)^2 - (-1)(x^2-1) = 2x^2 - 2x < 0$ より $0 < x < 1$ となります。</div>`,
+                graph: { a:1, b:-2, c:0 }
+            };
+        } else if (this.mode === 'tangent') {
+            data = {
+                instr: "放物線 $y = x^2$ と $y = -x^2 + 4x - 2$ の両方に接する共通接線の方程式を求めよ。",
+                formula: "y = x^2 \\quad \\text{and} \\quad y = -x^2 + 4x - 2",
+                expl: `
+                    <div class="expl-step"><span class="expl-h">AI解析：接点共有の理論</span>1つ目の放物線の接線が、2つ目の放物線と「重解（接する）」を持つ条件を利用します。</div>
+                    <div class="expl-step"><span class="expl-h">手順</span>
+                    1. $y=x^2$ 上の接点 $(t, t^2)$ での接線 $y = 2tx - t^2$ を作成。<br>
+                    2. $2tx - t^2 = -x^2 + 4x - 2$ を整理し、判別式 $D=0$ を解き $t$ を決定します。</div>`,
+                graph: { type: 'double' }
+            };
+        } else if (this.mode === 'area') {
+            data = {
+                instr: "$y = x^2 - 2mx + m^2 + m$ において、$0 \le m \le 1$ の範囲を $m$ が動くときの通過領域を解析せよ。",
+                formula: "y = (x-m)^2 + m",
+                expl: `<div class="expl-step"><span class="expl-h">AI解析：包絡線</span>頂点 $(m, m)$ が直線 $y=x$ 上を動きながら、放物線が掃引（スキャン）する領域を求めます。</div>`,
+                graph: { a:1, b:-2, c:1 }
+            };
         }
 
-        this.current = {f, i, e, g};
-        document.getElementById('q-instr').innerText = i;
-        document.getElementById('q-formula').innerHTML = "\\[ " + f + " \\]";
+        this.current = data;
+        this.updateUI();
+    },
+
+    updateUI() {
+        document.getElementById('q-instr').innerHTML = this.current.instr;
+        document.getElementById('q-formula').innerHTML = "\\[ " + this.current.formula + " \\]";
         
-        if (window.MathJax) MathJax.typesetPromise();
+        // MathJaxの再レンダリングを確実に実行
+        if (window.MathJax && MathJax.typesetPromise) {
+            MathJax.typesetPromise();
+        }
         this.draw();
     },
 
-    showExpl() {
+    toggleExpl() {
         const el = document.getElementById('expl');
-        el.innerHTML = `<h3 style="margin:0; color:var(--accent); display:flex; align-items:center; gap:10px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2zm0-6h2v4h-2z"/></svg>
-            AI Deep Analysis</h3>` + this.current.e;
-        el.style.display = 'block';
-        if (window.MathJax) MathJax.typesetPromise([el]);
+        if (el.style.display === 'none') {
+            el.innerHTML = `<h3 style="color:var(--accent);margin:0 0 15px 0">🤖 AI Solution Report</h3>` + this.current.expl;
+            el.style.display = 'block';
+            if (window.MathJax) MathJax.typesetPromise([el]);
+        } else {
+            el.style.display = 'none';
+        }
     },
 
     draw() {
         const ctx = document.getElementById('mainChart').getContext('2d');
         if (this.chart) this.chart.destroy();
-        const g = this.current.g;
-        let ds = [];
+        
+        const g = this.current.graph;
+        let datasets = [];
 
         if (g.type === 'double') {
             let d1 = [], d2 = [];
-            for (let x=-5; x<=7; x+=0.1) {
-                d1.push({x, y: g.a1*x*x + g.b1*x + g.c1});
-                d2.push({x, y: g.a2*x*x + g.b2*x + g.c2});
+            for (let x = -3; x <= 5; x += 0.1) {
+                d1.push({x, y: x*x});
+                d2.push({x, y: -x*x + 4*x - 2});
             }
-            ds.push({label:'Curve A', data:d1, showLine:true, borderColor:'#8b5cf6', borderWidth:3, pointRadius:0});
-            ds.push({label:'Curve B', data:d2, showLine:true, borderColor:'#ec4899', borderWidth:3, pointRadius:0});
+            datasets.push({ data: d1, showLine: true, borderColor: '#a78bfa', borderWidth: 3, pointRadius: 0 });
+            datasets.push({ data: d2, showLine: true, borderColor: '#f472b6', borderWidth: 3, pointRadius: 0 });
         } else {
-            let d = [];
-            for (let x=-8; x<=8; x+=0.1) d.push({x, y: g.a*x*x + g.b*x + g.c});
-            ds.push({label:'Main Curve', data:d, showLine:true, borderColor:'#fff', borderWidth:3, pointRadius:0});
+            let points = [];
+            for (let x = -8; x <= 8; x += 0.1) {
+                points.push({ x, y: g.a * x * x + g.b * x + g.c });
+            }
+            datasets.push({ data: points, showLine: true, borderColor: '#a78bfa', borderWidth: 3, pointRadius: 0 });
         }
 
         this.chart = new Chart(ctx, {
             type: 'scatter',
-            data: { datasets: ds },
-            options: { 
-                responsive: true, maintainAspectRatio: false,
-                scales: { 
-                    x: { min:-5, max:6, grid:{color:'#222'}, ticks:{color:'#999'} }, 
-                    y: { min:-4, max:10, grid:{color:'#222'}, ticks:{color:'#999'} } 
+            data: { datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { min: -5, max: 5, grid: { color: '#2d2d3d' }, ticks: { color: '#64748b' } },
+                    y: { min: -2, max: 8, grid: { color: '#2d2d3d' }, ticks: { color: '#64748b' } }
                 },
                 plugins: { legend: { display: false } }
             }
@@ -234,10 +242,10 @@ const app = {
     }
 };
 
-// 起動時に最初の問題を生成
-window.onload = () => {
-    app.reload();
-};
+// 起動プロセス
+window.addEventListener('DOMContentLoaded', () => {
+    app.init();
+});
 </script>
 </body>
 </html>
