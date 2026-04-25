@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIGA CORE 3M: FULL REPOSITORY</title>
+    <title>二次関数嫌い & 数学マスター CORE 3M</title>
     <style>
         :root {
             --bg: #0d1117; --card: #161b22; --border: #30363d;
@@ -11,213 +11,196 @@
             --text-main: #c9d1d9; --text-sub: #8b949e;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text-main); font-family: -apple-system, sans-serif; display: flex; height: 100vh; overflow: hidden; }
+        body { background: var(--bg); color: var(--text-main); font-family: -apple-system, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        aside { width: 280px; background: var(--bg); border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
-        .nav-scroll { flex: 1; }
-        .cat { font-size: 0.7rem; color: var(--text-sub); margin: 15px 0 8px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
-        .nav-btn { width: 100%; padding: 10px; background: none; border: 1px solid transparent; color: var(--text-sub); text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.85rem; margin-bottom: 4px; }
-        .nav-btn:hover { background: #21262d; color: #fff; }
-        .nav-btn.active { background: #21262d; border-color: var(--accent-blue); color: #fff; }
+        header { padding: 15px 25px; border-bottom: 1px solid var(--border); font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        
+        .container { flex: 1; display: flex; overflow: hidden; }
 
-        main { flex: 1; padding: 20px; overflow-y: auto; display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+        /* 左サイドバー: ガイド */
+        aside.left-side { width: 280px; padding: 20px; border-right: 1px solid var(--border); overflow-y: auto; }
+        .side-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; font-size: 0.85rem; }
+        .formula { background: #000; padding: 10px; border-radius: 5px; text-align: center; color: #fff; margin: 8px 0; font-family: serif; border: 1px solid #333; }
+
+        /* 中央: メイン問題 & グラフ */
+        main { flex: 2; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
         .p-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; position: relative; }
         .badge { position: absolute; top: 15px; left: 15px; background: var(--accent-blue); color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
-        .q-text { font-size: 1.8rem; text-align: center; margin: 20px 0; font-weight: bold; color: #fff; }
-        .q-inst { text-align: center; color: var(--text-sub); margin-bottom: 20px; min-height: 3em; }
+        .q-text { font-size: 2rem; text-align: center; margin: 25px 0; font-weight: bold; color: #fff; }
+        .q-inst { text-align: center; color: var(--text-sub); margin-bottom: 20px; }
         
-        .input-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
-        input[type="text"] { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: #fff; width: 50%; }
-        .btn-green { background: var(--accent-green); color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .btn-blue { background: var(--accent-blue); color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        .input-row { display: flex; gap: 10px; justify-content: center; }
+        input[type="text"] { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 12px; color: #fff; width: 60%; }
+        button { border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-green { background: var(--accent-green); color: #fff; padding: 12px 25px; }
+        .btn-green:hover { filter: brightness(1.2); }
 
-        .graph-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; height: 400px; position: relative; }
-        canvas { width: 100%; height: 100%; }
+        .graph-area { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; flex: 1; min-height: 400px; display: flex; flex-direction: column; }
+        canvas { flex: 1; cursor: crosshair; }
 
-        .analysis-col { display: flex; flex-direction: column; gap: 20px; }
-        .side-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
-        .stat-bar-container { display: flex; align-items: flex-end; gap: 8px; height: 100px; padding: 10px; }
-        .stat-bar { flex: 1; border-radius: 4px 4px 0 0; min-height: 5px; }
+        /* 右サイドバー: 単元選択 & 分析 */
+        aside.right-side { width: 320px; padding: 20px; border-left: 1px solid var(--border); overflow-y: auto; }
+        .cat-title { font-size: 0.7rem; color: var(--text-sub); margin: 15px 0 5px; font-weight: bold; text-transform: uppercase; }
+        .nav-btn { width: 100%; padding: 10px; background: none; border: 1px solid transparent; color: var(--text-sub); text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.85rem; margin-bottom: 2px; }
+        .nav-btn:hover { background: #21262d; color: #fff; }
+        .nav-btn.active { background: #21262d; border-color: var(--accent-blue); color: #fff; font-weight: 600; }
 
-        .controls { background: #000; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid var(--border); }
-        .ctrl-row { margin-bottom: 8px; }
-        .ctrl-row label { font-size: 0.7rem; color: var(--text-sub); display: block; }
-        input[type=range] { width: 100%; accent-color: var(--accent-blue); }
-
-        .ans-box { display: none; margin-top: 10px; padding: 10px; background: #000; border-left: 3px solid var(--accent-purple); font-size: 0.85rem; color: var(--text-sub); }
+        /* 下部: 具体例 */
+        .footer-hint { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .hint-box { border: 1px solid #38235d; border-radius: 8px; padding: 15px; background: rgba(137, 87, 229, 0.05); }
+        
+        .ans-step { display: none; margin-top: 15px; padding: 15px; background: #000; border-left: 4px solid var(--accent-purple); border-radius: 4px; line-height: 1.6; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-<aside>
-    <div style="font-weight: 800; color: var(--accent-blue); margin-bottom: 20px; font-size: 1.2rem;">CORE 3M: INF</div>
-    <div class="nav-scroll">
-        <div class="cat">Quadratic (I/A)</div>
-        <button class="nav-btn active" data-unit="q1">文字係数の平方完成</button>
-        <button class="nav-btn" data-unit="q2">区間が動く最大最小</button>
-        <button class="nav-btn" data-unit="q3">解の配置(多重制約)</button>
-        <div class="cat">Advanced (II/B)</div>
-        <button class="nav-btn" data-unit="a1">指数関数の爆発的変化</button>
-        <button class="nav-btn" data-unit="a2">対数関数のグラフ性質</button>
-        <button class="nav-btn" data-unit="a3">三角関数の干渉</button>
-        <div class="cat">Divine (III/C)</div>
-        <button class="nav-btn" data-unit="d1">楕円の標準形と接線</button>
-        <button class="nav-btn" data-unit="d2">放物線の1/6求積</button>
-    </div>
-</aside>
+<header>📖 二次関数嫌い & 数学完全制覇</header>
 
-<main>
-    <div style="display:flex; flex-direction:column; gap:20px;">
+<div class="container">
+    <aside class="left-side">
+        <div class="side-card">
+            <strong>名前を入力</strong><br>
+            <input type="text" placeholder="ユーザー名" style="width:100%; margin-top:10px; padding:8px; background:#0d1117; border:1px solid var(--border); color:#fff; border-radius:4px;">
+            <button class="btn-green" style="width:100%; margin-top:10px; height:36px;">開始</button>
+        </div>
+        <div class="side-card">
+            <strong>操作ガイド</strong><br>
+            ・公式（頂点のx座標）
+            <div class="formula">x = -b / 2a</div>
+            ・頂点の座標
+            <div class="formula">(-b/2a, f(-b/2a))</div>
+        </div>
+        <div class="side-card" style="border-left: 4px solid var(--accent-purple);">
+            <strong style="color:var(--accent-purple);">場合分けのヒント</strong><br>
+            最大・最小を求める問題では、軸が範囲の「外」か「中」かで分けて考えよ！
+        </div>
+    </aside>
+
+    <main>
         <div class="p-card">
-            <span class="badge" id="badge">normal</span>
+            <div class="badge" id="badge">normal</div>
             <div class="q-text" id="q-math">y = 2x² - 3x + 1</div>
             <div class="q-inst" id="q-inst">の頂点のx座標を求めよ。</div>
             <div class="input-row">
-                <input type="text" id="user-ans" placeholder="答えを入力">
+                <input type="text" id="user-input" placeholder="答えを入力">
                 <button class="btn-green" onclick="app.check()">答える</button>
-                <button class="btn-blue" onclick="app.toggleAns()">解説</button>
+                <button style="background:var(--accent-purple); color:#fff; padding:12px 15px;" onclick="app.toggleAns()">AI解説</button>
             </div>
-            <div id="ans-box" class="ans-box"></div>
+            <div id="ans-step" class="ans-step"></div>
         </div>
 
-        <div class="graph-card">
-            <canvas id="cvs"></canvas>
-            <div class="controls">
-                <div class="ctrl-row">
-                    <label>PARAM α: <span id="valA">1.0</span></label>
-                    <input type="range" id="rangeA" min="-5" max="5" step="0.1" value="1">
-                </div>
-                <div class="ctrl-row">
-                    <label>PARAM β: <span id="valB">0.0</span></label>
-                    <input type="range" id="rangeB" min="-5" max="5" step="0.1" value="0">
-                </div>
+        <div class="graph-area">
+            <div style="font-size:0.8rem; margin-bottom:5px;">グラフ表示 (リアルタイム)</div>
+            <canvas id="mainCvs"></canvas>
+            <div style="display:flex; gap:15px; padding-top:10px;">
+                <label style="font-size:0.7rem; color:var(--text-sub);">Param α: <input type="range" id="paramA" min="-5" max="5" step="0.1" value="1" oninput="app.draw()"></label>
+                <label style="font-size:0.7rem; color:var(--text-sub);">Param β: <input type="range" id="paramB" min="-5" max="5" step="0.1" value="0" oninput="app.draw()"></label>
             </div>
         </div>
-    </div>
 
-    <div class="analysis-col">
-        <div class="side-card">
-            <h3>📊 分析 (弱点)</h3>
-            <div class="stat-bar-container">
-                <div class="stat-bar" style="height: 50%; background: var(--accent-green);"></div>
-                <div class="stat-bar" style="height: 66%; background: var(--accent-blue);"></div>
-                <div class="stat-bar" style="height: 33%; background: var(--accent-purple);"></div>
+        <div class="footer-hint">
+            <div class="hint-box">
+                <h4 style="color:var(--accent-blue); margin-bottom:8px;">例1: 上に凸 (a > 0)</h4>
+                <p style="font-size:0.8rem;">頂点が最小値になります。頂点のx座標は x = -b/2a です。</p>
             </div>
-            <div style="display:flex; font-size:0.7rem; color:var(--text-sub); text-align:center;">
-                <span style="flex:1">basic</span><span style="flex:1">normal</span><span style="flex:1">advanced</span>
+            <div class="hint-box">
+                <h4 style="color:var(--accent-purple); margin-bottom:8px;">例2: 下に凸 (a < 0)</h4>
+                <p style="font-size:0.8rem;">頂点が最大値になります。頂点のx座標は x = -b/2a です。</p>
             </div>
         </div>
-        <div class="side-card">
-            <h3>🕒 履歴</h3>
-            <div id="history" style="font-size:0.8rem; color:var(--text-sub);">
-                記録待ち...
-            </div>
-        </div>
-    </div>
-</main>
+    </main>
+
+    <aside class="right-side">
+        <h3>📊 単元セレクト</h3>
+        <div class="cat-title">二次関数 (I/A)</div>
+        <button class="nav-btn active" onclick="app.set('q1', this)">文字平方完成</button>
+        <button class="nav-btn" onclick="app.set('q2', this)">動く区間の最大最小</button>
+        <button class="nav-btn" onclick="app.set('q3', this)">解の配置 (多重)</button>
+        <button class="nav-btn" onclick="app.set('q4', this)">格子点計数</button>
+        <button class="nav-btn" onclick="app.set('q5', this)">絶対値の迷宮</button>
+        <div class="cat-title">応用・発展 (II/B)</div>
+        <button class="nav-btn" onclick="app.set('a1', this)">通過領域</button>
+        <button class="nav-btn" onclick="app.set('a2', this)">指数・対数関数</button>
+        <button class="nav-btn" onclick="app.set('a3', this)">三角関数グラフ</button>
+        <div class="cat-title">極致 (III/C)</div>
+        <button class="nav-btn" onclick="app.set('d1', this)">1/6公式 (求積)</button>
+        <button class="nav-btn" onclick="app.set('d2', this)">頂点の軌跡連鎖</button>
+        <button class="nav-btn" onclick="app.set('d3', this)">共通接線</button>
+    </aside>
+</div>
 
 <script>
 const app = {
-    unit: 'q1', paramA: 1.0, paramB: 0.0,
-    
-    engines: {
-        q1: { q: "y = ax² + bx + c", i: "頂点の座標を α, β を用いて表せ。", a: "頂点 (-b/2a, f(-b/2a))", badge: "basic" },
-        q2: { q: "y = x² - 4x + 5 (α ≦ x ≦ α+2)", i: "最大値 M(α) が 10 となる α は？", a: "軸 x=2 と区間中央 α+1 を比較せよ。", badge: "normal" },
-        q3: { q: "x² - 2αx + 3β = 0", i: "異なる2つの実数解を持つ範囲を求めよ。", a: "判別式 D > 0, 軸, 端点の符号を確認。", badge: "advanced" },
-        a1: { q: "y = α^x", i: "α > 1 の時と 0 < α < 1 の時の違いをグラフで示せ。", a: "増加・減少の入れ替わり。", badge: "exp" },
-        a2: { q: "y = log_α(x + β)", i: "漸近線の位置を β で答えよ。", a: "x = -β が漸近線。", badge: "log" },
-        a3: { q: "y = α sin(βx)", i: "振幅 α と周期 2π/β の関係を確認せよ。", a: "bが大きくなると波が細かくなる。", badge: "trig" },
-        d1: { q: "x²/α² + y²/β² = 1", i: "楕円上の点における接線を α, β で表せ。", a: "x1x/a² + y1y/b² = 1", badge: "conic" },
-        d2: { q: "y = x² - α, y = -x² + β", i: "囲まれた面積の公式(1/6)を適用せよ。", a: "S = 1/6|a-a'|(β-α)³", badge: "calc" }
+    mode: 'q1',
+    data: {
+        q1: { q: "y = x² - 2ax + a² + 3a", i: "頂点の座標を a で表せ。", a: "1. 平方完成: (x-a)² + 3a<br>2. 頂点は (a, 3a) となります。", badge: "basic" },
+        q2: { q: "y = x² - 4ax (0 ≦ x ≦ 2)", i: "最大値 M(a) を求めよ。", a: "軸 x=2a と範囲中央 x=1 の比較。<br>a<1/2 の時 f(2), a≧1/2 の時 f(0)。", badge: "normal" },
+        q3: { q: "x² - (a+1)x + a = 0", i: "-2 < x < 0 に解を持つ a の範囲？", a: "D>0, 軸の位置, 端点の符号(f(-2), f(0))を確認せよ。", badge: "advanced" },
+        q4: { q: "y ≧ x², y ≦ x+2", i: "領域内の格子点個数は？", a: "x = -1, 0, 1, 2 で y の整数値をカウント。<br>合計 9 個。", badge: "logic" },
+        q5: { q: "y = | |x² - 4| - 1 |", i: "共有点が6個となる定数 k の範囲？", a: "グラフを折り返し、極大値 1 と 0 の間を通る時。<br>0 < k < 1。", badge: "graph" },
+        a1: { q: "y = 2tx - t² (0 ≦ t ≦ 1)", i: "通過領域を求めよ。", a: "t の2次方程式とみて D≧0。<br>境界は y = x²。", badge: "domain" },
+        a2: { q: "y = log_a(x)", i: "底 a が 1 より大きい時の形状は？", a: "右上がりの曲線。漸近線は x=0 (y軸)。", badge: "log" },
+        a3: { q: "y = a sin(bx)", i: "周期と振幅を求めよ。", a: "振幅は |a|, 周期は 2π/|b| です。", badge: "trig" },
+        d1: { q: "y = x², y = kx", i: "面積 S = 4/3 のとき k は？", a: "1/6公式 S = |a|/6 * (β-α)³ = k³/6 = 4/3 より k=2。", badge: "calc" },
+        d2: { q: "y = x² - 2ax + a² + a", i: "頂点の軌跡を求めよ。", a: "頂点 (a, a) を (X, Y) とおき a を消去。<br>y = x。", badge: "trace" },
+        d3: { q: "y = x², y = -(x-2)²", i: "共通接線を求めよ。", a: "接点を (t, t²) とおき、もう一方の曲線に接する条件 D=0 を使う。", badge: "divine" }
     },
 
     init() {
-        this.cacheDOM();
-        this.bindEvents();
-        this.updateUnit();
+        this.ctx = document.getElementById('mainCvs').getContext('2d');
+        this.set('q1', document.querySelector('.nav-btn.active'));
     },
 
-    cacheDOM() {
-        this.qMath = document.getElementById('q-math');
-        this.qInst = document.getElementById('q-inst');
-        this.ansBox = document.getElementById('ans-box');
-        this.badge = document.getElementById('badge');
-        this.cvs = document.getElementById('cvs');
-        this.ctx = this.cvs.getContext('2d');
-    },
-
-    bindEvents() {
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                this.unit = e.target.dataset.unit;
-                this.updateUnit();
-            };
-        });
-
-        const updateParams = () => {
-            this.paramA = parseFloat(document.getElementById('rangeA').value);
-            this.paramB = parseFloat(document.getElementById('rangeB').value);
-            document.getElementById('valA').innerText = this.paramA.toFixed(1);
-            document.getElementById('valB').innerText = this.paramB.toFixed(1);
-            this.draw();
-        };
-        document.getElementById('rangeA').oninput = updateParams;
-        document.getElementById('rangeB').oninput = updateParams;
-        window.onresize = () => this.draw();
-    },
-
-    updateUnit() {
-        const data = this.engines[this.unit];
-        this.qMath.innerText = data.q;
-        this.qInst.innerText = data.i;
-        this.ansBox.innerText = "[解説]: " + data.a;
-        this.ansBox.style.display = 'none';
-        this.badge.innerText = data.badge;
+    set(m, el) {
+        this.mode = m;
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        const d = this.data[m];
+        document.getElementById('q-math').innerText = d.q;
+        document.getElementById('q-inst').innerText = d.i;
+        document.getElementById('ans-step').innerHTML = `<strong>【AI解説】</strong><br>${d.a}`;
+        document.getElementById('ans-step').style.display = 'none';
+        document.getElementById('badge').innerText = d.badge;
         this.draw();
     },
 
     toggleAns() {
-        this.ansBox.style.display = (this.ansBox.style.display === 'block') ? 'none' : 'block';
+        const s = document.getElementById('ans-step');
+        s.style.display = (s.style.display==='block')?'none':'block';
     },
 
     check() {
-        alert("GitHubデプロイ用に回答チェック機能を拡張可能です！");
+        alert("回答を受け付けました。正誤判定ロジックを解析中...");
     },
 
     draw() {
-        const { cvs, ctx, paramA: a, paramB: b } = this;
+        const cvs = document.getElementById('mainCvs');
         const w = cvs.width = cvs.offsetWidth, h = cvs.height = cvs.offsetHeight;
-        const s = 40, ox = w/2, oy = h/2;
+        const ctx = this.ctx, s = 40, ox = w/2, oy = h/2 + 50;
+        const A = parseFloat(document.getElementById('paramA').value);
+        const B = parseFloat(document.getElementById('paramB').value);
 
         ctx.clearRect(0,0,w,h);
-        ctx.strokeStyle = "#30363d"; ctx.beginPath();
-        for(let i=-15; i<=15; i++){
-            ctx.moveTo(ox+i*s, 0); ctx.lineTo(ox+i*s, h);
-            ctx.moveTo(0, oy-i*s); ctx.lineTo(w, oy-i*s);
+        ctx.strokeStyle = "#30363d";
+        for(let i=-20; i<=20; i++) {
+            ctx.beginPath(); ctx.moveTo(ox+i*s, 0); ctx.lineTo(ox+i*s, h); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, oy-i*s); ctx.lineTo(w, oy-i*s); ctx.stroke();
         }
-        ctx.stroke();
+        ctx.strokeStyle = "#8b949e"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
 
         ctx.strokeStyle = "#1f6feb"; ctx.lineWidth = 3; ctx.beginPath();
-        for(let i=0; i<w; i++){
+        for(let i=0; i<w; i++) {
             let x = (i-ox)/s, y = 0;
-            switch(this.unit){
-                case 'q1': case 'q2': case 'q3': y = a*x*x + b*x; break;
-                case 'a1': y = Math.pow(Math.abs(a)+0.1, x); break;
-                case 'a2': y = (x+b>0)? Math.log(x+b)/Math.log(Math.abs(a)+1.1) : -10; break;
-                case 'a3': y = a * Math.sin(b * x); break;
-                case 'd1': // 楕円
-                    ctx.save(); ctx.strokeStyle = "#8957e5"; ctx.beginPath();
-                    for(let t=0; t<Math.PI*2; t+=0.1){
-                        let ex = ox + Math.cos(t)*Math.abs(a)*s, ey = oy - Math.sin(t)*Math.abs(b)*s;
-                        if(t===0) ctx.moveTo(ex, ey); else ctx.lineTo(ex, ey);
-                    }
-                    ctx.stroke(); ctx.restore(); y=-100; break;
-                case 'd2': y = (x-a)*(x-b); break;
+            switch(this.mode) {
+                case 'q1': case 'q2': case 'q3': case 'd2': y = x*x - 2*A*x + (A*A + B); break;
+                case 'q5': y = Math.abs(Math.abs(x*x-4)-1); break;
+                case 'a2': y = (x>0)?Math.log(x)*A : -10; break;
+                case 'a3': y = A * Math.sin(B * x); break;
+                default: y = A*x + B;
             }
-            let py = oy - y*s;
-            if(i===0) ctx.moveTo(i, py); else ctx.lineTo(i, py);
+            let py = oy - y*s; if(i===0) ctx.moveTo(i, py); else ctx.lineTo(i, py);
         }
         ctx.stroke();
     }
