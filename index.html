@@ -3,45 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>二次関数嫌い</title>
+<title>二次関数トレーナー</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>📘 二次関数嫌い</h1>
+<div class="container">
 
-<div class="card">
-  <input id="username" placeholder="名前">
-  <button onclick="login()">開始</button>
-</div>
+  <h1>📘 二次関数トレーナー</h1>
 
-<div class="card">
-  <p id="question">問題</p>
-  <input id="answer">
-  <button onclick="check()">答える</button>
+  <div class="card login">
+    <input id="username" placeholder="名前を入力">
+    <button onclick="login()">開始</button>
+  </div>
 
-  <p id="result"></p>
-  <p id="score">スコア:0</p>
+  <div class="card main">
+    <p id="question">問題がここに表示される</p>
 
-  <canvas id="graph" width="300" height="300"></canvas>
-</div>
+    <div class="answer-area">
+      <input id="answer" placeholder="答え">
+      <button onclick="check()">回答</button>
+    </div>
 
-<div class="card">
-  <h2>分析</h2>
-  <p id="status"></p>
-  <canvas id="weakChart" width="300" height="200"></canvas>
-  <button onclick="weakMode()">弱点特訓</button>
-</div>
+    <p id="result"></p>
+    <p id="score">スコア:0</p>
 
-<div class="card">
-  <h2>履歴</h2>
-  <ul id="historyList"></ul>
-</div>
+    <canvas id="graph" width="300" height="300"></canvas>
+  </div>
 
-<div class="card">
-  <button onclick="downloadBackup()">データ保存</button>
-  <input type="file" onchange="loadBackup(event)">
+  <div class="card">
+    <h2>📊 分析</h2>
+    <p id="status"></p>
+    <canvas id="weakChart" width="300" height="200"></canvas>
+    <button onclick="weakMode()">弱点特訓</button>
+  </div>
+
+  <div class="card">
+    <h2>📜 履歴</h2>
+    <ul id="historyList"></ul>
+  </div>
+
+  <div class="card">
+    <button onclick="downloadBackup()">データ保存</button>
+    <input type="file" onchange="loadBackup(event)">
+  </div>
+
 </div>
 
 <script src="app.js"></script>
