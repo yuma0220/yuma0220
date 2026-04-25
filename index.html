@@ -2,146 +2,163 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ポータブル教頭：基礎から叩き込む二次関数</title>
+    <title>ポータブル教頭：FG完全網羅・究極版</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-            chtml: { displayAlign: 'center' }
-        };
-    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        :root { --bg: #f8f9fa; --main: #2c3e50; --accent: #e74c3c; --sub: #3498db; --white: #ffffff; }
-        body { background: var(--bg); color: var(--main); font-family: 'Helvetica Neue', 'Arial', 'Hiragino Kaku Gothic ProN', sans-serif; margin: 0; display: flex; height: 100vh; }
+        :root {
+            --bg: #050505;
+            --sidebar: #0a0a0a;
+            --card: #111;
+            --border: #333;
+            --neon: #00f2ff;
+            --neon-sub: #39ff14;
+            --text: #eee;
+        }
+        body { background: var(--bg); color: var(--text); font-family: 'Consolas', 'Hiragino Kaku Gothic ProN', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* サイドバー：教頭の学習指示棚 */
-        aside { width: 320px; background: var(--main); color: white; padding: 30px; display: flex; flex-direction: column; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
-        .mode-label { font-size: 0.75rem; color: #bdc3c7; letter-spacing: 1px; margin-bottom: 5px; }
-        .nav-group { margin-bottom: 20px; border-bottom: 1px solid #455a64; padding-bottom: 15px; }
+        /* サイドバー：圧倒的問題数 */
+        aside { width: 340px; background: var(--sidebar); border-right: 2px solid var(--neon); padding: 20px; overflow-y: auto; scrollbar-width: thin; }
+        .brand { border-bottom: 2px solid var(--neon); padding-bottom: 10px; margin-bottom: 20px; }
+        .brand h1 { font-size: 1.2rem; color: var(--neon); margin: 0; }
+
+        .category-label { font-size: 0.7rem; color: #555; text-transform: uppercase; margin: 15px 0 5px; display: block; border-left: 3px solid #555; padding-left: 8px; }
         
-        .menu-btn { width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: none; color: white; text-align: left; cursor: pointer; margin-bottom: 8px; border-radius: 6px; font-size: 0.9rem; transition: 0.3s; }
-        .menu-btn:hover { background: rgba(255,255,255,0.2); }
-        .menu-btn.active { background: var(--sub); font-weight: bold; }
-        .menu-btn.kiso { border-left: 5px solid #2ecc71; }
-        .menu-btn.nanmon { border-left: 5px solid var(--accent); }
+        .menu-btn { width: 100%; padding: 10px 12px; background: #111; border: 1px solid var(--border); color: #888; text-align: left; cursor: pointer; margin-bottom: 5px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; }
+        .menu-btn:hover { border-color: var(--neon); color: #fff; }
+        .menu-btn.active { border-color: var(--neon); background: rgba(0, 242, 255, 0.1); color: #fff; }
+        .menu-btn.kiso-btn { border-left: 4px solid var(--neon-sub); }
+        .menu-btn.nanmon-btn { border-left: 4px solid #ff00ff; }
 
         /* メイン講義エリア */
-        main { flex: 1; padding: 40px; display: flex; flex-direction: column; gap: 25px; overflow-y: auto; }
-        .lecture-card { background: var(--white); border-radius: 15px; padding: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 5px solid var(--sub); }
-        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .difficulty { font-weight: bold; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
+        main { flex: 1; padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .problem-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; position: relative; }
+        .math-display { background: #000; border: 1px solid #222; padding: 20px; margin: 15px 0; border-radius: 8px; min-height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #fff; }
         
-        .formula-box { background: #f1f3f5; border-radius: 10px; padding: 30px; margin: 20px 0; font-size: 2rem; text-align: center; color: #1a1a1a; }
-        
-        .control-btns { display: flex; gap: 15px; margin-top: 20px; }
-        .btn { flex: 1; padding: 18px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.2s; }
-        .btn-main { background: var(--sub); color: white; }
-        .btn-main:hover { background: #2980b9; transform: translateY(-2px); }
+        .btn-gen { width: 100%; padding: 15px; background: var(--neon); color: #000; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1rem; }
+        .btn-gen:hover { box-shadow: 0 0 20px var(--neon); }
 
-        .graph-area { background: white; border-radius: 15px; padding: 20px; height: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .graph-wrap { flex: 1; background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 10px; min-height: 350px; }
+        canvas { width: 100% !important; height: 100% !important; }
     </style>
 </head>
 <body>
 
 <aside>
-    <div style="margin-bottom: 30px;">
-        <h2 style="margin:0; font-size: 1.5rem;">ポータブル教頭</h2>
-        <p style="font-size: 0.8rem; opacity: 0.7;">FG完全網羅・学習支援システム</p>
+    <div class="brand">
+        <h1>PORTABLE KYOTO 3000+</h1>
+        <p style="font-size: 0.6rem; color: #444; margin: 2px 0;">FOCUS GOLD ALL-IN-ONE ENGINE</p>
     </div>
 
-    <div class="nav-group">
-        <span class="mode-label">【基礎固め：星1〜2】</span>
-        <button class="menu-btn kiso active" onclick="app.setMode('base_top', this)">頂点と平方完成</button>
-        <button class="menu-btn kiso" onclick="app.setMode('base_move', this)">グラフの平行移動</button>
-        <button class="menu-btn kiso" onclick="app.setMode('base_ineq', this)">2次不等式の基礎</button>
-    </div>
+    <span class="category-label">【基礎：星1〜2】</span>
+    <button class="menu-btn kiso-btn active" onclick="app.setMode('k_square', this)">平方完成と頂点</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_move', this)">グラフの平行移動</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_axis', this)">軸と係数の符号</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_maxmin', this)">範囲制限下の最大最小</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_ineq', this)">2次不等式の基本</button>
+    <button class="menu-btn kiso-btn" onclick="app.setMode('k_kouten', this)">x軸との共有点</button>
 
-    <div class="nav-group">
-        <span class="mode-label">【入試標準：星3〜4】</span>
-        <button class="menu-btn nanmon" onclick="app.setMode('root_pos', this)">解の配置</button>
-        <button class="menu-btn nanmon" onclick="app.setMode('area', this)">通過領域</button>
-        <button class="menu-btn nanmon" onclick="app.setMode('abs', this)">絶対値の共有点</button>
-    </div>
+    <span class="category-label">【応用：星3〜4】</span>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_axis_move', this)">動く軸の最大最小</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_root_pos', this)">解の配置（D・軸・端点）</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_area', this)">通過領域（逆像法）</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_abs', this)">絶対値関数の共有点</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_int', this)">整数解の個数限定</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_sym', this)">対称式と実数存在条件</button>
+    <button class="menu-btn nanmon-btn" onclick="app.setMode('a_tri', this)">直角三角形の斜辺範囲</button>
 </aside>
 
 <main>
-    <div class="lecture-card">
-        <div class="q-header">
-            <span id="q-title" style="font-size: 1.2rem; font-weight: bold;">頂点と平方完成の特訓</span>
-            <span id="q-diff" class="difficulty" style="background: #e8f8f5; color: #2ecc71;">FG 星1級</span>
-        </div>
-        <div id="q-text" style="line-height: 1.8;"></div>
-        <div class="formula-box" id="q-math"></div>
-        <div class="control-btns">
-            <button class="btn btn-main" onclick="app.generate()">数値を入れ替えて練習</button>
-        </div>
+    <div class="problem-card">
+        <div id="instr" style="font-size: 0.95rem; color: #aaa;"></div>
+        <div class="math-display"><div id="math-box"></div></div>
+        <button class="btn-gen" onclick="app.generate()">類題を再生成（無限）</button>
     </div>
-
-    <div class="graph-area">
+    <div class="graph-wrap">
         <canvas id="mainChart"></canvas>
     </div>
 </main>
 
 <script>
 const app = {
-    mode: 'base_top', chart: null,
+    mode: 'k_square', chart: null,
     r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
 
-    setMode(m, btn) {
+    setMode(m, b) {
         this.mode = m;
-        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+        b.classList.add('active');
         this.generate();
     },
 
     generate() {
-        const text = document.getElementById('q-text');
-        const math = document.getElementById('q-math');
-        const title = document.getElementById('q-title');
-        const diff = document.getElementById('q-diff');
-        
+        const inst = document.getElementById('instr');
+        const box = document.getElementById('math-box');
         let t = "", m = "", conf = {};
-        const a = this.r(1, 3); const p = this.r(-5, 5); const q = this.r(-5, 5);
-        const b = -2 * a * p; const c = a * p * p + q;
+        const a = this.r(1, 2); const p = this.r(-3, 3); const q = this.r(-4, 4);
+        const k = this.r(2, 8);
 
         switch(this.mode) {
-            case 'base_top':
-                title.innerText = "頂点と平方完成の特訓";
-                diff.innerText = "FG 星1級"; diff.style.background="#e8f8f5"; diff.style.color="#2ecc71";
-                t = `次の2次関数を平方完成し、頂点の座標を求めなさい。`;
-                m = `y = ${a === 1 ? '' : a}x^2 ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c}`;
+            case 'k_square':
+                t = "【基礎】次の2次関数を平方完成し、頂点の座標を答えよ。";
+                m = `y = ${a}x^2 ${-2*a*p >= 0 ? '+' : ''} ${-2*a*p}x ${a*p*p+q >= 0 ? '+' : ''} ${a*p*p+q}`;
                 conf = { type: 'p', a: a, p: p, q: q }; break;
-            case 'base_move':
-                title.innerText = "グラフの平行移動";
-                diff.innerText = "FG 星2級"; diff.style.background="#e8f8f5"; diff.style.color="#2ecc71";
-                const dx = this.r(-3, 3); const dy = this.r(-3, 3);
-                t = `放物線 $y = x^2$ を、$x$ 軸方向に ${dx}、$y$ 軸方向に ${dy} だけ平行移動したあとの方程式を求めよ。`;
-                m = `y = x^2 \\longrightarrow 移動後 ?`;
+            case 'k_move':
+                const dx = this.r(-4, 4); const dy = this.r(-4, 4);
+                t = `【基礎】$y = x^2$ を $x$ 軸方向に $ ${dx} $、$y$ 軸方向に $ ${dy} $ だけ平行移動した式を求めよ。`;
+                m = `y = (x - p)^2 + q`;
                 conf = { type: 'p', a: 1, p: dx, q: dy }; break;
-            case 'base_ineq':
-                title.innerText = "2次不等式の基礎";
-                diff.innerText = "FG 星2級"; diff.style.background="#e8f8f5"; diff.style.color="#2ecc71";
-                const x1 = this.r(1, 3); const x2 = this.r(4, 6);
-                t = `次の2次不等式を解け。グラフをイメージして範囲を答えること。`;
-                m = `(x - ${x1})(x - ${x2}) \\leqq 0`;
-                conf = { type: 'i', x1: x1, x2: x2 }; break;
-            case 'root_pos':
-                title.innerText = "解の配置 (D・軸・端点)";
-                diff.innerText = "FG 星4級"; diff.style.background="#fdedec"; diff.style.color="#e74c3c";
-                t = `2次方程式 $x^2 - 2ax + ${this.r(4, 8)} = 0$ が、$x > 1$ の範囲に異なる2つの実数解をもつ定数 $a$ の範囲。`;
-                m = `x^2 - 2ax + ${this.r(4, 8)} = 0`;
-                conf = { type: 'p', a: 1, p: 3, q: -2 }; break;
-            case 'area':
-                title.innerText = "通過領域 (逆像法)";
-                diff.innerText = "FG 星4級"; diff.style.background="#fdedec"; diff.style.color="#e74c3c";
-                t = `実数 $m$ が $0 \\leqq m \\leqq 1$ を動くとき、$y = x^2 - 2mx + m$ が動く範囲。`;
-                m = `y = x^2 - 2mx + m`;
-                conf = { type: 'area' }; break;
+            case 'k_axis':
+                t = "【基礎】グラフが $(1, 0), (3, 0)$ を通り、点 $(0, 6)$ を通る2次関数を求めよ。";
+                m = `y = a(x - \\alpha)(x - \\beta)`;
+                conf = { type: 'std', a: 2, b: -8, c: 6 }; break;
+            case 'k_maxmin':
+                t = `【基礎】$0 \\leqq x \\leqq 4$ における $y = (x-2)^2 + ${q}$ の最大値と最小値を答えよ。`;
+                m = `y = (x - 2)^2 ${q >= 0 ? '+' : ''} ${q} \\quad (0 \\leqq x \\leqq 4)`;
+                conf = { type: 'p', a: 1, p: 2, q: q }; break;
+            case 'k_ineq':
+                const x1 = this.r(1, 2); const x2 = this.r(3, 5);
+                t = "【基礎】次の2次不等式を解け。";
+                m = `x^2 - ${x1+x2}x + ${x1*x2} \\leqq 0`;
+                conf = { type: 'std', a: 1, b: -(x1+x2), c: x1*x2 }; break;
+            case 'k_kouten':
+                t = `【基礎】放物線 $y = x^2 + ${k}x + 4$ が $x$ 軸と接するときの $k$ の値を求めよ。`;
+                m = `D = b^2 - 4ac = 0`;
+                conf = { type: 'std', a: 1, b: k, c: 4 }; break;
+            
+            // 応用
+            case 'a_axis_move':
+                t = `【応用】$0 \\leqq x \\leqq 2$ における $y = x^2 - 2ax$ の最小値を $a$ で分類して答えよ。`;
+                m = `y = x^2 - 2ax \\quad (0 \\leqq x \\leqq 2)`;
+                conf = { type: 'p', a: 1, p: 1.5, q: -2.25 }; break;
+            case 'a_root_pos':
+                t = `【応用】$x^2 - 2ax + ${k} = 0$ が $x > 1$ の範囲に異なる2つの実数解をもつ $a$ の範囲。`;
+                m = `x^2 - 2ax + ${k} = 0 \\quad (x > 1)`;
+                conf = { type: 'std', a: 1, b: -4, c: k }; break;
+            case 'a_area':
+                t = `【最難関】$0 \\leqq m \\leqq ${a}$ のとき、$y = x^2 - ${a*2}mx + m$ が通過する領域を求めよ。`;
+                m = `y = x^2 - ${a*2}mx + m \\quad (0 \\leqq m \\leqq ${a})`;
+                conf = { type: 'area', range: a, b: -a*2 }; break;
+            case 'a_abs':
+                t = `【応用】$y = |x^2 - 4x|$ と $y = k$ の共有点が3個となる $k$ を求めよ。`;
+                m = `y = |x^2 - 4x|`;
+                conf = { type: 'abs', b: -4 }; break;
+            case 'a_int':
+                t = `【応用】$x^2 - mx + m/4 - 1 \\leqq 0$ を満たす整数 $x$ が 3個 となる $m$ の範囲。`;
+                m = `x^2 - mx + \\frac{m}{4} - 1 \\leqq 0`;
+                conf = { type: 'std', a: 1, b: -3, c: 0 }; break;
+            case 'a_sym':
+                t = `【応用】$x^2 + xy + y^2 = ${k}$ のとき、$x^2 + y^2$ の最大・最小を求めよ。`;
+                m = `x^2 + xy + y^2 = ${k}`;
+                conf = { type: 'std', a: 1, b: 0, c: 0 }; break;
+            case 'a_tri':
+                t = `【応用】3辺の和が ${k} である直角三角形の斜辺 $c$ のとり得る範囲。`;
+                m = `a^2 + b^2 = c^2, \\ a+b+c = ${k}`;
+                conf = { type: 'std', a: 1, b: 0, c: 0 }; break;
         }
 
-        text.innerHTML = t;
-        math.innerHTML = `\\[ ${m} \\]`;
+        inst.innerHTML = t;
+        box.innerHTML = `\\[ ${m} \\]`;
         if (window.MathJax) MathJax.typesetPromise();
         this.draw(conf);
     },
@@ -150,19 +167,22 @@ const app = {
         const ctx = document.getElementById('mainChart').getContext('2d');
         if (this.chart) this.chart.destroy();
         let ds = [];
-        
+
         if (conf.type === 'p') {
-            let d = []; for(let x=-10; x<=10; x+=0.2) d.push({x: x, y: conf.a * Math.pow(x - conf.p, 2) + conf.q});
-            ds.push({ data: d, showLine: true, borderColor: '#3498db', borderWidth: 3, pointRadius: 0 });
-            ds.push({ data: [{x: conf.p, y: conf.q}], pointRadius: 6, pointBackgroundColor: '#e74c3c', label: '頂点' });
-        } else if (conf.type === 'i') {
-            let d = []; for(let x=conf.x1-2; x<=conf.x2+2; x+=0.2) d.push({x: x, y: (x-conf.x1)*(x-conf.x2)});
-            ds.push({ data: d, showLine: true, borderColor: '#2ecc71', borderWidth: 3, pointRadius: 0 });
+            let d = []; for(let x=conf.p-5; x<=conf.p+5; x+=0.2) d.push({x: x, y: conf.a * (x-conf.p)**2 + conf.q});
+            ds.push({ data: d, showLine: true, borderColor: '#00f2ff', borderWidth: 2, pointRadius: 0 });
+            ds.push({ data: [{x: conf.p, y: conf.q}], pointRadius: 5, pointBackgroundColor: '#ff00ff' });
         } else if (conf.type === 'area') {
-            for(let m=0; m<=1; m+=0.2) {
-                let d = []; for(let x=-2; x<=4; x+=0.2) d.push({x: x, y: x*x - 2*m*x + m});
-                ds.push({ data: d, showLine: true, borderColor: `rgba(52, 152, 219, ${1-m})`, borderWidth: 1, pointRadius: 0 });
+            for(let m=0; m<=conf.range; m+=conf.range/6) {
+                let d = []; for(let x=-2; x<=5; x+=0.2) d.push({x: x, y: x*x + conf.b*m*x + m});
+                ds.push({ data: d, showLine: true, borderColor: `rgba(0, 242, 255, ${1-m/conf.range})`, borderWidth: 1, pointRadius: 0 });
             }
+        } else if (conf.type === 'abs') {
+            let d = []; for(let x=-1; x<=5; x+=0.1) d.push({x: x, y: Math.abs(x*x + conf.b*x)});
+            ds.push({ data: d, showLine: true, borderColor: '#ff00ff', borderWidth: 2, pointRadius: 0 });
+        } else {
+            let d = []; for(let x=-10; x<=10; x+=0.2) d.push({x: x, y: conf.a*x*x + (conf.b||0)*x + (conf.c||0)});
+            ds.push({ data: d, showLine: true, borderColor: '#39ff14', borderWidth: 2, pointRadius: 0 });
         }
 
         this.chart = new Chart(ctx, {
@@ -171,8 +191,8 @@ const app = {
             options: {
                 responsive: true, maintainAspectRatio: false,
                 scales: {
-                    x: { type: 'linear', position: 'center', min: -8, max: 8 },
-                    y: { type: 'linear', position: 'center', min: -8, max: 8 }
+                    x: { type: 'linear', position: 'center', grid: { color: '#222' } },
+                    y: { type: 'linear', position: 'center', grid: { color: '#222' } }
                 },
                 plugins: { legend: { display: false } }
             }
@@ -180,7 +200,7 @@ const app = {
     }
 };
 
-window.onload = () => app.generate();
+window.onload = () => setTimeout(() => app.generate(), 500);
 </script>
 </body>
 </html>
