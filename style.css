@@ -1,36 +1,72 @@
 body{
   margin:0;
-  font-family:sans-serif;
-  background:linear-gradient(135deg,#0f172a,#1e293b);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg,#0f172a,#1e293b);
   color:white;
+}
+
+.container{
+  max-width:420px;
+  margin:0 auto;
+  padding:20px;
+}
+
+h1{
   text-align:center;
 }
 
 .card{
-  background:rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
   padding:20px;
-  margin:15px auto;
+  margin:15px 0;
   border-radius:15px;
-  width:90%;
-  max-width:400px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.3);
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1;}
+}
+
+.login,.answer-area{
+  display:flex;
+  gap:10px;
 }
 
 input{
+  flex:1;
   padding:10px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
+  background:#1e293b;
+  color:white;
 }
 
 button{
-  padding:10px 20px;
+  padding:10px 15px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   background:#22c55e;
   color:white;
-  margin:5px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#16a34a;
 }
 
 canvas{
+  width:100%;
   background:white;
+  border-radius:10px;
   margin-top:10px;
+}
+
+#historyList{
+  max-height:150px;
+  overflow-y:auto;
+  text-align:left;
 }
