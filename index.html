@@ -2,65 +2,66 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>GIGA CORE 3,000,000 : ORIGIN</title>
+    <title>GIGA CORE 3M: GOD MODE [FULL TREE]</title>
     <style>
         :root {
-            --bg: #000; --side: #0a0a0a; --card: #111;
-            --accent: #00f2ff; --green: #39ff14; --ans: #ffcc00;
+            --bg: #050000; --side: #0a0000; --card: #110000;
+            --accent: #ff3300; --green: #39ff14; --ans: #ffcc00; --grid: #220000;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: var(--bg); color: #fff; font-family: sans-serif;
+            background: var(--bg); color: #fff; font-family: 'Courier New', monospace;
             height: 100vh; width: 100vw; overflow: hidden; display: flex; 
         }
         aside { 
-            width: 250px; background: var(--side); border-right: 2px solid #222;
+            width: 280px; background: var(--side); border-right: 2px solid var(--accent);
             display: flex; flex-direction: column; padding: 15px;
         }
-        .nav-scroll { flex: 1; overflow-y: auto; padding-right: 5px; }
-        .cat { font-size: 0.7rem; color: #555; margin: 12px 0 5px; font-weight: bold; border-left: 2px solid var(--accent); padding-left: 8px; }
+        .nav-scroll { flex: 1; overflow-y: auto; }
+        .cat { font-size: 0.7rem; color: #800; margin: 15px 0 5px; font-weight: bold; border-left: 2px solid var(--accent); padding-left: 8px; }
         .nav-btn { 
-            width: 100%; padding: 10px; background: transparent; border: 1px solid #1a1a1a; 
-            color: #777; text-align: left; cursor: pointer; margin-bottom: 4px; border-radius: 6px; font-size: 0.8rem;
+            width: 100%; padding: 10px; background: transparent; border: 1px solid #300; 
+            color: #666; text-align: left; cursor: pointer; margin-bottom: 4px; border-radius: 4px; font-size: 0.75rem;
         }
-        .nav-btn.active { border-color: var(--accent); color: #fff; background: rgba(0,242,255,0.15); }
+        .nav-btn.active { border-color: var(--accent); color: #fff; background: rgba(255,51,0,0.2); box-shadow: 0 0 15px rgba(255,51,0,0.3); }
         
-        main { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 12px; height: 100vh; }
+        main { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 10px; height: 100vh; }
         .p-card { 
-            background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 20px;
-            display: flex; flex-direction: column; justify-content: center; height: 38%;
+            background: var(--card); border: 1px solid var(--accent); border-radius: 8px; padding: 20px;
+            display: flex; flex-direction: column; justify-content: center; height: 42%;
+            position: relative;
         }
-        .math-row { font-size: 2.2rem; font-weight: 800; text-align: center; }
-        .inst-row { font-size: 1.5rem; color: var(--accent); text-align: center; font-weight: 700; margin-top: 8px; }
+        .p-card::before { content: "SYSTEM: GOD MODE"; position: absolute; top: 10px; right: 10px; color: var(--accent); font-size: 0.7rem; font-weight: bold; }
+        .math-row { font-size: 1.8rem; font-weight: 800; text-align: center; color: #fff; line-height: 1.4; }
+        .inst-row { font-size: 1.2rem; color: var(--accent); text-align: center; font-weight: 700; margin-top: 10px; }
         .btn-row { display: flex; gap: 10px; margin-top: 15px; }
-        .btn { flex: 1; height: 50px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        .btn-gen { background: var(--accent); color: #000; }
-        .btn-ans { background: #333; color: #fff; }
-        .ans-box { margin-top: 10px; padding: 12px; background: rgba(255,204,0,0.1); border-radius: 6px; color: var(--ans); display: none; text-align: center; font-weight: bold; }
-        .graph-box { flex: 1; background: #000; border: 1px solid #222; border-radius: 12px; overflow: hidden; position: relative; }
+        .btn { flex: 1; height: 45px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        .btn-gen { background: var(--accent); color: #fff; }
+        .btn-ans { background: #000; color: #888; border: 1px solid #444; }
+        .ans-box { margin-top: 10px; padding: 12px; background: #220000; border: 1px solid var(--ans); color: var(--ans); display: none; font-size: 0.95rem; line-height: 1.5; }
+        .graph-box { flex: 1; background: #000; border: 1px solid var(--grid); border-radius: 8px; overflow: hidden; position: relative; }
         canvas { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
 <aside>
-    <div style="color:var(--accent); font-weight:900; text-align:center; margin-bottom:15px;">GIGA CORE 3M</div>
+    <div style="color:var(--accent); font-weight:900; text-align:center; margin-bottom:15px; letter-spacing:2px; font-size: 1.2rem;">SKILL TREE 100%</div>
     <div class="nav-scroll">
-        <div class="cat">BASIC</div>
-        <button class="nav-btn active" onclick="app.set('k1', this)">01. 頂点・平方完成</button>
-        <button class="nav-btn" onclick="app.set('k2', this)">02. 平行移動</button>
-        <button class="nav-btn" onclick="app.set('k3', this)">03. 三点を通る式</button>
-        <button class="nav-btn" onclick="app.set('k4', this)">04. 最大最小</button>
-        <button class="nav-btn" onclick="app.set('k5', this)">05. 二次不等式</button>
-        <button class="nav-btn" onclick="app.set('k6', this)">06. 軸との共有点</button>
-        <div class="cat">ELITE</div>
-        <button class="nav-btn" onclick="app.set('a7', this)">07. 軸が動く最大最小</button>
-        <button class="nav-btn" onclick="app.set('a8', this)">08. 解の配置</button>
-        <button class="nav-btn" onclick="app.set('a9', this)">09. 通過領域</button>
-        <button class="nav-btn" onclick="app.set('a10', this)">10. 絶対値と共有点</button>
-        <button class="nav-btn" onclick="app.set('a11', this)">11. 整数解条件</button>
-        <button class="nav-btn" onclick="app.set('a12', this)">12. 対称式と実数</button>
-        <button class="nav-btn" onclick="app.set('a13', this)">13. 図形最大面積</button>
+        <div class="cat">TIER 1-2: BASIC/ABYSS</div>
+        <button class="nav-btn active" onclick="app.set('t1_a', this)">文字係数の平方完成</button>
+        <button class="nav-btn" onclick="app.set('t2_a', this)">区間が動く最大最小</button>
+        <button class="nav-btn" onclick="app.set('t2_b', this)">4次関数への帰着</button>
+        <button class="nav-btn" onclick="app.set('t2_c', this)">解の配置(多重制約)</button>
+        <div class="cat">TIER 3: OVERLORD</div>
+        <button class="nav-btn" onclick="app.set('t3_a', this)">通過領域(逆像法)</button>
+        <button class="nav-btn" onclick="app.set('t3_b', this)">多重絶対値迷宮</button>
+        <button class="nav-btn" onclick="app.set('t3_c', this)">2変数関数の従属移動</button>
+        <div class="cat">TIER 4: DIVINE (UNLOCKED)</div>
+        <button class="nav-btn" onclick="app.set('t4_a', this)">領域内の格子点計数</button>
+        <button class="nav-btn" onclick="app.set('t4_b', this)">放物線求積(1/6公式)</button>
+        <button class="nav-btn" onclick="app.set('t4_c', this)">頂点の軌跡連鎖</button>
+        <button class="nav-btn" onclick="app.set('t4_d', this)">共通接線の導出</button>
     </div>
 </aside>
 
@@ -69,8 +70,8 @@
         <div id="q-math" class="math-row"></div>
         <div id="q-inst" class="inst-row"></div>
         <div class="btn-row">
-            <button class="btn btn-gen" onclick="app.gen()">GENERATION</button>
-            <button class="btn btn-ans" onclick="app.toggle()">ANALYSIS</button>
+            <button class="btn btn-gen" onclick="app.gen()">REGENERATE DATA</button>
+            <button class="btn btn-ans" onclick="app.toggle()">DECODE LOGIC</button>
         </div>
         <div id="ans-box" class="ans-box"></div>
     </div>
@@ -79,7 +80,7 @@
 
 <script>
 const app = {
-    mode: 'k1',
+    mode: 't1_a',
     r: (n, m) => Math.floor(Math.random() * (m - n + 1)) + n,
     set(m, el) {
         this.mode = m;
@@ -92,28 +93,26 @@ const app = {
         b.style.display = b.style.display === 'block' ? 'none' : 'block';
     },
     engines: {
-        k1: () => {
-            let a = app.r(1, 2), b = app.r(-6, 6), c = app.r(-4, 4);
-            return { q: `y = ${a==1?'':a}x²${b>=0?'+':''}${b}x${c>=0?'+':''}${c}`, i: "の頂点を求めよ。", a: `頂点 (${-b/(2*a)}, ${(4*a*c-b*b)/(4*a)})`, cfg: {a, b, c} };
+        t1_a: () => {
+            let k = app.r(1, 5);
+            return { q: `y = x² - 2(${k}a)x + ${k*k}a² + a`, i: "頂点の座標を a を用いて表せ。", a: `y = (x - ${k}a)² + a より、頂点 (${k}a, a)`, cfg: {a:1, b:-2, c:1, type:'para'} };
         },
-        k2: () => ({ q: "y = x² を x軸:+2, y軸:-1 平行移動", i: "した放物線の式を求めよ。", a: "y = (x-2)² - 1", cfg: {a:1, b:-4, c:3} }),
-        k3: () => ({ q: "(0,3), (1,0), (2,1) を通る", i: "二次関数の式を求めよ。", a: "y = 2x² - 5x + 3", cfg: {a:2, b:-5, c:3} }),
-        k4: () => ({ q: "y = x² - 4x + 5 (0 ≦ x ≦ 3)", i: "の最大値・最小値を求めよ。", a: "最大:5 (x=0), 最小:1 (x=2)", cfg: {a:1, b:-4, c:5} }),
-        k5: () => ({ q: "x² - 5x + 6 ≦ 0", i: "この二次不等式の解を求めよ。", a: "2 ≦ x ≦ 3", cfg: {a:1, b:-5, c:6} }),
-        k6: () => ({ q: "y = x² - 2x - 3", i: "と x軸 との共有点を求めよ。", a: "(-1, 0), (3, 0)", cfg: {a:1, b:-2, c:-3} }),
-        a7: () => ({ q: "y = x² - 2ax + 4 (0 ≦ x ≦ 2)", i: "の最小値を a で分類して求めよ。", a: "a<0: 4, 0≦a≦2: 4-a², a>2: 8-4a", cfg: {a:1, b:-2, c:4} }),
-        a8: () => ({ q: "x² - 2ax + a + 6 = 0", i: "x > 2 で異なる2つの解を持つ a の範囲？", a: "3 < a < 10", cfg: {a:1, b:-6, c:10} }),
-        a9: () => ({ q: "y = 2mx - m² (0 ≦ m ≦ 1)", i: "直線が動く範囲（通過領域）を求めよ。", a: "y ≦ x² (0≦x≦1) 等の境界内", cfg: {area: true} }),
-        a10: () => ({ q: "y = |x² - 4x + 3|", i: "直線 y = 1 との共有点の個数は？", a: "3 個", cfg: {a:1, b:-4, c:3, abs:true, kv:1} }),
-        a11: () => ({ q: "x² - ax + a + 1 = 0", i: "の解がすべて整数となる a を求めよ。", a: "a = 0, 4", cfg: {a:1, b:-4, c:5} }),
-        a12: () => ({ q: "x + y = a, xy = a", i: "実数 x, y が存在する a の範囲は？", a: "a ≦ 0, 4 ≦ a", cfg: {a:1, b:-4, c:0} }),
-        a13: () => ({ q: "周の長さが 20 の長方形", i: "の面積が最大となるときの一辺は？", a: "一辺 5 (正方形)", cfg: {a:-1, b:10, c:0} })
+        t2_a: () => ({ q: "y = x² - 4ax (0 ≦ x ≦ 2)", i: "最大値 M(a) を求めよ。", a: "軸 x=2a と範囲の中央 x=1 の比較。a < 1/2 のとき f(2), a ≧ 1/2 のとき f(0)", cfg: {a:1, b:-2, c:0, type:'para'} }),
+        t2_b: () => ({ q: "y = (x²-2x)² + 2(x²-2x) - 1", i: "最小値を求めよ。", a: "t = x²-2x ≧ -1。y = t²+2t-1 (t≧-1) より、t=-1 のとき 最小値 -2", cfg: {type:'fourth'} }),
+        t2_c: () => ({ q: "x² - (a+1)x + a = 0", i: "-2 < x < 0 に少なくとも1つの解を持つ a の範囲？", a: "f(-2)f(0) < 0 または D=0 等の条件を精査せよ。", cfg: {a:1, b:-1, c:1, type:'para'} }),
+        t3_a: () => ({ q: "y = 2tx - t² (0 ≦ t ≦ 1)", i: "直線群の通過領域を求めよ。", a: "x < 0: y ≦ 0, 0 ≦ x ≦ 1: y ≦ x², 1 < x: y ≦ 2x-1", cfg: {type:'envelope'} }),
+        t3_b: () => ({ q: "y = | |x² - 4| - 1 |", i: "y = k との共有点が 6 個になる k は？", a: "0 < k < 1 の範囲。グラフの山が削れる領域。", cfg: {type:'abs_complex'} }),
+        t3_c: () => ({ q: "x² + y² = 1 (y ≧ 0) のとき", i: "x² + 2y の最大値を求めよ。", a: "x² = 1-y² 代入。-(y-1)² + 2 より、y=1 のとき最大値 2", cfg: {a:-1, b:2, c:1, type:'para'} }),
+        t4_a: () => ({ q: "y ≧ x² と y ≦ x + 2", i: "領域内の格子点(整数点)の個数を答えよ。", a: "x=-1(2個), 0(3個), 1(3個), 2(1個) の合計 9 個", cfg: {type:'lattice'} }),
+        t4_b: () => ({ q: "y = x² と y = kx で囲まれた面積が 4/3", i: "正の定数 k の値を求めよ。", a: "k³/6 = 4/3 より k³ = 8, よって k = 2", cfg: {type:'area_calc'} }),
+        t4_c: () => ({ q: "y = x² - 2ax + a² + a", i: "a が変化する時、頂点が描く軌跡を求めよ。", a: "頂点(a, a) より 軌跡 y = x", cfg: {type:'trace'} }),
+        t4_d: () => ({ q: "y = x² と y = -(x-2)²", i: "この2つの放物線の共通接線の式を求めよ。", a: "y = x - 1/4 と y = 3x - 9/4 (導関数を利用)", cfg: {type:'common_tan'} })
     },
     gen() {
         const res = this.engines[this.mode]();
         document.getElementById('q-math').innerHTML = res.q;
         document.getElementById('q-inst').innerText = res.i;
-        document.getElementById('ans-box').innerHTML = `ANS: ${res.a}`;
+        document.getElementById('ans-box').innerHTML = `[LOGIC] ${res.a}`;
         document.getElementById('ans-box').style.display = 'none';
         this.draw(res.cfg);
     },
@@ -123,48 +122,68 @@ const app = {
         const w = canvas.width = canvas.offsetWidth;
         const h = canvas.height = canvas.offsetHeight;
         ctx.clearRect(0,0,w,h);
+        const scale = 40; const ox = w/2; const oy = h/2 + 50;
         
-        const scale = 40;
-        const ox = w/2; const oy = h/2 + 50;
-
-        // 軸
-        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
-
-        // 目盛
-        ctx.strokeStyle = '#333'; ctx.lineWidth = 1;
-        for(let i=-10; i<=10; i++) {
+        ctx.strokeStyle = varColor('--grid'); ctx.lineWidth = 1;
+        for(let i=-15; i<=15; i++){
             ctx.beginPath(); ctx.moveTo(ox+i*scale, 0); ctx.lineTo(ox+i*scale, h); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(0, oy-i*scale); ctx.lineTo(w, oy-i*scale); ctx.stroke();
         }
+        ctx.strokeStyle = '#440000'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
 
-        // グラフ
-        ctx.strokeStyle = '#39ff14'; ctx.lineWidth = 4;
+        ctx.strokeStyle = varColor('--green'); ctx.lineWidth = 3;
         ctx.beginPath();
-        for(let px=0; px<w; px++) {
-            let x = (px-ox)/scale;
-            let y;
-            if (cfg.area) {
-                y = x*x; // 領域の境界線として y=x^2 を表示
-            } else {
-                y = (cfg.a||1)*x*x + (cfg.b||0)*x + (cfg.c||0);
-                if (cfg.abs) y = Math.abs(y);
+        for(let px=0; px<w; px++){
+            let x = (px-ox)/scale; let y;
+            if(cfg.type==='fourth') y = Math.pow(x*x-2*x, 2) + 2*(x*x-2*x) - 1;
+            else if(cfg.type==='abs_complex') y = Math.abs(Math.abs(x*x-4)-1);
+            else if(cfg.type==='envelope') y = (x>=0 && x<=1) ? x*x : (x>1 ? 2*x-1 : -10);
+            else if(cfg.type==='lattice') {
+                this.drawLattice(ctx, ox, oy, scale);
+                y = x*x; ctx.strokeStyle = '#555';
             }
+            else if(cfg.type==='area_calc') {
+                this.drawArea(ctx, ox, oy, scale);
+                y = x*x;
+            }
+            else if(cfg.type==='trace') { ctx.strokeStyle = '#ff3300'; y = x; }
+            else if(cfg.type==='common_tan') {
+                ctx.strokeStyle = '#ff3300'; y = x*x;
+                ctx.stroke(); ctx.beginPath(); ctx.strokeStyle='#ff3300'; y = -Math.pow(x-2,2);
+            }
+            else y = (cfg.a||1)*x*x + (cfg.b||0)*x + (cfg.c||0);
+            
             let py = oy - y*scale;
             if(px===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
         }
         ctx.stroke();
-
-        if(cfg.kv) {
-            ctx.strokeStyle = '#f0f'; ctx.lineWidth = 2; ctx.setLineDash([5,5]);
-            ctx.beginPath(); ctx.moveTo(0, oy-cfg.kv*scale); ctx.lineTo(w, oy-cfg.kv*scale); ctx.stroke();
-            ctx.setLineDash([]);
+    },
+    drawLattice(ctx, ox, oy, scale) {
+        ctx.fillStyle = '#ff3300';
+        for(let x=-1; x<=2; x++){
+            for(let y=Math.ceil(x*x); y<=x+2; y++){
+                ctx.beginPath(); ctx.arc(ox+x*scale, oy-y*scale, 4, 0, Math.PI*2); ctx.fill();
+            }
         }
+    },
+    drawArea(ctx, ox, oy, scale) {
+        ctx.fillStyle = 'rgba(255,51,0,0.3)';
+        ctx.beginPath();
+        for(let x=0; x<=2; x+=0.1){
+            let px = ox + x*scale; let py = oy - (x*x)*scale;
+            if(x===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+        for(let x=2; x>=0; x-=0.1){
+            let px = ox + x*scale; let py = oy - (2*x)*scale;
+            ctx.lineTo(px,py);
+        }
+        ctx.fill();
     }
 };
-window.onload = () => { app.gen(); };
-window.onresize = () => { app.gen(); };
+function varColor(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+window.onload = () => app.gen();
 </script>
 </body>
 </html>
