@@ -1,8 +1,8 @@
-　<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>GIGA CORE 3M: GOD MODE [FULL TREE]</title>
+    <title>GIGA CORE 3M: GENESIS [GOD MODE FULL]</title>
     <style>
         :root {
             --bg: #050000; --side: #0a0000; --card: #110000;
@@ -10,58 +10,60 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: var(--bg); color: #fff; font-family: 'Courier New', monospace;
+            background: #050000; color: #fff; font-family: 'Consolas', 'Courier New', monospace;
             height: 100vh; width: 100vw; overflow: hidden; display: flex; 
         }
         aside { 
-            width: 280px; background: var(--side); border-right: 2px solid var(--accent);
+            width: 280px; background: #0a0000; border-right: 2px solid #ff3300;
             display: flex; flex-direction: column; padding: 15px;
         }
         .nav-scroll { flex: 1; overflow-y: auto; }
-        .cat { font-size: 0.7rem; color: #800; margin: 15px 0 5px; font-weight: bold; border-left: 2px solid var(--accent); padding-left: 8px; }
+        .cat { font-size: 0.7rem; color: #800; margin: 15px 0 5px; font-weight: bold; border-left: 2px solid #ff3300; padding-left: 8px; }
         .nav-btn { 
             width: 100%; padding: 10px; background: transparent; border: 1px solid #300; 
             color: #666; text-align: left; cursor: pointer; margin-bottom: 4px; border-radius: 4px; font-size: 0.75rem;
         }
-        .nav-btn.active { border-color: var(--accent); color: #fff; background: rgba(255,51,0,0.2); box-shadow: 0 0 15px rgba(255,51,0,0.3); }
+        .nav-btn:hover { color: #aaa; background: #111; }
+        .nav-btn.active { border-color: #ff3300; color: #fff; background: rgba(255,51,0,0.2); box-shadow: 0 0 10px rgba(255,51,0,0.3); }
         
         main { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 10px; height: 100vh; }
         .p-card { 
-            background: var(--card); border: 1px solid var(--accent); border-radius: 8px; padding: 20px;
+            background: #110000; border: 1px solid #ff3300; border-radius: 8px; padding: 20px;
             display: flex; flex-direction: column; justify-content: center; height: 42%;
             position: relative;
         }
-        .p-card::before { content: "SYSTEM: GOD MODE"; position: absolute; top: 10px; right: 10px; color: var(--accent); font-size: 0.7rem; font-weight: bold; }
+        .p-card::before { content: "SYSTEM: GOD MODE v2.0"; position: absolute; top: 10px; right: 10px; color: #ff3300; font-size: 0.7rem; font-weight: bold; }
         .math-row { font-size: 1.8rem; font-weight: 800; text-align: center; color: #fff; line-height: 1.4; }
-        .inst-row { font-size: 1.2rem; color: var(--accent); text-align: center; font-weight: 700; margin-top: 10px; }
+        .inst-row { font-size: 1.2rem; color: #ff3300; text-align: center; font-weight: 700; margin-top: 10px; }
         .btn-row { display: flex; gap: 10px; margin-top: 15px; }
-        .btn { flex: 1; height: 45px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
-        .btn-gen { background: var(--accent); color: #fff; }
+        .btn { flex: 1; height: 45px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
+        .btn-gen { background: #ff3300; color: #fff; }
+        .btn-gen:active { transform: scale(0.98); }
         .btn-ans { background: #000; color: #888; border: 1px solid #444; }
-        .ans-box { margin-top: 10px; padding: 12px; background: #220000; border: 1px solid var(--ans); color: var(--ans); display: none; font-size: 0.95rem; line-height: 1.5; }
-        .graph-box { flex: 1; background: #000; border: 1px solid var(--grid); border-radius: 8px; overflow: hidden; position: relative; }
+        .ans-box { margin-top: 10px; padding: 12px; background: #220000; border: 1px solid #ffcc00; color: #ffcc00; display: none; font-size: 0.95rem; line-height: 1.5; }
+        .graph-box { flex: 1; background: #000; border: 1px solid #220000; border-radius: 8px; overflow: hidden; }
         canvas { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
 <aside>
-    <div style="color:var(--accent); font-weight:900; text-align:center; margin-bottom:15px; letter-spacing:2px; font-size: 1.2rem;">SKILL TREE 100%</div>
+    <div style="color:#ff3300; font-weight:900; text-align:center; margin-bottom:15px; letter-spacing:2px; font-size: 1.2rem;">SKILL TREE: MAX</div>
     <div class="nav-scroll">
-        <div class="cat">TIER 1-2: BASIC/ABYSS</div>
-        <button class="nav-btn active" onclick="app.set('t1_a', this)">文字係数の平方完成</button>
-        <button class="nav-btn" onclick="app.set('t2_a', this)">区間が動く最大最小</button>
-        <button class="nav-btn" onclick="app.set('t2_b', this)">4次関数への帰着</button>
-        <button class="nav-btn" onclick="app.set('t2_c', this)">解の配置(多重制約)</button>
-        <div class="cat">TIER 3: OVERLORD</div>
-        <button class="nav-btn" onclick="app.set('t3_a', this)">通過領域(逆像法)</button>
-        <button class="nav-btn" onclick="app.set('t3_b', this)">多重絶対値迷宮</button>
-        <button class="nav-btn" onclick="app.set('t3_c', this)">2変数関数の従属移動</button>
-        <div class="cat">TIER 4: DIVINE (UNLOCKED)</div>
-        <button class="nav-btn" onclick="app.set('t4_a', this)">領域内の格子点計数</button>
-        <button class="nav-btn" onclick="app.set('t4_b', this)">放物線求積(1/6公式)</button>
-        <button class="nav-btn" onclick="app.set('t4_c', this)">頂点の軌跡連鎖</button>
-        <button class="nav-btn" onclick="app.set('t4_d', this)">共通接線の導出</button>
+        <div class="cat">BASIC / ABYSS</div>
+        <button class="nav-btn active" onclick="app.set('t1_a', this)">01. 文字係数の平方完成</button>
+        <button class="nav-btn" onclick="app.set('t2_a', this)">02. 区間が動く最大最小</button>
+        <button class="nav-btn" onclick="app.set('t2_b', this)">03. 4次関数への帰着</button>
+        <button class="nav-btn" onclick="app.set('t2_c', this)">04. 解の配置(多重制約)</button>
+        <div class="cat">OVERLORD</div>
+        <button class="nav-btn" onclick="app.set('t3_a', this)">05. 通過領域(逆像法)</button>
+        <button class="nav-btn" onclick="app.set('t3_b', this)">06. 多重絶対値迷宮</button>
+        <button class="nav-btn" onclick="app.set('t3_c', this)">07. 2変数関数の従属移動</button>
+        <div class="cat">DIVINE</div>
+        <button class="nav-btn" onclick="app.set('t4_a', this)">08. 領域内の格子点計数</button>
+        <button class="nav-btn" onclick="app.set('t4_b', this)">09. 放物線求積(1/6公式)</button>
+        <button class="nav-btn" onclick="app.set('t4_c', this)">10. 頂点の軌跡連鎖</button>
+        <button class="nav-btn" onclick="app.set('t4_d', this)">11. 共通接線の導出</button>
     </div>
 </aside>
 
@@ -70,8 +72,8 @@
         <div id="q-math" class="math-row"></div>
         <div id="q-inst" class="inst-row"></div>
         <div class="btn-row">
-            <button class="btn btn-gen" onclick="app.gen()">REGENERATE DATA</button>
-            <button class="btn btn-ans" onclick="app.toggle()">DECODE LOGIC</button>
+            <button class="btn btn-gen" onclick="app.gen()">REGENERATE PROBLEM</button>
+            <button class="btn btn-ans" onclick="app.toggle()">DECODE ANALYSIS</button>
         </div>
         <div id="ans-box" class="ans-box"></div>
     </div>
@@ -82,108 +84,97 @@
 const app = {
     mode: 't1_a',
     r: (n, m) => Math.floor(Math.random() * (m - n + 1)) + n,
+    
     set(m, el) {
         this.mode = m;
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
         this.gen();
     },
+
     toggle() {
         const b = document.getElementById('ans-box');
-        b.style.display = b.style.display === 'block' ? 'none' : 'block';
+        b.style.display = (b.style.display === 'block') ? 'none' : 'block';
     },
+
     engines: {
-        t1_a: () => {
-            let k = app.r(1, 5);
-            return { q: `y = x² - 2(${k}a)x + ${k*k}a² + a`, i: "頂点の座標を a を用いて表せ。", a: `y = (x - ${k}a)² + a より、頂点 (${k}a, a)`, cfg: {a:1, b:-2, c:1, type:'para'} };
-        },
-        t2_a: () => ({ q: "y = x² - 4ax (0 ≦ x ≦ 2)", i: "最大値 M(a) を求めよ。", a: "軸 x=2a と範囲の中央 x=1 の比較。a < 1/2 のとき f(2), a ≧ 1/2 のとき f(0)", cfg: {a:1, b:-2, c:0, type:'para'} }),
-        t2_b: () => ({ q: "y = (x²-2x)² + 2(x²-2x) - 1", i: "最小値を求めよ。", a: "t = x²-2x ≧ -1。y = t²+2t-1 (t≧-1) より、t=-1 のとき 最小値 -2", cfg: {type:'fourth'} }),
-        t2_c: () => ({ q: "x² - (a+1)x + a = 0", i: "-2 < x < 0 に少なくとも1つの解を持つ a の範囲？", a: "f(-2)f(0) < 0 または D=0 等の条件を精査せよ。", cfg: {a:1, b:-1, c:1, type:'para'} }),
-        t3_a: () => ({ q: "y = 2tx - t² (0 ≦ t ≦ 1)", i: "直線群の通過領域を求めよ。", a: "x < 0: y ≦ 0, 0 ≦ x ≦ 1: y ≦ x², 1 < x: y ≦ 2x-1", cfg: {type:'envelope'} }),
-        t3_b: () => ({ q: "y = | |x² - 4| - 1 |", i: "y = k との共有点が 6 個になる k は？", a: "0 < k < 1 の範囲。グラフの山が削れる領域。", cfg: {type:'abs_complex'} }),
-        t3_c: () => ({ q: "x² + y² = 1 (y ≧ 0) のとき", i: "x² + 2y の最大値を求めよ。", a: "x² = 1-y² 代入。-(y-1)² + 2 より、y=1 のとき最大値 2", cfg: {a:-1, b:2, c:1, type:'para'} }),
-        t4_a: () => ({ q: "y ≧ x² と y ≦ x + 2", i: "領域内の格子点(整数点)の個数を答えよ。", a: "x=-1(2個), 0(3個), 1(3個), 2(1個) の合計 9 個", cfg: {type:'lattice'} }),
-        t4_b: () => ({ q: "y = x² と y = kx で囲まれた面積が 4/3", i: "正の定数 k の値を求めよ。", a: "k³/6 = 4/3 より k³ = 8, よって k = 2", cfg: {type:'area_calc'} }),
-        t4_c: () => ({ q: "y = x² - 2ax + a² + a", i: "a が変化する時、頂点が描く軌跡を求めよ。", a: "頂点(a, a) より 軌跡 y = x", cfg: {type:'trace'} }),
-        t4_d: () => ({ q: "y = x² と y = -(x-2)²", i: "この2つの放物線の共通接線の式を求めよ。", a: "y = x - 1/4 と y = 3x - 9/4 (導関数を利用)", cfg: {type:'common_tan'} })
+        t1_a: () => ({ q: `y = x² - 2(ka)x + k²a² + a`, i: "頂点の座標を a を用いて表せ。", a: "頂点 (ka, a)", cfg: {a:1, b:-2, c:1} }),
+        t2_a: () => ({ q: "y = x² - 4ax (0 ≦ x ≦ 2)", i: "最大値 M(a) を求めよ。", a: "a < 1/2 のとき f(2), a ≧ 1/2 のとき f(0)", cfg: {a:1, b:-2, c:0} }),
+        t2_b: () => ({ q: "y = (x²-2x)² + 2(x²-2x) - 1", i: "最小値を求めよ。", a: "t=x²-2xとおき、t≧-1で y=t²+2t-1 を解く。最小値 -2", cfg: {type:'fourth'} }),
+        t2_c: () => ({ q: "x² - (a+1)x + a = 0", i: "-2 < x < 0 に少なくとも1つの解を持つ a の範囲？", a: "f(-2)f(0) < 0 等の条件を吟味せよ。", cfg: {a:1, b:-1, c:1} }),
+        t3_a: () => ({ q: "y = 2tx - t² (0 ≦ t ≦ 1)", i: "直線が動く範囲(通過領域)を答えよ。", a: "0≦x≦1 では y ≦ x² など。", cfg: {type:'envelope'} }),
+        t3_b: () => ({ q: "y = | |x² - 4| - 1 |", i: "y = k との共有点が 6 個になる k は？", a: "0 < k < 1", cfg: {type:'abs_complex'} }),
+        t3_c: () => ({ q: "x² + y² = 1 (y ≧ 0) のとき", i: "x² + 2y の最大値を求めよ。", a: "最大値 2", cfg: {a:-1, b:2, c:1} }),
+        t4_a: () => ({ q: "y ≧ x² と y ≦ x + 2", i: "領域内の格子点(整数点)の個数を数えよ。", a: "合計 9 個", cfg: {type:'lattice'} }),
+        t4_b: () => ({ q: "y = x² と y = kx で囲まれた面積が 4/3", i: "正の定数 k の値を求めよ。", a: "k = 2", cfg: {type:'area_calc'} }),
+        t4_c: () => ({ q: "y = x² - 2ax + a² + a", i: "頂点が描く軌跡を求めよ。", a: "y = x", cfg: {type:'trace'} }),
+        t4_d: () => ({ q: "y = x² と y = -(x-2)²", i: "共通接線の式をすべて求めよ。", a: "y = x - 1/4, y = 3x - 9/4", cfg: {type:'common_tan'} })
     },
+
     gen() {
-        const res = this.engines[this.mode]();
-        document.getElementById('q-math').innerHTML = res.q;
+        const engine = this.engines[this.mode];
+        const res = engine();
+        document.getElementById('q-math').innerText = res.q;
         document.getElementById('q-inst').innerText = res.i;
-        document.getElementById('ans-box').innerHTML = `[LOGIC] ${res.a}`;
+        document.getElementById('ans-box').innerText = `[LOGIC DECODED] ${res.a}`;
         document.getElementById('ans-box').style.display = 'none';
         this.draw(res.cfg);
     },
+
     draw(cfg) {
         const canvas = document.getElementById('cvs');
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const w = canvas.width = canvas.offsetWidth;
         const h = canvas.height = canvas.offsetHeight;
-        ctx.clearRect(0,0,w,h);
-        const scale = 40; const ox = w/2; const oy = h/2 + 50;
         
-        ctx.strokeStyle = varColor('--grid'); ctx.lineWidth = 1;
+        ctx.clearRect(0,0,w,h);
+        const scale = 40; const ox = w/2; const oy = h/2 + 40;
+        
+        // Grid
+        ctx.strokeStyle = '#220000'; ctx.lineWidth = 1;
         for(let i=-15; i<=15; i++){
             ctx.beginPath(); ctx.moveTo(ox+i*scale, 0); ctx.lineTo(ox+i*scale, h); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(0, oy-i*scale); ctx.lineTo(w, oy-i*scale); ctx.stroke();
         }
+        // Axis
         ctx.strokeStyle = '#440000'; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
 
-        ctx.strokeStyle = varColor('--green'); ctx.lineWidth = 3;
+        ctx.strokeStyle = '#39ff14'; ctx.lineWidth = 3;
         ctx.beginPath();
         for(let px=0; px<w; px++){
-            let x = (px-ox)/scale; let y;
-            if(cfg.type==='fourth') y = Math.pow(x*x-2*x, 2) + 2*(x*x-2*x) - 1;
-            else if(cfg.type==='abs_complex') y = Math.abs(Math.abs(x*x-4)-1);
-            else if(cfg.type==='envelope') y = (x>=0 && x<=1) ? x*x : (x>1 ? 2*x-1 : -10);
-            else if(cfg.type==='lattice') {
-                this.drawLattice(ctx, ox, oy, scale);
-                y = x*x; ctx.strokeStyle = '#555';
+            let x = (px-ox)/scale; let y = 0;
+            if(cfg.type === 'fourth') y = Math.pow(x*x-2*x, 2) + 2*(x*x-2*x) - 1;
+            else if(cfg.type === 'abs_complex') y = Math.abs(Math.abs(x*x-4)-1);
+            else if(cfg.type === 'envelope') y = (x>=0 && x<=1) ? x*x : (x>1 ? 2*x-1 : -10);
+            else if(cfg.type === 'trace') { ctx.strokeStyle = '#ff3300'; y = x; }
+            else if(cfg.type === 'common_tan') {
+                ctx.strokeStyle = '#ff3300'; y = x*x; 
+                ctx.stroke(); ctx.beginPath(); y = -Math.pow(x-2,2);
             }
-            else if(cfg.type==='area_calc') {
-                this.drawArea(ctx, ox, oy, scale);
-                y = x*x;
-            }
-            else if(cfg.type==='trace') { ctx.strokeStyle = '#ff3300'; y = x; }
-            else if(cfg.type==='common_tan') {
-                ctx.strokeStyle = '#ff3300'; y = x*x;
-                ctx.stroke(); ctx.beginPath(); ctx.strokeStyle='#ff3300'; y = -Math.pow(x-2,2);
-            }
-            else y = (cfg.a||1)*x*x + (cfg.b||0)*x + (cfg.c||0);
+            else { y = (cfg.a||1)*x*x + (cfg.b||0)*x + (cfg.c||0); }
             
             let py = oy - y*scale;
             if(px===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
         }
         ctx.stroke();
-    },
-    drawLattice(ctx, ox, oy, scale) {
-        ctx.fillStyle = '#ff3300';
-        for(let x=-1; x<=2; x++){
-            for(let y=Math.ceil(x*x); y<=x+2; y++){
-                ctx.beginPath(); ctx.arc(ox+x*scale, oy-y*scale, 4, 0, Math.PI*2); ctx.fill();
+
+        if(cfg.type === 'lattice') {
+            ctx.fillStyle = '#ff3300';
+            for(let x=-1; x<=2; x++){
+                for(let y=Math.ceil(x*x-0.001); y<=x+2.001; y++){
+                    ctx.beginPath(); ctx.arc(ox+x*scale, oy-y*scale, 4, 0, Math.PI*2); ctx.fill();
+                }
             }
         }
-    },
-    drawArea(ctx, ox, oy, scale) {
-        ctx.fillStyle = 'rgba(255,51,0,0.3)';
-        ctx.beginPath();
-        for(let x=0; x<=2; x+=0.1){
-            let px = ox + x*scale; let py = oy - (x*x)*scale;
-            if(x===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-        }
-        for(let x=2; x>=0; x-=0.1){
-            let px = ox + x*scale; let py = oy - (2*x)*scale;
-            ctx.lineTo(px,py);
-        }
-        ctx.fill();
     }
 };
-function varColor(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
-window.onload = () => app.gen();
+
+window.addEventListener('load', () => {
+    app.gen();
+});
 </script>
 </body>
 </html>
