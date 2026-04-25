@@ -2,174 +2,260 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>GIGA CORE 3M: FINAL EVOLUTION</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIGA CORE 3,000,000 | Open Source Edition</title>
     <style>
         :root { --bg: #fdfdfd; --side: #ffffff; --accent: #007aff; --text: #1d1d1f; --grid: #f2f2f7; --sub: #8e8e93; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, system-ui, sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; height: 100vh; display: flex; overflow: hidden; }
         
-        /* 1. フォーカスモード対応サイドバー */
-        aside { width: 260px; background: var(--side); border-right: 1px solid #e5e5e7; display: flex; flex-direction: column; transition: 0.3s; z-index: 10; }
-        aside.collapsed { margin-left: -260px; }
-        .nav-head { padding: 20px; font-weight: 800; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
-        .nav-scroll { flex: 1; overflow-y: auto; padding: 0 15px; }
-        .cat { font-size: 0.65rem; color: var(--sub); margin: 15px 0 5px; font-weight: 700; text-transform: uppercase; }
-        .nav-btn { width: 100%; padding: 12px; background: none; border: none; color: #444; text-align: left; cursor: pointer; border-radius: 10px; font-size: 0.8rem; margin-bottom: 2px; }
-        .nav-btn.active { background: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
+        /* Sidebar Navigation */
+        aside { width: 260px; background: var(--side); border-right: 1px solid #e5e5e7; display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 100; }
+        aside.collapsed { transform: translateX(-260px); position: absolute; height: 100%; }
+        .nav-head { padding: 25px 20px; font-weight: 800; color: var(--accent); font-size: 1.2rem; border-bottom: 1px solid var(--grid); }
+        .nav-scroll { flex: 1; overflow-y: auto; padding: 10px 15px; }
+        .cat { font-size: 0.65rem; color: var(--sub); margin: 15px 0 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-btn { width: 100%; padding: 12px; background: none; border: none; color: #444; text-align: left; cursor: pointer; border-radius: 10px; font-size: 0.85rem; margin-bottom: 4px; transition: 0.2s; }
+        .nav-btn:hover { background: #f2f2f7; }
+        .nav-btn.active { background: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 4px 12px rgba(0,122,255,0.2); }
 
-        main { flex: 1; display: flex; flex-direction: column; padding: 20px; gap: 15px; position: relative; }
-        .toggle-menu { position: absolute; left: 10px; top: 10px; z-index: 20; cursor: pointer; background: #fff; border: 1px solid #ddd; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; }
+        /* Main Content */
+        main { flex: 1; display: flex; flex-direction: column; padding: 20px; gap: 15px; position: relative; min-width: 0; }
+        .menu-trigger { position: absolute; left: 15px; top: 15px; z-index: 101; cursor: pointer; background: #fff; border: 1px solid #ddd; padding: 8px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 
-        /* 2. ステップ解説対応カード */
-        .p-card { background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); height: 45%; overflow-y: auto; }
-        .math-row { font-size: 1.8rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
+        /* Problem Card */
+        .p-card { background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 40%; overflow-y: auto; display: flex; flex-direction: column; }
+        .math-row { font-size: 1.8rem; font-weight: 700; text-align: center; margin: 10px 0; word-break: break-all; }
         .inst-row { font-size: 1.1rem; color: var(--accent); text-align: center; font-weight: 600; margin-bottom: 20px; }
         .btn-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        .btn { flex: 1; height: 44px; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+        .btn { flex: 1; height: 48px; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
         .btn-gen { background: var(--accent); color: #fff; }
         .btn-ans { background: #f2f2f7; color: #1d1d1f; }
-        .ans-box { padding: 15px; background: #f9f9fb; border-radius: 12px; display: none; line-height: 1.6; font-size: 0.9rem; border-left: 4px solid var(--accent); }
+        .ans-box { padding: 18px; background: #f9f9fb; border-radius: 12px; display: none; line-height: 1.6; font-size: 0.95rem; border-left: 5px solid var(--accent); animation: fadeIn 0.3s ease; }
 
-        /* 3. 動的シミュレーター & グラフ */
-        .graph-box { flex: 1; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
-        canvas { width: 100%; height: 100%; cursor: crosshair; }
-        .controls { position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 15px; border-radius: 15px; border: 1px solid #eee; width: 220px; }
-        .ctrl-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
-        .ctrl-row label { font-size: 0.7rem; font-weight: bold; color: #666; }
-        input[type=range] { width: 100%; cursor: pointer; }
+        /* Visualizer */
+        .graph-box { flex: 1; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; overflow: hidden; border: 1px solid #f0f0f0; }
+        canvas { width: 100%; height: 100%; }
+        .controls { position: absolute; bottom: 15px; right: 15px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); padding: 15px; border-radius: 15px; border: 1px solid #eee; width: 220px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .ctrl-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .ctrl-row label { font-size: 0.65rem; font-weight: 800; color: #888; text-transform: uppercase; }
+        input[type=range] { width: 100%; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { aside { position: absolute; height: 100%; } }
     </style>
 </head>
 <body>
 
-<div class="toggle-menu" onclick="document.querySelector('aside').classList.toggle('collapsed')">MENU</div>
+<div class="menu-trigger" id="menuToggle">MENU</div>
 
-<aside>
-    <div class="nav-head">GIGA CORE 3M: FINAL</div>
-    <div class="nav-scroll" id="nav">
+<aside id="sidebar">
+    <div class="nav-head">GIGA CORE 3M</div>
+    <div class="nav-scroll" id="navContainer">
         <div class="cat">Analysis & Logic</div>
-        <button class="nav-btn active" onclick="app.set('f1', this)">文字平方完成</button>
-        <button class="nav-btn" onclick="app.set('f2', this)">動く区間の最大最小</button>
-        <button class="nav-btn" onclick="app.set('f3', this)">解の配置: 思考プロセス</button>
+        <button class="nav-btn active" data-mode="f1">文字平方完成</button>
+        <button class="nav-btn" data-mode="f2">動く区間の最大最小</button>
+        <button class="nav-btn" data-mode="f3">解の配置: 思考プロセス</button>
         <div class="cat">Complex Geometry</div>
-        <button class="nav-btn" onclick="app.set('f4', this)">絶対値の多重折り畳み</button>
-        <button class="nav-btn" onclick="app.set('f5', this)">通過領域と包絡線</button>
-        <button class="nav-btn" onclick="app.set('f6', this)">二次曲線の接線(数III)</button>
+        <button class="nav-btn" data-mode="f4">絶対値の多重折り畳み</button>
+        <button class="nav-btn" data-mode="f5">通過領域と包絡線</button>
+        <button class="nav-btn" data-mode="f6">二次曲線の接線(数III)</button>
         <div class="cat">Divine Mechanics</div>
-        <button class="nav-btn" onclick="app.set('f7', this)">格子点計数アルゴリズム</button>
-        <button class="nav-btn" onclick="app.set('f8', this)">放物線と直線の求積</button>
-        <button class="nav-btn" onclick="app.set('f9', this)">頂点の軌跡連鎖</button>
+        <button class="nav-btn" data-mode="f7">格子点計数アルゴリズム</button>
+        <button class="nav-btn" data-mode="f8">放物線と直線の求積</button>
+        <button class="nav-btn" data-mode="f9">頂点の軌跡連鎖</button>
     </div>
 </aside>
 
 <main>
     <div class="p-card">
-        <div id="q-m" class="math-row"></div>
-        <div id="q-i" class="inst-row"></div>
+        <div id="q-math" class="math-row"></div>
+        <div id="q-inst" class="inst-row"></div>
         <div class="btn-row">
-            <button class="btn btn-gen" onclick="app.gen()">GENERATION</button>
-            <button class="btn btn-ans" onclick="app.toggle()">ANALYSIS STEP</button>
+            <button class="btn btn-gen" id="genBtn">GENERATION</button>
+            <button class="btn btn-ans" id="ansBtn">ANALYSIS STEP</button>
         </div>
-        <div id="ans" class="ans-box"></div>
+        <div id="ans-box" class="ans-box"></div>
     </div>
     <div class="graph-box">
-        <canvas id="cvs"></canvas>
+        <canvas id="mainCanvas"></canvas>
         <div class="controls">
             <div class="ctrl-row">
-                <label>PARAM A: <span id="valA">0</span></label>
-                <input type="range" id="rangeA" min="-5" max="5" step="0.1" value="1" oninput="app.update()">
+                <label>Param A: <span id="labelA">1.0</span></label>
+                <input type="range" id="inputA" min="-5" max="5" step="0.1" value="1">
             </div>
             <div class="ctrl-row">
-                <label>PARAM B: <span id="valB">0</span></label>
-                <input type="range" id="rangeB" min="-5" max="5" step="0.1" value="0" oninput="app.update()">
+                <label>Param B: <span id="labelB">0.0</span></label>
+                <input type="range" id="inputB" min="-5" max="5" step="0.1" value="0">
             </div>
         </div>
     </div>
 </main>
 
 <script>
-const app = {
-    mode: 'f1', paramA: 1, paramB: 0,
-    set(m, el) {
-        this.mode = m;
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        this.gen();
+/**
+ * GIGA CORE 3,000,000 : Stability First Edition
+ */
+const CoreApp = {
+    mode: 'f1',
+    paramA: 1.0,
+    paramB: 0.0,
+    
+    init() {
+        this.cacheDOM();
+        this.bindEvents();
+        this.generateProblem();
+        this.render();
     },
-    toggle() { const b = document.getElementById('ans'); b.style.display = (b.style.display==='block')?'none':'block'; },
-    update() {
-        this.paramA = parseFloat(document.getElementById('rangeA').value);
-        this.paramB = parseFloat(document.getElementById('rangeB').value);
-        document.getElementById('valA').innerText = this.paramA;
-        document.getElementById('valB').innerText = this.paramB;
-        this.draw();
-    },
-    engines: {
-        f1: () => ({ q: "y = x² - 2ax + a² + 2a", i: "頂点の座標を a で表せ。", a: "1. 平方完成: (x-a)² + 2a<br>2. 頂点定義 (p, q) より<br>3. 結論: (a, 2a)" }),
-        f2: () => ({ q: "y = x² - 4x + 5 (a ≦ x ≦ a+2)", i: "最大値 M(a) が 10 となる a は？", a: "1. 軸 x=2 と区間中央 a+1 の比較<br>2. a+1 < 2 の時 f(a), a+1 ≧ 2 の時 f(a+2)<br>3. 方程式を解き、範囲を満たす値を選別。" }),
-        f3: () => ({ q: "x² - 2ax + 3a = 0 (1 < x < 3)", i: "異なる2つの実数解を持つ a の範囲？", a: "1. 判別式 D > 0<br>2. 軸の位置 1 < a < 3<br>3. 端点の符号 f(1)>0 かつ f(3)>0<br>4. 全ての共通範囲を抽出。" }),
-        f4: () => ({ q: "y = | |x² - a| - b |", i: "共有点の個数を調べよ。", a: "1. y=x²-a を描く<br>2. x軸以下を折り返す<br>3. 全体を b だけ下げ、再度折り返す。" }),
-        f5: () => ({ q: "y = 2ax - a² (0 ≦ a ≦ 1)", i: "通過領域の境界線を求めよ。", a: "1. a の2次方程式 a² - 2xa + y = 0 とみなす<br>2. 実数条件 D ≧ 0 より y ≦ x²<br>3. a の範囲制限による端点の軌跡を考慮。" }),
-        f6: () => ({ q: "x²/4 + y²/1 = 1 (楕円)", i: "点(2, 1)における接線の式を求めよ。", a: "1. 接点の公式 x₁x/a² + y₁y/b² = 1 を適用<br>2. 2x/4 + 1y/1 = 1<br>3. 整理して y = -1/2x + 1" }),
-        f7: () => ({ q: "y ≧ x², y ≦ ax + b", i: "領域内の整数点の個数を算出せよ。", a: "1. x を整数値で走査<br>2. 各 x における y の整数個数を Σ で加算。" }),
-        f8: () => ({ q: "y = x² - 4, y = -x² + 4", i: "2曲線で囲まれた面積を求めよ。", a: "1. 交点 x = ±2 を算出<br>2. ∫[上-下]dx すなわち ∫(-2x²+8)dx<br>3. 1/6公式の2倍として計算 2 * (1/6 * 2 * 4³)" }),
-        f9: () => ({ q: "y = x² - 2ax + a² + a", i: "aが全実数を動く時の頂点の軌跡は？", a: "1. 頂点 (a, a) を (X, Y) と置く<br>2. パラメータ a を消去<br>3. 結論: y = x" })
-    },
-    gen() {
-        const r = this.engines[this.mode]();
-        document.getElementById('q-m').innerHTML = r.q;
-        document.getElementById('q-i').innerText = r.i;
-        document.getElementById('ans').innerHTML = r.a;
-        document.getElementById('ans').style.display = 'none';
-        this.draw();
-    },
-    draw() {
-        const cvs = document.getElementById('cvs');
-        const ctx = cvs.getContext('2d');
-        const w = cvs.width = cvs.offsetWidth, h = cvs.height = cvs.offsetHeight;
-        const s = 45, ox = w/2, oy = h/2 + 50;
-        const A = this.paramA, B = this.paramB;
 
-        ctx.clearRect(0,0,w,h);
-        ctx.strokeStyle = '#f2f2f7'; ctx.lineWidth = 1;
-        for(let i=-20; i<=20; i++){
-            ctx.beginPath(); ctx.moveTo(ox+i*s, 0); ctx.lineTo(ox+i*s, h); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(0, oy-i*s); ctx.lineTo(w, oy-i*s); ctx.stroke();
+    cacheDOM() {
+        this.dom = {
+            sidebar: document.getElementById('sidebar'),
+            menuToggle: document.getElementById('menuToggle'),
+            navBtns: document.querySelectorAll('.nav-btn'),
+            qMath: document.getElementById('q-math'),
+            qInst: document.getElementById('q-inst'),
+            ansBox: document.getElementById('ans-box'),
+            genBtn: document.getElementById('genBtn'),
+            ansBtn: document.getElementById('ansBtn'),
+            canvas: document.getElementById('mainCanvas'),
+            inputA: document.getElementById('inputA'),
+            inputB: document.getElementById('inputB'),
+            labelA: document.getElementById('labelA'),
+            labelB: document.getElementById('labelB')
+        };
+        this.ctx = this.dom.canvas.getContext('2d');
+    },
+
+    bindEvents() {
+        this.dom.menuToggle.addEventListener('click', () => this.dom.sidebar.classList.toggle('collapsed'));
+        this.dom.genBtn.addEventListener('click', () => this.generateProblem());
+        this.dom.ansBtn.addEventListener('click', () => this.toggleAnalysis());
+        
+        this.dom.navBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.dom.navBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.mode = e.target.dataset.mode;
+                this.generateProblem();
+            });
+        });
+
+        const updateParams = () => {
+            this.paramA = parseFloat(this.dom.inputA.value);
+            this.paramB = parseFloat(this.dom.inputB.value);
+            this.dom.labelA.innerText = this.paramA.toFixed(1);
+            this.dom.labelB.innerText = this.paramB.toFixed(1);
+            this.render();
+        };
+
+        this.dom.inputA.addEventListener('input', updateParams);
+        this.dom.inputB.addEventListener('input', updateParams);
+        window.addEventListener('resize', () => this.render());
+    },
+
+    engines: {
+        f1: () => ({ q: "y = x² - 2ax + a² + 2a", i: "頂点の座標を a で表せ。", a: "1. 平方完成: (x-a)² + 2a<br>2. 頂点定義より、x=a, y=2a<br>3. 結論: (a, 2a)" }),
+        f2: () => ({ q: "y = x² - 4x + 5 (a ≦ x ≦ a+2)", i: "最大値 M(a) が 10 となる a は？", a: "1. 軸 x=2 と区間中央 a+1 を比較<br>2. a < 1 (左寄り) か a ≧ 1 (右寄り) で場合分け<br>3. 各端点の値を計算し方程式を解く。" }),
+        f3: () => ({ q: "x² - 2ax + 3a = 0 (1 < x < 3)", i: "異なる2解を持つ a の範囲？", a: "1. D > 0 (判別式)<br>2. 1 < 軸 < 3<br>3. f(1) > 0 かつ f(3) > 0" }),
+        f4: () => ({ q: "y = | |x² - a| - b |", i: "共有点の個数の変化を追え。", a: "1. 基本形 x²-a の描画<br>2. 折り返し処理<br>3. bによる平行移動後の再折り返し" }),
+        f5: () => ({ q: "y = 2ax - a² (0 ≦ a ≦ 1)", i: "通過領域の境界線を求めよ。", a: "1. a の二次方程式とみなす<br>2. 判別式 D≧0 から y ≦ x² を導出<br>3. 境界条件をグラフで確認" }),
+        f6: () => ({ q: "x²/4 + y²/1 = 1", i: "接線の傾きと接点を連動させよ。", a: "接線の公式: (x1)x/a² + (y1)y/b² = 1" }),
+        f7: () => ({ q: "y ≧ x², y ≦ ax + b", i: "領域内の格子点数を動的に計算。", a: "各整数 x における (upper_y - lower_y) の和。" }),
+        f8: () => ({ q: "y = x² - 4, y = -x² + 4", i: "囲まれた面積の最小化。", a: "1/6公式 S = |a|/6 * (β-α)³ の適用。" }),
+        f9: () => ({ q: "y = x² - 2ax + a² + a", i: "頂点の軌跡を a を消去して求めよ。", a: "X=a, Y=a より Y=X すなわち y=x" })
+    },
+
+    generateProblem() {
+        const data = this.engines[this.mode]();
+        this.dom.qMath.innerHTML = data.q;
+        this.dom.qInst.innerText = data.i;
+        this.dom.ansBox.innerHTML = data.a;
+        this.dom.ansBox.style.display = 'none';
+        this.render();
+    },
+
+    toggleAnalysis() {
+        const display = this.dom.ansBox.style.display;
+        this.dom.ansBox.style.display = (display === 'block') ? 'none' : 'block';
+    },
+
+    render() {
+        const { canvas, ctx } = this;
+        const w = canvas.width = canvas.offsetWidth;
+        const h = canvas.height = canvas.offsetHeight;
+        const scale = 45;
+        const ox = w / 2;
+        const oy = h / 2 + 50;
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Grid
+        ctx.strokeStyle = '#f2f2f7';
+        ctx.lineWidth = 1;
+        for (let i = -20; i <= 20; i++) {
+            ctx.beginPath(); ctx.moveTo(ox + i * scale, 0); ctx.lineTo(ox + i * scale, h); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, oy - i * scale); ctx.lineTo(w, oy - i * scale); ctx.stroke();
         }
-        ctx.strokeStyle = '#d1d1d6'; ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+
+        // Axes
+        ctx.strokeStyle = '#d1d1d6';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
 
-        ctx.strokeStyle = '#007aff'; ctx.lineWidth = 3; ctx.beginPath();
-        for(let p=0; p<w; p++){
-            let x = (p-ox)/s, y = 0;
-            switch(this.mode){
-                case 'f4': y = Math.abs(Math.abs(x*x - A) - Math.abs(B)); break;
-                case 'f5': y = 2*A*x - A*A; break;
-                case 'f6': // 楕円描画
-                    ctx.strokeStyle = '#ff9500';
-                    let t = (p/w)*2*Math.PI; y = Math.sin(t)*1; let px = ox + Math.cos(t)*2*s;
-                    if(p===0) ctx.moveTo(px, oy-y*s); else ctx.lineTo(px, oy-y*s);
-                    continue;
-                case 'f7': // 格子点
-                    this.drawLattice(ctx, ox, oy, s, A, B);
-                    y = x*x; ctx.strokeStyle = '#eee'; break;
-                default: y = A*x*x + B*x; break;
+        // Plot
+        ctx.strokeStyle = '#007aff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+
+        for (let i = 0; i < w; i++) {
+            let x = (i - ox) / scale;
+            let y = 0;
+            const a = this.paramA;
+            const b = this.paramB;
+
+            switch(this.mode) {
+                case 'f4': y = Math.abs(Math.abs(x*x - a) - Math.abs(b)); break;
+                case 'f5': y = 2*a*x - a*a; break;
+                case 'f6': 
+                    ctx.save(); ctx.strokeStyle = '#ff9500';
+                    ctx.beginPath();
+                    for(let t=0; t<Math.PI*2; t+=0.1){
+                        let ex = ox + Math.cos(t)*2*scale;
+                        let ey = oy - Math.sin(t)*1*scale;
+                        if(t===0) ctx.moveTo(ex, ey); else ctx.lineTo(ex, ey);
+                    }
+                    ctx.stroke(); ctx.restore();
+                    y = -100; // Skip main plot
+                    break;
+                case 'f7':
+                    this.drawLattice(ctx, ox, oy, scale, a, b);
+                    y = x*x; ctx.strokeStyle = 'rgba(0,122,255,0.2)';
+                    break;
+                default:
+                    y = a * x * x + b * x;
             }
-            let py = oy - y*s; if(p===0) ctx.moveTo(p,py); else ctx.lineTo(p,py);
+
+            let py = oy - y * scale;
+            if (i === 0) ctx.moveTo(i, py); else ctx.lineTo(i, py);
         }
         ctx.stroke();
     },
+
     drawLattice(ctx, ox, oy, s, a, b) {
         ctx.fillStyle = '#ff3b30';
-        for(let x=-3; x<=3; x++) {
-            for(let y=-3; y<=5; y++) {
-                if(y >= x*x && y <= a*x + b) {
-                    ctx.beginPath(); ctx.arc(ox+x*s, oy-y*s, 4, 0, 7); ctx.fill();
+        for(let x=-4; x<=4; x++) {
+            for(let y=-2; y<=6; y++) {
+                if(y >= x*x - 0.1 && y <= a*x + b + 3 + 0.1) {
+                    ctx.beginPath(); ctx.arc(ox + x*s, oy - y*s, 3, 0, Math.PI*2); ctx.fill();
                 }
             }
         }
     }
 };
-window.onload = () => { app.update(); app.gen(); };
+
+document.addEventListener('DOMContentLoaded', () => CoreApp.init());
 </script>
 </body>
 </html>
