@@ -1,14 +1,13 @@
 body{
   margin:0;
   font-family:sans-serif;
-  background: radial-gradient(circle at top,#0b1a2a,#020617);
+  background: radial-gradient(circle at top,#0b1f35,#020617);
   color:white;
 }
 
-.title{
-  font-size:28px;
-  font-weight:bold;
+.header{
   padding:20px;
+  font-size:24px;
 }
 
 .layout{
@@ -25,16 +24,15 @@ body{
 }
 
 .card{
-  background: rgba(255,255,255,0.03);
+  background:rgba(255,255,255,0.03);
   border:1px solid rgba(255,255,255,0.1);
   border-radius:15px;
   padding:18px;
-  box-shadow:0 0 20px rgba(0,0,0,0.5);
+  box-shadow:0 0 25px rgba(0,0,0,0.6);
 }
 
-.card.purple{
+.hint{
   border:1px solid #a855f7;
-  background: rgba(168,85,247,0.08);
 }
 
 input{
@@ -52,20 +50,37 @@ button{
   border-radius:10px;
   background:linear-gradient(90deg,#22c55e,#16a34a);
   color:white;
-  font-weight:bold;
   cursor:pointer;
 }
 
-.row{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
+button.blue{
+  background:linear-gradient(90deg,#3b82f6,#2563eb);
 }
 
-#question{
-  font-size:24px;
+.full{
+  width:100%;
+}
+
+.badge{
+  background:#0ea5e9;
+  padding:6px 12px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+.question{
   text-align:center;
-  margin-bottom:15px;
+  font-size:26px;
+  margin:20px 0;
+}
+
+.answer-row{
+  display:flex;
+  gap:10px;
+}
+
+.result-box{
+  margin-top:10px;
 }
 
 canvas{
@@ -76,19 +91,39 @@ canvas{
 
 .legend{
   margin-top:10px;
-  text-align:center;
 }
+
+.dot{
+  display:inline-block;
+  width:10px;
+  height:10px;
+  margin:0 5px;
+}
+
+.red{background:red;}
+.yellow{background:gold;}
+.green{background:lime;}
 
 #historyList{
   list-style:none;
   padding:0;
 }
 
-@media(max-width:900px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-  .row{
-    flex-direction:column;
-  }
+#historyList li::before{
+  content:"● ";
+  color:#22c55e;
 }
+
+.example-grid{
+  display:flex;
+  gap:10px;
+}
+
+.ex{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+}
+
+.blue{background:rgba(59,130,246,0.2);}
+.purple{background:rgba(168,85,247,0.2);}
