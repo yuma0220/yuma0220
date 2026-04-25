@@ -3,112 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- フォント -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <title>二次関数嫌い</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+  font-family: 'Inter', sans-serif;
+}
+</style>
+
 </head>
 
-<body>
+<body class="bg-gradient-to-br from-[#0b1f35] to-[#020617] text-white">
 
-<header class="header">
-  <h1>📘 二次関数嫌い</h1>
-</header>
+<h1 class="text-2xl font-semibold p-6">📘 二次関数嫌い</h1>
 
-<main class="layout">
+<div class="grid grid-cols-1 lg:grid-cols-[260px_1fr_320px] gap-6 px-6 pb-10">
 
-  <!-- LEFT -->
-  <aside class="left">
-    <div class="card">
-      <h3>名前を入力</h3>
-      <input id="username" placeholder="ユーザー名">
-      <button onclick="login()">開始</button>
+  <!-- 左 -->
+  <div class="space-y-6">
+    <div class="bg-white/5 border border-white/10 rounded-xl p-4 shadow-xl">
+      <p class="mb-2">名前を入力</p>
+      <input id="username" class="w-full p-3 rounded-lg bg-[#111827]">
+      <button onclick="start()" class="w-full mt-3 bg-green-500 hover:bg-green-600 p-3 rounded-lg">開始</button>
     </div>
 
-    <div class="card">
-      <h3>操作ガイド</h3>
-      <p>・頂点のx座標</p>
-      <p class="formula">x = -b / 2a</p>
-      <p>・頂点の座標</p>
-      <p class="formula">( -b/2a , f(-b/2a) )</p>
+    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+      <p>頂点 x = -b / 2a</p>
     </div>
 
-    <div class="card hint">
-      <h3>場合分けのヒント</h3>
-      <p>・a > 0 → 最小値</p>
-      <p>・a < 0 → 最大値</p>
-      <p>・区間 → 端点と頂点比較</p>
+    <div class="bg-purple-500/10 border border-purple-400 rounded-xl p-4">
+      <p>a > 0 → 最小</p>
+      <p>a < 0 → 最大</p>
     </div>
-  </aside>
+  </div>
 
-  <!-- CENTER -->
-  <section class="center">
+  <!-- 中央 -->
+  <div class="space-y-6">
 
-    <div class="card main-card">
-      <span id="typeBadge" class="badge">問題タイプ: normal</span>
+    <div class="bg-white/5 border border-white/10 rounded-xl p-6 shadow-xl">
 
-      <div id="question" class="question"></div>
+      <span class="bg-sky-500 text-xs px-3 py-1 rounded-full">問題タイプ: normal</span>
 
-      <div class="answer-row">
-        <input id="answer" placeholder="答えを入力">
-        <button onclick="check()">答える</button>
+      <div id="question" class="text-center text-2xl mt-6 mb-6"></div>
+
+      <div class="flex gap-3">
+        <input id="answer" class="flex-1 p-3 rounded-lg bg-[#111827]" placeholder="答えを入力">
+        <button onclick="check()" class="bg-green-500 px-6 rounded-lg">答える</button>
       </div>
 
-      <div class="result-box">
+      <div class="mt-4 text-sm">
         <p id="result">結果:</p>
         <p id="score">スコア:0</p>
       </div>
     </div>
 
-    <div class="card">
-      <h3>二次関数のグラフ</h3>
+    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+      <p class="mb-2">二次関数のグラフ</p>
       <canvas id="graph"></canvas>
-
-      <div class="legend">
-        <span class="dot red"></span>頂点
-        <span class="dot yellow"></span>y切片
-        <span class="dot green"></span>x切片
-      </div>
     </div>
 
-    <div class="card example">
-      <h3>💡 場合分けの具体例</h3>
-      <div class="example-grid">
-        <div class="ex blue">
-          <p>上に凸 → 最小</p>
-        </div>
-        <div class="ex purple">
-          <p>下に凸 → 最大</p>
-        </div>
-      </div>
+  </div>
+
+  <!-- 右 -->
+  <div class="space-y-6">
+
+    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+      <p class="mb-2">分析</p>
+      <p class="mb-3">basic (50%)</p>
+      <canvas id="chart"></canvas>
+      <button class="w-full mt-3 bg-green-500 p-3 rounded-lg">弱点特訓</button>
     </div>
 
-  </section>
-
-  <!-- RIGHT -->
-  <aside class="right">
-
-    <div class="card">
-      <h3>分析（弱点）</h3>
-      <p id="status">basic (50%)</p>
-      <canvas id="weakChart" width="250" height="200"></canvas>
-      <button class="full" onclick="weakMode()">弱点特訓モード</button>
+    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+      <p>履歴</p>
+      <ul id="history"></ul>
     </div>
 
-    <div class="card">
-      <h3>履歴（最新10件）</h3>
-      <ul id="historyList"></ul>
-    </div>
+  </div>
 
-    <div class="card">
-      <h3>データ管理</h3>
-      <button class="full" onclick="downloadBackup()">データ保存</button>
-      <input type="file" onchange="loadBackup(event)">
-      <button class="blue full">データ復元</button>
-    </div>
+</div>
 
-  </aside>
+<script>
+let a=2,b=-3,c=1;
 
-</main>
+function start(){
+  generate();
+}
 
-<script src="app.js"></script>
+function generate(){
+  a=Math.floor(Math.random()*3)+1;
+  b=Math.floor(Math.random()*11)-5;
+  c=Math.floor(Math.random()*6)-3;
+
+  document.getElementById("question").innerText =
+    `y = ${a}x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c}
+の頂点のx座標を求めよ`;
+
+  drawGraph();
+}
+
+function check(){
+  generate();
+}
+
+/* グラフ（Chart.js） */
+function drawGraph(){
+  const ctx=document.getElementById("graph");
+
+  let data=[];
+  for(let x=-10;x<=10;x+=0.5){
+    data.push({x:x,y:a*x*x+b*x+c});
+  }
+
+  new Chart(ctx,{
+    type:'line',
+    data:{
+      datasets:[{
+        label:'graph',
+        data:data,
+        borderColor:'#38bdf8',
+        tension:0.3
+      }]
+    },
+    options:{
+      scales:{
+        x:{type:'linear',grid:{color:'#444'}},
+        y:{grid:{color:'#444'}}
+      }
+    }
+  });
+}
+
+/* 分析グラフ */
+new Chart(document.getElementById("chart"),{
+  type:'bar',
+  data:{
+    labels:['basic','normal','advanced'],
+    datasets:[{
+      data:[50,66,33],
+      backgroundColor:['#22c55e','#3b82f6','#a855f7']
+    }]
+  },
+  options:{
+    plugins:{legend:{display:false}},
+    scales:{y:{beginAtZero:true,max:100}}
+  }
+});
+</script>
+
 </body>
 </html>
