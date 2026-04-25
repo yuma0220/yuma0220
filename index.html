@@ -2,96 +2,100 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>PORTABLE KYOTO: THE FINAL ANSWER</title>
+    <title>KYOTO GIGA-MAX UI</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg: #000; --sidebar: #050505; --card: #0a0a0a;
+            --bg: #000; --card: #080808;
             --neon-blue: #00f2ff; --neon-green: #39ff14; --neon-mag: #ff00ff;
-            --text: #fff; --sub: #555; --ans: #ffcc00;
+            --text: #fff; --ans: #ffcc00;
         }
-        * { box-sizing: border-box; }
-        body { background: var(--bg); color: var(--text); font-family: 'Consolas', monospace; margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        
-        aside { width: 300px; background: var(--sidebar); border-right: 2px solid var(--neon-blue); display: flex; flex-direction: column; padding: 15px; }
-        .logo h1 { font-size: 1.2rem; color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); text-align: center; margin: 10px 0; }
-        
-        .nav-list { flex: 1; overflow-y: auto; }
-        .cat { font-size: 0.7rem; color: var(--sub); margin: 15px 0 5px; border-left: 3px solid var(--neon-blue); padding-left: 5px; }
-        .nav-btn { width: 100%; padding: 10px; background: transparent; border: 1px solid #111; color: #666; text-align: left; cursor: pointer; margin-bottom: 4px; border-radius: 4px; font-size: 0.8rem; }
-        .nav-btn:hover { border-color: var(--neon-blue); color: #fff; }
-        .nav-btn.active { border-color: var(--neon-blue); background: rgba(0, 242, 255, 0.15); color: #fff; font-weight: bold; }
-        .kiso { border-left: 4px solid var(--neon-green) !important; }
-        .elite { border-left: 4px solid var(--neon-mag) !important; }
-
-        main { flex: 1; display: flex; flex-direction: column; padding: 20px; gap: 15px; }
-        .p-card { background: var(--card); border: 1px solid #1a1a1a; border-radius: 12px; padding: 20px; box-shadow: 0 0 30px #000; }
-        
-        /* 横1行・明快な問題文 */
-        .math-display {
-            background: #000; border: 1px solid #222; padding: 25px; margin: 10px 0; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; font-size: 1.8rem; line-height: 1.4;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: var(--bg); color: var(--text); font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif;
+            height: 100vh; width: 100vw; overflow: hidden; display: flex; 
         }
-        .sup { font-size: 0.6em; vertical-align: super; margin-left: 2px; color: var(--neon-green); }
-        .instruction { color: var(--neon-blue); font-weight: bold; margin-left: 15px; font-size: 1.4rem; }
 
-        .btn-row { display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1.1rem; }
+        /* サイドバー：細くしてメインを広く */
+        aside { 
+            width: 220px; background: #050505; border-right: 2px solid var(--neon-blue);
+            display: flex; flex-direction: column; padding: 10px;
+        }
+        .nav-btn { 
+            width: 100%; padding: 8px; background: transparent; border: 1px solid #222; 
+            color: #666; text-align: left; cursor: pointer; margin-bottom: 4px; border-radius: 4px; font-size: 0.75rem;
+        }
+        .nav-btn.active { border-color: var(--neon-blue); background: rgba(0, 242, 255, 0.1); color: #fff; font-weight: bold; }
+
+        /* メインエリア：一画面に凝縮 */
+        main { 
+            flex: 1; display: flex; flex-direction: column; padding: 10px; gap: 8px; height: 100vh;
+        }
+
+        /* 問題エリア：文字を巨大化 */
+        .p-card { 
+            height: 35%; background: var(--card); border: 1px solid #222; border-radius: 12px;
+            display: flex; flex-direction: column; padding: 15px; justify-content: space-around;
+        }
+        .math-row {
+            display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+            font-size: 3.5rem; font-weight: bold; text-align: center; line-height: 1.2;
+        }
+        .instruction { 
+            color: var(--neon-blue); font-size: 2.2rem; margin-left: 20px; 
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        .sup { font-size: 0.5em; vertical-align: super; color: var(--neon-green); }
+
+        .btn-row { display: flex; gap: 10px; height: 50px; }
+        .btn { flex: 1; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1.2rem; }
         .gen { background: var(--neon-blue); color: #000; }
         .ans-btn { background: #222; color: #fff; }
 
-        .ans-area { padding: 15px; background: rgba(255, 204, 0, 0.05); border: 1px dashed var(--ans); border-radius: 8px; display: none; color: var(--ans); font-size: 1.1rem; }
+        .ans-area { 
+            height: 60px; padding: 10px; background: rgba(255, 204, 0, 0.05); 
+            border: 1px dashed var(--ans); border-radius: 8px; display: none; 
+            color: var(--ans); font-size: 1.5rem; text-align: center;
+        }
 
-        .graph-area { flex: 1; background: #000; border: 1px solid #111; border-radius: 12px; position: relative; min-height: 0; }
+        /* グラフ：最大化 */
+        .graph-area { 
+            flex: 1; background: #000; border: 1px solid #222; border-radius: 12px;
+            position: relative; overflow: hidden;
+        }
+        canvas { width: 100% !important; height: 100% !important; }
     </style>
 </head>
 <body>
 
 <aside>
-    <div class="logo"><h1>KYOTO GIGA CORE</h1></div>
-    <div class="nav-list">
-        <div class="cat">BASIC</div>
-        <button class="nav-btn kiso active" onclick="app.set('k_square', this)">01. 平方完成と頂点</button>
-        <button class="nav-btn kiso" onclick="app.set('k_move', this)">02. グラフの平行移動</button>
-        <button class="nav-btn kiso" onclick="app.set('k_axis', this)">03. 三点を通る式</button>
-        <button class="nav-btn kiso" onclick="app.set('k_maxmin', this)">04. 最大・最小</button>
-        <button class="nav-btn kiso" onclick="app.set('k_ineq', this)">05. 二次不等式</button>
-        <button class="nav-btn kiso" onclick="app.set('k_kouten', this)">06. x軸との共有点</button>
-        <div class="cat">ELITE</div>
-        <button class="nav-btn elite" onclick="app.set('a_axis_move', this)">07. 軸が動く最大最小</button>
-        <button class="nav-btn elite" onclick="app.set('a_root_pos', this)">08. 解の配置</button>
-        <button class="nav-btn elite" onclick="app.set('a_area', this)">09. 通過領域</button>
-        <button class="nav-btn elite" onclick="app.set('a_abs', this)">10. 絶対値関数</button>
-        <button class="nav-btn elite" onclick="app.set('a_int', this)">11. 整数解条件</button>
-        <button class="nav-btn elite" onclick="app.set('a_sym', this)">12. 対称式の存在条件</button>
-        <button class="nav-btn elite" onclick="app.set('a_tri', this)">13. 三角形への応用</button>
-    </div>
+    <div style="color:var(--neon-blue); font-weight:bold; margin-bottom:10px; text-align:center;">KYOTO CORE</div>
+    <button class="nav-btn active" onclick="app.set('a_root_pos', this)">08. 解の配置 (難問)</button>
+    <button class="nav-btn" onclick="app.set('a_axis_move', this)">07. 軸移動 (難問)</button>
+    <button class="nav-btn" onclick="app.set('a_abs', this)">10. 絶対値 (応用)</button>
+    <button class="nav-btn" onclick="app.set('k_square', this)">01. 平方完成 (基礎)</button>
+    <button class="nav-btn" onclick="app.set('k_maxmin', this)">04. 最大最小 (基礎)</button>
 </aside>
 
 <main>
     <div class="p-card">
-        <div id="mode-label" style="color:var(--sub); font-size:0.7rem; font-weight:bold;">MISSION_START</div>
-        <div class="math-display" id="display">
+        <div class="math-row" id="display">
             </div>
         <div class="btn-row">
-            <button class="btn gen" onclick="app.gen()">GENERATE PROBLEM</button>
-            <button class="btn ans-btn" onclick="app.toggle()">ANALYSIS</button>
+            <button class="btn gen" onclick="app.gen()">NEXT MISSION</button>
+            <button class="btn ans-btn" onclick="app.toggle()">CHECK ANALYSIS</button>
         </div>
         <div id="ans" class="ans-area"></div>
     </div>
-    <div class="graph-area"><canvas id="chart"></canvas></div>
+    <div class="graph-area">
+        <canvas id="chart"></canvas>
+    </div>
 </main>
 
 <script>
 const app = {
-    mode: 'k_square', chart: null,
+    mode: 'a_root_pos', chart: null,
     r: (n, m) => Math.floor(Math.random() * (m - n + 1)) + n,
-    gcd: (a, b) => b ? app.gcd(b, a % b) : Math.abs(a),
-    f: (n, d) => {
-        const c = app.gcd(n, d); n /= c; d /= c;
-        if (d < 0) { n *= -1; d *= -1; }
-        return d === 1 ? `${n}` : `<span class="frac"><span class="frac-n">${n}</span><span class="frac-d">${d}</span></span>`;
-    },
 
     set(m, el) {
         this.mode = m;
@@ -106,50 +110,40 @@ const app = {
     },
 
     engines: {
-        k_square: () => {
-            const a = app.r(1, 2), b = app.r(-8, 8), c = app.r(-5, 5);
-            return {
-                q: `y = ${a==1?'':a}x<span class="sup">2</span>${b>=0?'+':''}${b}x${c>=0?'+':''}${c}`,
-                inst: "の頂点の座標を求めよ。",
-                ans: `頂点: (${app.f(-b, 2*a)}, ${app.f(4*a*c-b*b, 4*a)})`,
-                c: { a, b, c, type:'std' }
-            };
-        },
-        k_move: () => {
-            const mx = app.r(-5, 5), my = app.r(-5, 5);
-            return {
-                q: `y = x<span class="sup">2</span> をx軸:${mx}, y軸:${my} 移動`,
-                inst: "した後の式を求めよ。",
-                ans: `y = (x - ${mx})<span class="sup">2</span> ${my>=0?'+':''}${my}`,
-                c: { a:1, b:-2*mx, c:mx*mx+my, type:'std' }
-            };
-        },
         a_root_pos: () => {
-            const k = app.r(2, 5);
+            const k = app.r(2, 6);
             return {
-                q: `x<span class="sup">2</span> - 2ax + ${k} = 0 が x > 1 で2解`,
-                inst: "をもつ a の範囲を求めよ。",
-                ans: `D>0, 軸>1, f(1)>0 の連立 ➡ √${k} < a < ${app.f(k+1, 2)}`,
+                q: `x<span class="sup">2</span>-2ax+${k}=0`,
+                inst: "x>1 で異なる2解をもつ a を求めよ",
+                ans: `判別式 a²-${k}>0 , 軸 a>1 , f(1)=${k+1}-2a>0 より √${k} < a < ${(k+1)/2}`,
                 c: { a:1, b:-4, c:k, type:'std' }
+            };
+        },
+        a_axis_move: () => {
+            const a = app.r(1, 2);
+            return {
+                q: `y = x<span class="sup">2</span>-2ax+4`,
+                inst: "0≦x≦2 での最小値を求めよ",
+                ans: `a<0のとき4, 0≦a≦2のとき4-a², a>2のとき8-4a`,
+                c: { a:1, b:-2, c:4, type:'std' }
             };
         },
         a_abs: () => {
             const k = app.r(1, 2);
             return {
-                q: `y = |x<span class="sup">2</span> - 4x + 3| と y = ${k}`,
-                inst: "の共有点の個数を調べよ。",
-                ans: `k=${k} のとき、交点は ${k==1?3:2} 個です。`,
+                q: `y = |x<span class="sup">2</span>-4x+3|`,
+                inst: `y=${k} との共有点の個数を調べよ`,
+                ans: `k=${k} のとき、共有点は ${k==1?3:2} 個`,
                 c: { a:1, b:-4, c:3, type:'abs', k_val: k }
             };
         }
-        // 他のメニューも同様に「inst」を追加
     },
 
     gen() {
-        const eng = this.engines[this.mode] || this.engines.k_square;
+        const eng = this.engines[this.mode] || this.engines.a_root_pos;
         const res = eng();
-        document.getElementById('display').innerHTML = `<span>${res.q}</span><span class="instruction">${res.inst}</span>`;
-        document.getElementById('ans').innerHTML = `【解析結果】<br>${res.ans}`;
+        document.getElementById('display').innerHTML = `<div>${res.q}</div><div class="instruction">${res.inst}</div>`;
+        document.getElementById('ans').innerHTML = res.ans;
         document.getElementById('ans').style.display = 'none';
         this.draw(res.c);
     },
@@ -158,13 +152,13 @@ const app = {
         const ctx = document.getElementById('chart').getContext('2d');
         if (this.chart) this.chart.destroy();
         let ds = [];
-        let d = []; for(let x=-8; x<=8; x+=0.1) {
+        let d = []; for(let x=-5; x<=7; x+=0.1) {
             let y = c.a*x*x + (c.b||0)*x + (c.c||0);
             if (c.type === 'abs') y = Math.abs(y);
             d.push({x, y});
         }
-        ds.push({ data: d, showLine: true, borderColor: '#39ff14', borderWidth: 3, pointRadius: 0 });
-        if (c.k_val) ds.push({ data: [{x:-10, y:c.k_val}, {x:10, y:c.k_val}], showLine: true, borderColor: '#ff00ff', borderDash: [5,5], pointRadius: 0 });
+        ds.push({ data: d, showLine: true, borderColor: '#39ff14', borderWidth: 5, pointRadius: 0 });
+        if (c.k_val) ds.push({ data: [{x:-10, y:c.k_val}, {x:10, y:c.k_val}], showLine: true, borderColor: '#ff00ff', borderDash: [10,10], borderWidth: 3, pointRadius: 0 });
 
         this.chart = new Chart(ctx, {
             type: 'scatter',
@@ -172,8 +166,8 @@ const app = {
             options: {
                 responsive: true, maintainAspectRatio: false,
                 scales: {
-                    x: { min: -10, max: 10, position: 'center', grid: { color: '#111' } },
-                    y: { min: -5, max: 15, position: 'center', grid: { color: '#111' } }
+                    x: { min: -4, max: 6, position: 'center', grid: { color: '#222' }, ticks: { color: '#555', font: {size: 14} } },
+                    y: { min: -4, max: 10, position: 'center', grid: { color: '#222' }, ticks: { color: '#555', font: {size: 14} } }
                 },
                 plugins: { legend: { display: false } }
             }
