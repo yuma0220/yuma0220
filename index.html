@@ -3,103 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- フォント完全一致 -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-<!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <title>二次関数嫌い</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-body{font-family:'Inter',sans-serif;}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background: radial-gradient(circle at top,#0b1f35,#020617);
+  color:white;
+}
+
+.container{
+  display:flex;
+  gap:20px;
+  padding:20px;
+}
+
+.card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;
+  padding:20px;
+}
+
+.left{width:250px;}
+.center{flex:1;}
+.right{width:300px;}
+
+input{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#111827;
+  color:white;
+}
+
+button{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:white;
+  cursor:pointer;
+}
+
+.question{
+  text-align:center;
+  font-size:22px;
+  margin:20px 0;
+}
+
+.row{
+  display:flex;
+  gap:10px;
+}
+
+canvas{
+  background:#020617;
+  border-radius:10px;
+  width:100%;
+}
+
+.badge{
+  background:#0ea5e9;
+  padding:5px 10px;
+  border-radius:10px;
+  font-size:12px;
+}
 </style>
 </head>
 
-<body class="bg-gradient-to-br from-[#0b1f35] to-[#020617] text-white">
+<body>
 
-<h1 class="text-[22px] font-semibold px-6 py-5">📘 二次関数嫌い</h1>
+<h2 style="padding:20px;">📘 二次関数嫌い</h2>
 
-<div class="grid lg:grid-cols-[260px_1fr_320px] gap-6 px-6 pb-10">
+<div class="container">
 
-<!-- LEFT -->
-<div class="space-y-6">
+<!-- 左 -->
+<div class="left">
+  <div class="card">
+    <p>名前</p>
+    <input id="username">
+    <button onclick="generate()">開始</button>
+  </div>
 
-<div class="bg-white/5 border border-white/10 rounded-xl p-5 shadow-2xl backdrop-blur-xl">
-<p class="mb-2 text-sm">名前を入力</p>
-<input id="username" class="w-full p-3 rounded-lg bg-[#111827] outline-none">
-<button onclick="start()" class="w-full mt-3 bg-green-500 hover:bg-green-600 transition p-3 rounded-lg">
-開始
-</button>
+  <div class="card">
+    <p>難易度</p>
+    <button onclick="setLevel('easy')">Easy</button>
+    <button onclick="setLevel('normal')">Normal</button>
+    <button onclick="setLevel('hard')">Hard</button>
+  </div>
 </div>
 
-<div class="bg-white/5 border border-white/10 rounded-xl p-5">
-<p class="text-sm">頂点 x = -b / 2a</p>
+<!-- 中央 -->
+<div class="center">
+  <div class="card">
+
+    <span class="badge">問題</span>
+
+    <div id="question" class="question"></div>
+
+    <div class="row">
+      <input id="answer">
+      <button onclick="check()">答える</button>
+    </div>
+
+    <p id="result"></p>
+    <p id="score">スコア:0</p>
+
+  </div>
+
+  <div class="card">
+    <canvas id="graph" width="700" height="350"></canvas>
+  </div>
 </div>
 
-<div class="bg-purple-500/10 border border-purple-400 rounded-xl p-5">
-<p class="text-sm">a > 0 → 最小</p>
-<p class="text-sm">a < 0 → 最大</p>
-<p class="text-sm">区間 → 端点＋頂点</p>
-</div>
+<!-- 右 -->
+<div class="right">
 
-</div>
+  <div class="card">
+    <p id="analysis">分析</p>
+  </div>
 
-<!-- CENTER -->
-<div class="space-y-6">
-
-<div class="bg-white/5 border border-white/10 rounded-xl p-6 shadow-2xl backdrop-blur-xl">
-
-<span class="bg-sky-500 text-xs px-3 py-1 rounded-full">
-問題タイプ: normal
-</span>
-
-<div id="question" class="text-center text-[24px] font-semibold mt-6 mb-6 leading-relaxed"></div>
-
-<div class="flex gap-3">
-<input id="answer" class="flex-1 p-3 rounded-lg bg-[#111827] outline-none">
-<button onclick="check()" class="bg-green-500 hover:bg-green-600 transition px-6 rounded-lg">
-答える
-</button>
-</div>
-
-<div class="mt-4 text-sm">
-<p id="result">結果:</p>
-<p id="score">スコア:0</p>
-</div>
-
-</div>
-
-<div class="bg-white/5 border border-white/10 rounded-xl p-4">
-<p class="mb-2 text-sm">二次関数のグラフ</p>
-<canvas id="graph"></canvas>
-</div>
-
-</div>
-
-<!-- RIGHT -->
-<div class="space-y-6">
-
-<div class="bg-white/5 border border-white/10 rounded-xl p-5">
-<p class="text-sm mb-2">分析</p>
-<p class="text-sm mb-3">basic (50%)</p>
-<canvas id="chart"></canvas>
-<button class="w-full mt-3 bg-green-500 hover:bg-green-600 transition p-3 rounded-lg">
-弱点特訓モード
-</button>
-</div>
-
-<div class="bg-white/5 border border-white/10 rounded-xl p-5">
-<p class="text-sm">履歴</p>
-<ul class="text-sm mt-2 space-y-1">
-<li>● 正解 (basic)</li>
-<li>● 不正解 (normal)</li>
-</ul>
-</div>
+  <div class="card">
+    <p>履歴</p>
+    <ul id="history"></ul>
+  </div>
 
 </div>
 
@@ -107,96 +141,171 @@ body{font-family:'Inter',sans-serif;}
 
 <script>
 let a,b,c,correct,score=0;
-let graphChart;
+let level="normal";
 
-window.onload=start;
+/* ===== 履歴・分析 ===== */
+let history = JSON.parse(localStorage.getItem("history")) || [];
 
-function start(){
-generate();
+let stats = {
+  easy:{ok:0,total:0},
+  normal:{ok:0,total:0},
+  hard:{ok:0,total:0}
+};
+
+/* ===== 難易度 ===== */
+function setLevel(l){
+  level=l;
+  generate();
 }
 
+/* ===== ランダム ===== */
+function rand(min,max){
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
+
+/* ===== 問題生成 ===== */
 function generate(){
-a=Math.floor(Math.random()*3)+1;
-b=Math.floor(Math.random()*11)-5;
-c=Math.floor(Math.random()*6)-3;
 
-correct=-b/(2*a);
+  if(level==="easy"){
+    a=1; b=rand(-4,4); c=0;
+  }
+  if(level==="normal"){
+    a=rand(1,3); b=rand(-6,6); c=rand(-5,5);
+  }
+  if(level==="hard"){
+    a=rand(-3,3)||1; b=rand(-8,8); c=rand(-8,8);
+  }
 
-document.getElementById("question").innerText =
-`y = ${a}x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c}
-の頂点のx座標を求めよ`;
+  correct=-b/(2*a);
 
-drawGraph();
+  document.getElementById("question").innerText=
+  `y=${a}x²${b>=0?'+':''}${b}x${c>=0?'+':''}${c}
+の頂点のx座標`;
+
+  drawGraph();
 }
 
+/* ===== 判定 ===== */
 function check(){
-let ans=Number(document.getElementById("answer").value);
-let ok=Math.abs(ans-correct)<0.5;
+  let ans=Number(document.getElementById("answer").value);
+  let ok=Math.abs(ans-correct)<0.5;
 
-document.getElementById("result").innerText =
-ok ? "正解！" : "不正解："+correct.toFixed(2);
+  document.getElementById("result").innerText=
+    ok?"正解！":"不正解："+correct.toFixed(2);
 
-score += ok ? 10 : -5;
-document.getElementById("score").innerText="スコア:"+score;
+  score+=ok?10:-5;
+  document.getElementById("score").innerText="スコア:"+score;
 
-generate();
+  // 記録
+  stats[level].total++;
+  if(ok) stats[level].ok++;
+
+  history.push({
+    result: ok,
+    level: level,
+    date: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("history", JSON.stringify(history));
+
+  showHistory();
+  analyze();
+
+  generate();
 }
 
+/* ===== 履歴表示 ===== */
+function showHistory(){
+  const ul=document.getElementById("history");
+  ul.innerHTML="";
+
+  history.slice(-10).reverse().forEach(h=>{
+    let li=document.createElement("li");
+    li.innerText=`${h.date} : ${h.result?"○":"×"} (${h.level})`;
+    ul.appendChild(li);
+  });
+}
+
+/* ===== 分析 ===== */
+function analyze(){
+  let worst="easy";
+  let worstRate=1;
+
+  for(let k in stats){
+    let r=stats[k].ok/(stats[k].total||1);
+    if(r<worstRate){
+      worstRate=r;
+      worst=k;
+    }
+  }
+
+  document.getElementById("analysis").innerText=
+    `弱点: ${worst} (${Math.round(worstRate*100)}%)`;
+}
+
+/* ===== グラフ ===== */
 function drawGraph(){
-const ctx=document.getElementById("graph");
+  const canvas=document.getElementById("graph");
+  const ctx=canvas.getContext("2d");
 
-let data=[];
-for(let x=-10;x<=10;x+=0.2){
-data.push({x:x,y:a*x*x+b*x+c});
+  const W=canvas.width;
+  const H=canvas.height;
+
+  ctx.clearRect(0,0,W,H);
+
+  const scale=30;
+  const cx=W/2;
+  const cy=H/2;
+
+  // 背景
+  ctx.fillStyle="#020617";
+  ctx.fillRect(0,0,W,H);
+
+  // グリッド
+  ctx.strokeStyle="rgba(255,255,255,0.15)";
+  for(let i=-10;i<=10;i++){
+    let x=cx+i*scale;
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+
+    let y=cy-i*scale;
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  }
+
+  // 軸
+  ctx.strokeStyle="white";
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,H); ctx.stroke();
+
+  // 放物線
+  ctx.strokeStyle="#60a5fa";
+  ctx.lineWidth=3;
+  ctx.beginPath();
+
+  for(let x=-10;x<=10;x+=0.05){
+    let y=a*x*x+b*x+c;
+    let px=cx+x*scale;
+    let py=cy-y*scale;
+
+    if(x===-10) ctx.moveTo(px,py);
+    else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+
+  // 頂点
+  let vx=-b/(2*a);
+  let vy=a*vx*vx+b*vx+c;
+
+  ctx.fillStyle="red";
+  ctx.beginPath();
+  ctx.arc(cx+vx*scale,cy-vy*scale,5,0,Math.PI*2);
+  ctx.fill();
 }
 
-if(graphChart) graphChart.destroy();
-
-graphChart=new Chart(ctx,{
-type:'line',
-data:{
-datasets:[{
-data:data,
-borderColor:'#38bdf8',
-pointRadius:0,
-tension:0.25
-}]
-},
-options:{
-plugins:{legend:{display:false}},
-scales:{
-x:{
-type:'linear',
-grid:{color:'rgba(255,255,255,0.08)'},
-ticks:{color:'#aaa'}
-},
-y:{
-grid:{color:'rgba(255,255,255,0.08)'},
-ticks:{color:'#aaa'}
-}
-}
-}
-});
-}
-
-new Chart(document.getElementById("chart"),{
-type:'bar',
-data:{
-labels:['basic','normal','advanced'],
-datasets:[{
-data:[50,70,30],
-backgroundColor:['#22c55e','#3b82f6','#a855f7'],
-borderRadius:6
-}]
-},
-options:{
-plugins:{legend:{display:false}},
-scales:{
-y:{beginAtZero:true,max:100,ticks:{color:'#aaa'}},
-x:{ticks:{color:'#aaa'}}
-}
-}
-});
+/* ===== 初期表示 ===== */
+showHistory();
+analyze();
+generate();
 </script>
 
 </body>
