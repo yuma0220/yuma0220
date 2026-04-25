@@ -2,282 +2,132 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>二次関数嫌い - Ultimate AI Tutor</title>
+    <title>二次関数 AI Tutor - 完全解説版</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --bg: #0f172a; --card: #1e293b; --accent: #22c55e;
-            --primary: #3b82f6; --purple: #a78bfa; --text: #f8fafc;
-        }
-        body {
-            background-color: var(--bg); color: var(--text);
-            font-family: 'Inter', system-ui, sans-serif; margin: 0; padding: 20px;
-        }
-        /* レイアウト */
-        .grid-main {
-            display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px;
-            max-width: 1600px; margin: 0 auto;
-        }
-        .card {
-            background: var(--card); border-radius: 16px; padding: 20px;
-            border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
-        /* コンポーネント */
-        .btn {
-            width: 100%; padding: 12px; border: none; border-radius: 8px;
-            font-weight: bold; cursor: pointer; transition: 0.2s; color: white;
-            margin-bottom: 8px;
-        }
-        .btn-p { background: var(--primary); }
-        .btn-s { background: var(--accent); }
-        .btn-o { background: transparent; border: 1px solid var(--purple); color: var(--purple); }
-        .btn:hover { opacity: 0.8; transform: translateY(-1px); }
-
-        .formula-display {
-            font-size: 2rem; text-align: center; padding: 30px;
-            background: rgba(0,0,0,0.2); border-radius: 12px; margin: 20px 0;
-        }
-        .badge {
-            background: #1e40af; color: #bfdbfe; padding: 4px 12px;
-            border-radius: 99px; font-size: 0.8rem;
-        }
-        input[type="text"] {
-            width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155;
-            color: white; border-radius: 8px; font-size: 1rem; box-sizing: border-box;
-        }
-
-        /* AI解説パネル */
-        .ai-guide {
-            display: none; background: linear-gradient(135deg, #1e1b4b, #2e1065);
-            border: 1px solid var(--purple); border-left: 5px solid var(--purple);
-        }
-        .step-box { margin-bottom: 15px; padding-left: 15px; border-left: 2px dashed var(--purple); }
+        :root { --bg: #0f172a; --card: #1e293b; --purple: #a78bfa; --text: #f8fafc; --accent: #22c55e; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
+        .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .formula-box { background: rgba(0,0,0,0.3); padding: 20px; text-align: center; font-size: 1.5em; border-radius: 8px; margin: 15px 0; border: 1px solid var(--purple); }
         
-        canvas { background: #020617; border-radius: 12px; width: 100%; }
-        .history-item { font-size: 0.85rem; padding: 8px; border-bottom: 1px solid #334155; }
+        /* ここが「解説」のスタイル */
+        .explanation-area { 
+            background: linear-gradient(135deg, #1e1b4b, #2e1065); 
+            border: 1px solid var(--purple); border-left: 6px solid var(--purple);
+            padding: 20px; margin-top: 20px; display: none; /* 最初は隠す */
+        }
+        .step { margin-bottom: 15px; }
+        .step-label { color: var(--purple); font-weight: bold; display: block; margin-bottom: 5px; }
+        
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 8px; color: white; }
+        .btn-main { background: #3b82f6; }
+        .btn-ans { background: var(--accent); }
+        input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 6px; box-sizing: border-box; font-size: 1.1em; }
     </style>
 </head>
 <body>
 
-<header style="margin-bottom: 30px; display: flex; align-items: center; gap: 15px;">
-    <span style="font-size: 2rem;">📘</span>
-    <h1 style="margin: 0; font-size: 1.5rem;">二次関数嫌い <span style="font-weight: normal; opacity: 0.6;">- AI Learning Studio</span></h1>
-</header>
-
-<div class="grid-main">
+<div class="container">
     <aside>
         <div class="card">
-            <h3 style="margin-top:0">モード選択</h3>
-            <button class="btn btn-p" onclick="qEngine.generate('vertex')">頂点の座標 (*)</button>
-            <button class="btn btn-p" onclick="qEngine.generate('intercept')">x軸との共有点 (**)</button>
-            <button class="btn btn-p" onclick="qEngine.generate('range')">最大・最小(範囲あり) (***)</button>
-            <button class="btn btn-o" onclick="alert('準備中...')">文字定数 $a$ の場合分け (****)</button>
-        </div>
-        <div class="card" style="background: linear-gradient(to bottom, #1e293b, #0f172a);">
-            <h3 style="color: var(--purple);">クイック・ガイド</h3>
-            <div id="quick-guide-math" style="font-size: 0.9rem;">
-                頂点公式: $x = -\frac{b}{2a}$<br>
-                判別式: $D = b^2 - 4ac$
-            </div>
+            <h3>問題を選択</h3>
+            <button class="btn btn-main" onclick="app.generate('vertex')">頂点の座標 (*)</button>
+            <button class="btn btn-main" onclick="app.generate('maxmin')">最大・最小 (***)</button>
+            <p style="font-size: 0.8em; color: #94a3b8;">※画像(Step Up 7,8)の類似問題をAIが自動生成します</p>
         </div>
     </aside>
 
     <main>
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span id="q-badge" class="badge">演習中...</span>
-                <span id="score-display">Score: 0</span>
-            </div>
-            
-            <div id="q-formula" class="formula-display">$$y = ax^2 + bx + c$$</div>
-            
-            <div id="q-instruction" style="text-align: center; margin-bottom: 20px; font-weight: bold; color: var(--purple);"></div>
-
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="user-input" placeholder="答えを入力してください">
-                <button class="btn btn-s" style="width: 150px; margin:0;" onclick="qEngine.check()">判定</button>
-            </div>
+            <div id="q-label" style="font-size: 0.9em; color: var(--purple);">演習</div>
+            <div id="q-text" class="formula-box">問題を生成してください</div>
+            <p id="q-desc" style="font-weight: bold;"></p>
+            <input type="text" id="user-ans" placeholder="答えを入力">
+            <button class="btn btn-ans" style="margin-top:15px;" onclick="app.check()">判定 & 解説を表示</button>
         </div>
 
-        <div id="ai-panel" class="card ai-guide">
-            <h3 style="color: var(--purple); margin-top: 0;">🤖 AIステップ解説</h3>
-            <div id="ai-content"></div>
-            <button class="btn btn-p" style="margin-top: 20px;" onclick="qEngine.next()">次の問題へ進む</button>
-        </div>
-
-        <div class="card">
-            <h3>ビジュアル分析</h3>
-            <canvas id="mainGraph" height="300"></canvas>
+        <div id="explanation" class="explanation-area">
+            <h3 style="margin-top:0; color: var(--purple);">🤖 AIによる詳細解説</h3>
+            <div id="expl-content"></div>
+            <button class="btn btn-main" style="margin-top:15px; background: #475569;" onclick="app.next()">次の問題へ</button>
         </div>
     </main>
-
-    <aside>
-        <div class="card">
-            <h3>苦手分析</h3>
-            <canvas id="chartStats" height="200"></canvas>
-        </div>
-        <div class="card">
-            <h3>学習履歴</h3>
-            <div id="history-list" style="max-height: 400px; overflow-y: auto;"></div>
-        </div>
-    </aside>
 </div>
 
 <script>
-/* ---------------------------------------------------------
-   問題生成・判定エンジン (qEngine)
---------------------------------------------------------- */
-const qEngine = {
+const app = {
     current: {},
-    score: 0,
-    stats: { vertex: 0, intercept: 0, range: 0 },
 
+    // 問題を生成する心臓部
     generate(type) {
-        let a = (Math.floor(Math.random() * 3) + 1) * (Math.random() > 0.5 ? 1 : -1);
-        let p = Math.floor(Math.random() * 8) - 4;
-        let q = Math.floor(Math.random() * 8) - 4;
+        document.getElementById('explanation').style.display = 'none';
+        document.getElementById('user-ans').value = '';
         
-        let b = -2 * a * p;
-        let c = a * p * p + q;
-        
+        // ランダムな係数 (画像の問題レベルに調整)
+        const a = (Math.floor(Math.random() * 2) + 1) * (Math.random() > 0.5 ? 1 : -1);
+        const p = Math.floor(Math.random() * 6) - 3;
+        const q = Math.floor(Math.random() * 6) - 3;
+        const b = -2 * a * p;
+        const c = a * p * p + q;
+
         this.current = { a, b, c, p, q, type };
-        document.getElementById('ai-panel').style.display = 'none';
-        document.getElementById('user-input').value = '';
 
-        let formulaText = `y = ${this.fmt(a)}x^2 ${this.fmtS(b)}x ${this.fmtS(c)}`;
-        
-        if(type === 'vertex') {
-            this.current.ans = `${p},${q}`;
-            document.getElementById('q-instruction').innerText = "頂点の座標 (x, y) を答えよ";
-        } else if(type === 'intercept') {
-            // 因数分解可能にするための再計算
-            let x1 = Math.floor(Math.random() * 5) - 2;
-            let x2 = x1 + Math.floor(Math.random() * 3) + 1;
-            this.current.a = 1; this.current.b = -(x1 + x2); this.current.c = x1 * x2;
-            this.current.ans = `${x1},${x2}`;
-            formulaText = `y = x^2 ${this.fmtS(this.current.b)}x ${this.fmtS(this.current.c)}`;
-            document.getElementById('q-instruction').innerText = "x軸との共有点のx座標をすべて答えよ";
-        } else if(type === 'range') {
-            let x1 = p - 2; let x2 = p + 1;
-            this.current.range = [x1, x2];
-            document.getElementById('q-instruction').innerText = `${x1} ≦ x ≦ ${x2} における最大・最小を考えよ (解説参照)`;
+        if (type === 'vertex') {
+            document.getElementById('q-text').innerHTML = `\\( y = ${this.fmt(a,b,c)} \\)`;
+            document.getElementById('q-desc').innerText = "この放物線の頂点の座標を求めなさい。";
+        } else {
+            const start = p - 2; const end = p + 1;
+            this.current.range = [start, end];
+            document.getElementById('q-text').innerHTML = `\\( y = ${this.fmt(a,b,c)} \\quad (${start} \\le x \\le ${end}) \\)`;
+            document.getElementById('q-desc').innerText = "この範囲における最大値と最小値を求めなさい。";
         }
-
-        document.getElementById('q-formula').innerHTML = `$$${formulaText}$$`;
-        document.getElementById('q-badge').innerText = `Type: ${type.toUpperCase()}`;
-        
         MathJax.typeset();
-        this.drawGraph();
     },
 
+    // 判定と「解説」の生成
     check() {
-        const val = document.getElementById('user-input').value;
-        const isCorrect = val.replace(/\s+/g, '') === this.current.ans;
-        
-        if(isCorrect) this.score += 10;
-        document.getElementById('score-display').innerText = `Score: ${this.score}`;
-        
-        this.showAIExplanation();
-        this.addHistory(isCorrect);
-    },
+        const expl = document.getElementById('explanation');
+        const content = document.getElementById('expl-content');
+        const { a, b, c, p, q, type, range } = this.current;
 
-    showAIExplanation() {
-        const panel = document.getElementById('ai-panel');
-        const content = document.getElementById('ai-content');
-        const { a, b, c, p, q, type } = this.current;
+        // --- ここでAI解説文を動的に組み立てる ---
+        let html = `<div class="step"><span class="step-label">【STEP 1】平方完成</span>`;
+        html += `式を $y = a(x-p)^2 + q$ の形に変形します。<br>`;
+        html += `\\( y = ${a}(x^2 ${b/a >= 0 ? '+' : ''}${b/a}x) ${c >= 0 ? '+' : ''}${c} \\)<br>`;
+        html += `\\( y = ${a}(x ${-p >= 0 ? '+' : ''}${-p})^2 ${q >= 0 ? '+' : ''}${q} \\)</div>`;
 
-        let html = `
-            <div class="step-box">
-                <strong>① 係数の抽出:</strong> $a=${a}, b=${b}, c=${c}$ です。
-            </div>
-            <div class="step-box">
-                <strong>② 平方完成:</strong><br>
-                $y = ${a}(x^2 ${this.fmtS(b/a)}x) ${this.fmtS(c)}$<br>
-                $y = ${a}(x ${this.fmtS(-p)})^2 ${this.fmtS(q)}$
-            </div>
-            <div class="step-box">
-                <strong>③ 結論:</strong><br>
-                頂点は $(${p}, ${q})$ です。グラフは${a > 0 ? '下に凸' : '上に凸'}となります。
-            </div>
-        `;
-        
+        if (type === 'vertex') {
+            html += `<div class="step"><span class="step-label">【STEP 2】頂点の特定</span>`;
+            html += `平方完成された形から、頂点は **$(${p}, ${q})$** となります。</div>`;
+        } else {
+            const y_start = a*range[0]*range[0] + b*range[0] + c;
+            const y_end = a*range[1]*range[1] + b*range[1] + c;
+            html += `<div class="step"><span class="step-label">【STEP 2】端点の値を計算</span>`;
+            html += `$x = ${range[0]}$ のとき $y = ${y_start}$<br>`;
+            html += `$x = ${range[1]}$ のとき $y = ${y_end}$</div>`;
+            html += `<div class="step"><span class="step-label">【STEP 3】最大・最小の判断</span>`;
+            html += `軸 $x = ${p}$ は範囲内にあるため、頂点と端点を比較します。<br>`;
+            html += `結果：**最大値 ${Math.max(y_start, y_end, q)}、最小値 ${Math.min(y_start, y_end, q)}** です。</div>`;
+        }
+
         content.innerHTML = html;
-        panel.style.display = 'block';
+        expl.style.display = 'block';
         MathJax.typeset();
     },
 
-    drawGraph() {
-        const ctx = document.getElementById('mainGraph').getContext('2d');
-        if(window.myChart) window.myChart.destroy();
-        
-        const dataPoints = [];
-        for(let x = -10; x <= 10; x += 0.5) {
-            dataPoints.push({x: x, y: this.current.a * x * x + this.current.b * x + this.current.c});
-        }
-
-        window.myChart = new Chart(ctx, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: '二次関数',
-                    data: dataPoints,
-                    showLine: true,
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                    borderWidth: 3,
-                    pointRadius: 0
-                }]
-            },
-            options: {
-                scales: {
-                    x: { min: -10, max: 10, grid: { color: '#334155' } },
-                    y: { min: -10, max: 10, grid: { color: '#334155' } }
-                },
-                plugins: { legend: { display: false } }
-            }
-        });
-    },
-
-    fmt(n) { return n === 1 ? "" : (n === -1 ? "-" : n); },
-    fmtS(n) { return n >= 0 ? `+ ${n}` : `- ${Math.abs(n)}`; },
-
-    addHistory(correct) {
-        const list = document.getElementById('history-list');
-        const div = document.createElement('div');
-        div.className = 'history-item';
-        div.innerHTML = `${correct ? '✅' : '❌'} ${this.current.type} - ${new Date().toLocaleTimeString()}`;
-        list.prepend(div);
+    fmt(a, b, c) {
+        let s = (a === 1 ? "" : a === -1 ? "-" : a) + "x^2";
+        if (b !== 0) s += (b > 0 ? "+" : "") + (Math.abs(b) === 1 ? (b > 0 ? "" : "-") : b) + "x";
+        if (c !== 0) s += (c > 0 ? "+" : "") + c;
+        return s;
     },
 
     next() { this.generate(this.current.type); }
 };
 
-// 初期起動
-window.onload = () => {
-    qEngine.generate('vertex');
-    
-    // 統計チャートの初期化
-    const ctx = document.getElementById('chartStats').getContext('2d');
-    new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: ['頂点', '共有点', '最大最小', '場合分け', '絶対値'],
-            datasets: [{
-                label: '理解度',
-                data: [80, 45, 60, 20, 30],
-                backgroundColor: 'rgba(167, 139, 250, 0.2)',
-                borderColor: '#a78bfa'
-            }]
-        },
-        options: {
-            scales: { r: { angleLines: { color: '#334155' }, grid: { color: '#334155' }, pointLabels: { color: '#f8fafc' }, ticks: { display: false } } },
-            plugins: { legend: { display: false } }
-        }
-    });
-};
+window.onload = () => app.generate('vertex');
 </script>
 
 </body>
