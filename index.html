@@ -23,24 +23,24 @@
 
     <div class="card">
       <h3>操作ガイド</h3>
-      <p>x = -b / 2a</p>
+      <p>頂点 x = -b / 2a</p>
     </div>
 
-    <div class="card">
+    <div class="card purple">
       <h3>場合分けのヒント</h3>
       <p>a > 0 → 最小</p>
       <p>a < 0 → 最大</p>
-      <p>範囲 → 端＋頂点を比較</p>
+      <p>区間 → 端と頂点比較</p>
     </div>
   </div>
 
   <!-- 中央 -->
   <div class="center">
     <div class="card">
-      <p id="question">問題</p>
+      <h2 id="question"></h2>
 
       <div class="row">
-        <input id="answer" placeholder="答え">
+        <input id="answer" placeholder="答えを入力">
         <button onclick="check()">答える</button>
       </div>
 
@@ -49,27 +49,32 @@
     </div>
 
     <div class="card">
-      <h3>グラフ</h3>
+      <h3>二次関数のグラフ</h3>
       <canvas id="graph"></canvas>
+
+      <p class="legend">
+        🔴 頂点　🟡 y切片　🟢 x切片
+      </p>
     </div>
   </div>
 
   <!-- 右 -->
   <div class="right">
     <div class="card">
-      <h3>分析</h3>
+      <h3>分析（弱点）</h3>
       <p id="status"></p>
       <canvas id="weakChart" width="250" height="200"></canvas>
-      <button onclick="weakMode()">弱点特訓</button>
+      <button onclick="weakMode()">弱点特訓モード</button>
     </div>
 
     <div class="card">
-      <h3>履歴</h3>
+      <h3>履歴（最新10件）</h3>
       <ul id="historyList"></ul>
     </div>
 
     <div class="card">
-      <button onclick="downloadBackup()">保存</button>
+      <h3>データ管理</h3>
+      <button onclick="downloadBackup()">データを保存（バックアップ）</button>
       <input type="file" onchange="loadBackup(event)">
     </div>
   </div>
