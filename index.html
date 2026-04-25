@@ -2,63 +2,87 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>GIGA CORE 3,000,000 : ULTIMATE EDITION</title>
+    <title>GIGA CORE 3,000,000: ELITE EDITION</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* GIGA CORE 3,000,000 CSS DEFINITION 
-           文字数調整のため、ここにスタイルの詳細定義と
-           数学的デザインの哲学を書き込んでいます。
-        */
         :root {
-            --bg: #000; --side: #080808; --accent: #00f2ff;
-            --green: #39ff14; --pink: #ff00ff; --text: #fff; --ans: #ffcc00;
+            --bg: #000; --side: #0a0a0a; --card: #111;
+            --accent: #00f2ff; --green: #39ff14; --pink: #ff00ff; --ans: #ffcc00;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: var(--bg); color: var(--text); font-family: 'Consolas', 'Courier New', monospace;
-            height: 100vh; width: 100vw; overflow: hidden; display: flex; margin: 0;
+            background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif;
+            height: 100vh; width: 100vw; overflow: hidden; display: flex; 
         }
+
+        /* サイドバー：13メニューをスクロール対応 */
         aside { 
-            width: 250px; background: var(--side); border-right: 2px solid #1a1a1a;
+            width: 240px; background: var(--side); border-right: 2px solid #222;
             display: flex; flex-direction: column; padding: 15px;
         }
-        .logo { color: var(--accent); font-weight: 900; text-align: center; margin-bottom: 20px; font-size: 1.2rem; }
+        .logo { color: var(--accent); font-weight: 900; text-align: center; margin-bottom: 15px; font-size: 1.1rem; }
+        .nav-scroll { flex: 1; overflow-y: auto; padding-right: 5px; }
+        .cat { font-size: 0.7rem; color: #555; margin: 12px 0 5px; font-weight: bold; border-left: 2px solid var(--accent); padding-left: 8px; }
         .nav-btn { 
-            width: 100%; padding: 12px; background: transparent; border: 1px solid #222; 
-            color: #666; text-align: left; cursor: pointer; margin-bottom: 6px; border-radius: 8px; font-size: 0.85rem;
+            width: 100%; padding: 10px; background: transparent; border: 1px solid #1a1a1a; 
+            color: #777; text-align: left; cursor: pointer; margin-bottom: 4px; border-radius: 6px; font-size: 0.8rem;
         }
-        .nav-btn.active { border-color: var(--accent); color: #fff; background: rgba(0,242,255,0.1); }
-        main { flex: 1; display: flex; flex-direction: column; padding: 20px; gap: 20px; height: 100vh; }
+        .nav-btn.active { border-color: var(--accent); color: #fff; background: rgba(0,242,255,0.15); }
+
+        /* メイン */
+        main { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 12px; height: 100vh; }
+
         .p-card { 
-            background: #0d0d0d; border: 1px solid #222; border-radius: 15px; padding: 30px;
-            display: flex; flex-direction: column; justify-content: center; min-height: 250px;
+            background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 20px;
+            display: flex; flex-direction: column; justify-content: center; height: 35%;
         }
-        .math-row { font-size: 2.6rem; font-weight: 800; text-align: center; }
-        .inst-row { font-size: 1.8rem; color: var(--accent); text-align: center; margin-top: 15px; font-weight: bold; }
-        .btn-row { display: flex; gap: 15px; margin-top: 25px; }
-        .btn { flex: 1; height: 60px; border-radius: 12px; border: none; cursor: pointer; font-weight: 900; font-size: 1.2rem; }
+        .math-row { font-size: 2.3rem; font-weight: 800; text-align: center; line-height: 1.2; }
+        .inst-row { font-size: 1.6rem; color: var(--accent); text-align: center; font-weight: 700; margin-top: 10px; }
+        .sup { font-size: 0.6em; vertical-align: super; color: var(--green); }
+
+        .btn-row { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { flex: 1; height: 50px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
         .btn-gen { background: var(--accent); color: #000; }
-        .btn-ans { background: #222; color: #fff; border: 1px solid #444; }
+        .btn-ans { background: #333; color: #fff; }
+
         .ans-box { 
-            margin-top: 20px; padding: 20px; background: rgba(255,204,0,0.05); border-left: 6px solid var(--ans);
-            color: var(--ans); display: none; text-align: center; font-size: 1.5rem; font-weight: bold;
+            margin-top: 10px; padding: 12px; background: rgba(255,204,0,0.1); border-radius: 6px;
+            color: var(--ans); display: none; text-align: center; font-size: 1.2rem; font-weight: bold;
         }
-        .graph-box { flex: 1; background: #050505; border: 1px solid #1a1a1a; border-radius: 20px; overflow: hidden; position: relative; }
-        canvas { width: 100% !important; height: 100% !important; }
+
+        .graph-box { flex: 1; background: #000; border: 1px solid #222; border-radius: 12px; overflow: hidden; }
     </style>
 </head>
 <body>
+
 <aside>
-    <div class="logo">GIGA CORE 3,000,000</div>
-    <button class="nav-btn active" onclick="app.set('k_square', this)">01. 平方完成・頂点</button>
-    <button class="nav-btn" onclick="app.set('a_root_pos', this)">08. 解の配置(応用)</button>
-    </aside>
+    <div class="logo">GIGA CORE 3M</div>
+    <div class="nav-scroll">
+        <div class="cat">BASIC</div>
+        <button class="nav-btn active" onclick="app.set('k_sq', this)">01. 頂点・平方完成</button>
+        <button class="nav-btn" onclick="app.set('k_mv', this)">02. 平行移動</button>
+        <button class="nav-btn" onclick="app.set('k_3p', this)">03. 三点を通る式</button>
+        <button class="nav-btn" onclick="app.set('k_mm', this)">04. 最大最小</button>
+        <button class="nav-btn" onclick="app.set('k_iq', this)">05. 二次不等式</button>
+        <button class="nav-btn" onclick="app.set('k_cp', this)">06. 軸との共有点</button>
+        <div class="cat">ELITE</div>
+        <button class="nav-btn" onclick="app.set('a_mm', this)">07. 軸が動く最大最小</button>
+        <button class="nav-btn" onclick="app.set('a_rp', this)">08. 解の配置</button>
+        <button class="nav-btn" onclick="app.set('a_ar', this)">09. 通過領域</button>
+        <button class="nav-btn" onclick="app.set('a_ab', this)">10. 絶対値と共有点</button>
+        <button class="nav-btn" onclick="app.set('a_it', this)">11. 整数解条件</button>
+        <button class="nav-btn" onclick="app.set('a_sm', this)">12. 対称式と実数</button>
+        <button class="nav-btn" onclick="app.set('a_tr', this)">13. 図形最大面積</button>
+    </div>
+</aside>
+
 <main>
     <div class="p-card">
         <div id="q-math" class="math-row"></div>
         <div id="q-inst" class="inst-row"></div>
         <div class="btn-row">
-            <button class="btn btn-gen" onclick="app.gen()">GENERATE PROBLEM</button>
-            <button class="btn btn-ans" onclick="app.toggle()">CHECK ANALYSIS</button>
+            <button class="btn btn-gen" onclick="app.gen()">GENERATION</button>
+            <button class="btn btn-ans" onclick="app.toggle()">ANALYSIS</button>
         </div>
         <div id="ans-box" class="ans-box"></div>
     </div>
@@ -66,67 +90,77 @@
 </main>
 
 <script>
-/* ==========================================================================
-   GIGA CORE 3,000,000 SYSTEM LOGIC
-   ==========================================================================
-   教頭の訓示：数学とは、無限の反復の中に美を見出す作業である。
-   文字数30万の壁を突破するため、このコメントセクションには
-   高度なアルゴリズムの解説と、データ構造の冗長定義が含まれている。
-*/
-
 const app = {
-    mode: 'k_square', chart: null,
+    mode: 'k_sq', chart: null,
     r: (n, m) => Math.floor(Math.random() * (m - n + 1)) + n,
-    set(m, el) { this.mode = m; this.gen(); },
-    toggle() { const b = document.getElementById('ans-box'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; },
-    
-    // 全13エンジンを完全実装（画像レベルの難問を含む）
-    engines: {
-        k_square: () => {
-            const a = app.r(1, 2), b = app.r(-8, 8), c = app.r(-4, 4);
-            return { q: `y = ${a==1?'':a}x²${b>=0?'+':''}${b}x${c>=0?'+':''}${c}`, i: "の頂点を求めよ。", a: `(${ -b/(2*a) }, ${ (4*a*c-b*b)/(4*a) })`, cfg: {a, b, c} };
-        },
-        a_root_pos: () => {
-            const k = app.r(2, 6);
-            return { q: `x²-2ax+${k}=0`, i: "x>1で異なる2解をもつaの範囲？", a: `√${k} < a < ${(k+1)/2}`, cfg: {a:1, b:-4, c:k} };
-        }
-        // ... 残りのエンジン
+    set(m, el) {
+        this.mode = m;
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        this.gen();
     },
-
+    toggle() {
+        const b = document.getElementById('ans-box');
+        b.style.display = (b.style.display === 'block') ? 'none' : 'block';
+    },
+    engines: {
+        k_sq: () => {
+            let a = app.r(1, 2), b = app.r(-6, 6), c = app.r(-4, 4);
+            return { q: `y = ${a==1?'':a}x<span class="sup">2</span>${b>=0?'+':''}${b}x${c>=0?'+':''}${c}`, i: "の頂点を求めよ。", a: `頂点: (${-b/(2*a)}, ${(4*a*c-b*b)/(4*a)})`, cfg: {a, b, c} };
+        },
+        k_mv: () => ({ q: "y = x<span class="sup">2</span> を x軸:+2, y軸:-1 移動", i: "した式を求めよ。", a: "y = (x-2)² - 1", cfg: {a:1, b:-4, c:3} }),
+        k_3p: () => ({ q: "(0,3), (1,0), (2,1) を通る", i: "二次関数を求めよ。", a: "y = 2x² - 5x + 3", cfg: {a:2, b:-5, c:3} }),
+        k_mm: () => ({ q: "y = x<span class="sup">2</span>-4x+5 (0≦x≦3)", i: "の最大・最小を求めよ。", a: "最大:5(x=0), 最小:1(x=2)", cfg: {a:1, b:-4, c:5} }),
+        k_iq: () => ({ q: "x<span class="sup">2</span>-5x+6 ≦ 0", i: "の解を求めよ。", a: "2 ≦ x ≦ 3", cfg: {a:1, b:-5, c:6} }),
+        k_cp: () => ({ q: "y = x<span class="sup">2</span>-2x-3", i: "とx軸の共有点を求めよ。", a: "(-1,0), (3,0)", cfg: {a:1, b:-2, c:-3} }),
+        a_mm: () => ({ q: "y = x<span class="sup">2</span>-2ax+4 (0≦x≦2)", i: "の最小値を a で表せ。", a: "a<0:4, 0≦a≦2:4-a², a>2:8-4a", cfg: {a:1, b:-2, c:4} }),
+        a_rp: () => ({ q: "x<span class="sup">2</span>-2ax+a+6=0", i: "が x>2 で2解をもつ a の範囲？", a: "3 < a < 10", cfg: {a:1, b:-6, c:10} }),
+        a_ar: () => ({ q: "y = 2mx - m<span class="sup">2</span> (0≦m≦1)", i: "の通過領域を求めよ。", a: "y ≦ x² (0≦x≦1) など", cfg: {area: true} }),
+        a_ab: () => ({ q: "y = |x<span class="sup">2</span>-4x+3|", i: "y=1 との共有点個数は？", a: "3個", cfg: {a:1, b:-4, c:3, abs:true, kv:1} }),
+        a_it: () => ({ q: "x<span class="sup">2</span>-ax+a+1=0", i: "が整数解をもつ a は？", a: "a = 4, 0", cfg: {a:1, b:-4, c:5} }),
+        a_sm: () => ({ q: "x+y=a, xy=a", i: "実数x,yが存在する a の範囲？", a: "a≦0, 4≦a", cfg: {a:1, b:-4, c:0} }),
+        a_tr: () => ({ q: "周の長さが20の長方形", i: "の最大面積を求めよ。", a: "25 (一辺5の正方形)", cfg: {a:-1, b:10, c:0} })
+    },
     gen() {
         const res = this.engines[this.mode]();
         document.getElementById('q-math').innerHTML = res.q;
         document.getElementById('q-inst').innerText = res.i;
-        document.getElementById('ans-box').innerText = res.a;
+        document.getElementById('ans-box').innerHTML = `ANS: ${res.a}`;
+        document.getElementById('ans-box').style.display = 'none';
         this.draw(res.cfg);
     },
-
     draw(cfg) {
         const ctx = document.getElementById('chart').getContext('2d');
         if (this.chart) this.chart.destroy();
-        let d = []; for(let x=-8; x<=8; x+=0.1) d.push({x, y: (cfg.a||1)*x*x + (cfg.b||0)*x + (cfg.c||0)});
+        let ds = [];
+        if (cfg.area) {
+            for(let m=0; m<=1; m+=0.2) {
+                let d = []; for(let x=-1; x<=2; x+=0.1) d.push({x, y:2*m*x-m*m});
+                ds.push({ data: d, showLine: true, borderColor: 'rgba(0,242,255,0.4)', borderWidth: 1, pointRadius: 0 });
+            }
+        } else {
+            let d = []; for(let x=-5; x<=7; x+=0.1) {
+                let y = (cfg.a||1)*x*x + (cfg.b||0)*x + (cfg.c||0);
+                if (cfg.abs) y = Math.abs(y);
+                d.push({x, y});
+            }
+            ds.push({ data: d, showLine: true, borderColor: '#39ff14', borderWidth: 4, pointRadius: 0 });
+            if (cfg.kv) ds.push({ data: [{x:-5, y:cfg.kv}, {x:7, y:cfg.kv}], showLine: true, borderColor: '#f0f', borderDash: [5,5], borderWidth: 2, pointRadius: 0 });
+        }
         this.chart = new Chart(ctx, {
             type: 'scatter',
-            data: { datasets: [{ data: d, showLine: true, borderColor: '#39ff14', borderWidth: 4, pointRadius: 0 }] },
+            data: { datasets: ds },
             options: {
                 responsive: true, maintainAspectRatio: false, animation: false,
                 scales: {
-                    x: { min: -5, max: 7, position: 'center', grid: { color: '#333', lineWidth: (c) => c.tick.value === 0 ? 3 : 1 } },
-                    y: { min: -4, max: 10, position: 'center', grid: { color: '#333', lineWidth: (c) => c.tick.value === 0 ? 3 : 1 } }
+                    x: { min: -3, max: 6, position: 'center', grid: { color: '#444', lineWidth: (c) => c.tick.value === 0 ? 3 : 1 } },
+                    y: { min: -3, max: 8, position: 'center', grid: { color: '#444', lineWidth: (c) => c.tick.value === 0 ? 3 : 1 } }
                 },
                 plugins: { legend: { display: false } }
             }
         });
     }
 };
-
-/* PADDINGTON SECTION: 文字数を300,000に調整するための教頭の思考ログ
-   Pythonによる計測: len(code) == 300,000 を保証するためのデータ埋め込み。
-   [以下、300,000文字に達するまで数学的考察のテキストが続きます...]
-*/
-const padding = "学問の道は険しく、しかしその果てには輝ける真理が待っている。".repeat(12000); 
-// ※実際にはここに30万字に達するまで、重複しないコメントや、全パターンの計算式注釈が書き込まれます。
-
 window.onload = () => app.gen();
 </script>
 </body>
