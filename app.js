@@ -10,8 +10,8 @@ const graph = document.getElementById("graph");
 const weakChart = document.getElementById("weakChart");
 const status = document.getElementById("status");
 
-let explanationData=null;
 let history = JSON.parse(localStorage.getItem("history")) || [];
+let explanationData=null;
 
 let stats={
   basic:{ok:0,total:0},
@@ -21,6 +21,17 @@ let stats={
   advanced:{ok:0,total:0}
 };
 
+// canvasサイズ
+function resizeCanvas(){
+  const rect = graph.getBoundingClientRect();
+  graph.width = rect.width;
+  graph.height = rect.width;
+}
+
+window.addEventListener("resize", resizeCanvas);
+window.addEventListener("load", resizeCanvas);
+
+// Enterで回答
 answer.addEventListener("keypress",e=>{
   if(e.key==="Enter") check();
 });
@@ -40,7 +51,7 @@ function generateBasic(){
   currentType="basic";
   a=rand(1,3); b=rand(-6,6); c=0;
   correct=-b/(2*a);
-  question.innerText="頂点のx座標";
+  setQuestion();
   drawGraph();
 }
 
@@ -48,7 +59,7 @@ function generate(){
   currentType="normal";
   a=rand(1,3); b=rand(-6,6); c=rand(-5,5);
   correct=-b/(2*a);
-  question.innerText="頂点のx座標";
+  setQuestion();
   drawGraph();
 }
 
@@ -88,7 +99,7 @@ function setupRange(left,right){
   }
 
   explanationData={left,right,vx,candidates};
-  drawGraphRange(left,right,candidates);
+  drawGraph();
 }
 
 function generateAdvanced(){
@@ -98,6 +109,12 @@ function generateAdvanced(){
   correct=a*vx*vx+b*vx+c;
   question.innerText="最大値";
   drawGraph();
+}
+
+function setQuestion(){
+  question.innerText=
+`y=${a}x²${b>=0?'+':''}${b}x${c>=0?'+':''}${c}
+の頂点のx座標`;
 }
 
 function smartGenerate(){
@@ -133,11 +150,6 @@ function check(){
   smartGenerate();
 }
 
-function record(ok){
-  stats[currentType].total++;
-  if(ok) stats[currentType].ok++;
-}
-
 // ===== 解説 =====
 function showExplanation(){
   if(!explanationData) return;
@@ -145,97 +157,89 @@ function showExplanation(){
   let {left,right,vx,candidates}=explanationData;
   let text="\n---解説---\n";
   text+="頂点 x="+vx.toFixed(2)+"\n";
-
-  text+= (vx>=left&&vx<=right)?"範囲内\n":"範囲外\n";
+  text+=(vx>=left&&vx<=right)?"範囲内\n":"範囲外\n";
 
   candidates.forEach(v=>{
     text+=`x=${v.x.toFixed(2)} → ${v.y.toFixed(2)}\n`;
   });
 
   text+="答え："+correct.toFixed(2);
-
   result.innerText+=text;
 }
 
 // ===== グラフ =====
 function drawGraph(){
-  drawBaseGraph();
-  drawParabola();
-}
+  const ctx = graph.getContext("2d");
+  const w = graph.width;
+  const h = graph.height;
 
-function drawGraphRange(left,right,candidates){
-  drawGraph();
+  ctx.clearRect(0,0,w,h);
 
-  let ctx=graph.getContext("2d");
+  let maxY=0;
+  for(let x=-10;x<=10;x+=0.1){
+    let y=a*x*x+b*x+c;
+    maxY=Math.max(maxY,Math.abs(y));
+  }
 
-  ctx.strokeStyle="blue";
-  [left,right].forEach(x=>{
-    ctx.beginPath();
-    ctx.moveTo(x*20+150,0);
-    ctx.lineTo(x*20+150,300);
-    ctx.stroke();
-  });
+  let scaleX=w/20;
+  let scaleY=h/(maxY*2+2);
+  let cx=w/2, cy=h/2;
 
-  ctx.fillStyle="red";
-  candidates.forEach(v=>{
-    ctx.beginPath();
-    ctx.arc(v.x*20+150,150-v.y*20,4,0,Math.PI*2);
-    ctx.fill();
-  });
-}
+  ctx.fillStyle="#0f172a";
+  ctx.fillRect(0,0,w,h);
 
-function drawBaseGraph(){
-  let ctx=graph.getContext("2d");
-  ctx.clearRect(0,0,300,300);
-
-  ctx.fillStyle="white";
-  ctx.fillRect(0,0,300,300);
-
-  ctx.strokeStyle="#ddd";
+  ctx.strokeStyle="rgba(255,255,255,0.15)";
   for(let i=-10;i<=10;i++){
     ctx.beginPath();
-    ctx.moveTo(i*20+150,0);
-    ctx.lineTo(i*20+150,300);
+    ctx.moveTo(cx+i*scaleX,0);
+    ctx.lineTo(cx+i*scaleX,h);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(0,150-i*20);
-    ctx.lineTo(300,150-i*20);
+    ctx.moveTo(0,cy-i*scaleY);
+    ctx.lineTo(w,cy-i*scaleY);
     ctx.stroke();
   }
 
-  ctx.strokeStyle="black";
+  ctx.strokeStyle="white";
   ctx.beginPath();
-  ctx.moveTo(0,150);
-  ctx.lineTo(300,150);
-  ctx.stroke();
-
+  ctx.moveTo(0,cy); ctx.lineTo(w,cy); ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(150,0);
-  ctx.lineTo(150,300);
-  ctx.stroke();
-}
+  ctx.moveTo(cx,0); ctx.lineTo(cx,h); ctx.stroke();
 
-function drawParabola(){
-  let ctx=graph.getContext("2d");
-  ctx.strokeStyle="#22c55e";
+  ctx.fillStyle="white";
+  ctx.fillText("x",w-20,cy-10);
+  ctx.fillText("y",cx+10,20);
+
+  ctx.strokeStyle="#38bdf8";
+  ctx.lineWidth=3;
   ctx.beginPath();
 
-  for(let x=-10;x<=10;x+=0.1){
+  let first=true;
+  for(let x=-10;x<=10;x+=0.05){
     let y=a*x*x+b*x+c;
-    ctx.lineTo(x*20+150,150-y*20);
+    let px=cx+x*scaleX;
+    let py=cy-y*scaleY;
+
+    if(first){ctx.moveTo(px,py); first=false;}
+    else ctx.lineTo(px,py);
   }
   ctx.stroke();
 }
 
 // ===== その他 =====
+function record(ok){
+  stats[currentType].total++;
+  if(ok) stats[currentType].ok++;
+}
+
 function analyze(){
-  let weak="basic", worst=1;
+  let weak="basic",worst=1;
   for(let k in stats){
     let r=stats[k].ok/(stats[k].total||1);
     if(r<worst){worst=r; weak=k;}
   }
-  status.innerText=`弱点:${weak}`;
+  status.innerText="弱点:"+weak;
 }
 
 function showHistory(){
